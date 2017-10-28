@@ -27,12 +27,12 @@ public:
 	char * getFilterAddress ();		//what is that?
 	//bool initializeServer (char * _myAddr, int _myPort); //Done
 	//bool initializeClient (char * _peerAddr, int _peerPort); //Done
-	int writeToSocket (char * buffer, int maxBytes );
+	int writeToSocket (char * buffer, int maxBytes ); //temporary
 	int writeToSocketAndWait (char * buffer, int maxBytes,int microSec );
 	int readFromSocketWithNoBlock (char * buffer, int maxBytes );
 	int readFromSocketWithTimeout (char * buffer, int maxBytes, int timeoutSec,
 	int timeoutMilli);
-	int readFromSocketWithBlock (char * buffer, int maxBytes );
+	int readFromSocketWithBlock (char * buffer, int maxBytes ); //temporary
 	int readSocketWithNoBlock (char * buffer, int maxBytes );
 	int readSocketWithTimeout (char * buffer, int maxBytes, int timeoutSec, int
 	timeoutMilli);

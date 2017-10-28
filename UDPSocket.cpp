@@ -49,8 +49,13 @@ UDPSocket::UDPSocket (){
 //	return false;
 //}
 int UDPSocket::writeToSocket (char * buffer, int maxBytes ){
-	return sendto(sock, (void*)(buffer), maxBytes, 0, (const sockaddr*)&peerAddr,
-			sizeof(struct sockaddr_in));
+	return sendto(sock, buffer, maxBytes,
+			0,(const sockaddr*)&peerAddr , sizeof(peerAddr));
+}
+
+int UDPSocket::readFromSocketWithBlock (char * buffer, int maxBytes ){
+	unsigned int aLength = sizeof(peerAddr);
+	return recvfrom(sock, buffer, maxBytes, 0, (sockaddr*)&peerAddr, &aLength);
 }
 
 int UDPSocket::getMyPort(){

@@ -32,6 +32,7 @@ bool UDPServerSocket::initializeServer (char * _myAddr, int _myPort){
 		unlock();
 		return false;
 	}
+	peerAddr.sin_family = AF_INET;
 	unlock();
 	return true;
 }

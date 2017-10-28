@@ -16,7 +16,8 @@ private:
 	UDPClientSocket * udpSocket;
 public:
 	Client(char * _hostname, int _port);
-	Message * execute(Message * _message);
+	char* execute(char * _Message, int _size);
+	Message* execute(Message * _message);
 	~Client();
 };
 

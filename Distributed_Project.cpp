@@ -15,16 +15,16 @@ using namespace std;
 
 int main(int argc, char *argv[]){
 	if(argv[1][0] == '0'){
-		Server serv("localhost", 16333);
+		Server serv("localhost", 64000);
 		serv.serveRequest();
 	}
 	else{
-		Client cli("localhost", 16333);
+		Client cli("localhost", 64000);
 		while(1){
-			char* message;
+			std::string _temp;
 			std::cout << "Please Enter a message: ";
-			char* c;
-			scanf("%1024s[^\n]%c", message, c);
+			getline(std::cin,_temp);
+			char* message = const_cast<char *>(_temp.c_str());;
 			char* response = cli.execute(message, strlen(message));
 			std::cout << response << endl;
 		}

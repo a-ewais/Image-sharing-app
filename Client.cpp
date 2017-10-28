@@ -4,15 +4,15 @@
  *  Created on: Oct 28, 2017
  *      Author: ewais
  */
-
+#include<iostream>
 #include"Client.h"
 
-Client::Client(char * _hostname, int _port){
+Client::Client(char* _hostname, int _port){
 	udpSocket = new UDPClientSocket();
 	udpSocket->initializeClient(_hostname, _port);
 }
 
-char * Client::execute(char * _message, int _size){
+char* Client::execute(char* _message, int _size){
 //	int size = 1024;
 //	char * message = new char[size];
 //	Message * reply = new Message(message, size);
@@ -28,9 +28,10 @@ char * Client::execute(char * _message, int _size){
 //	reply->setMessage(message, size);
 //	delete [] message;
 //	return reply;
+
 	int size = 1024;
-	char * reply = new char [size];
-	int flag = udpSocket->writeToSocket(_message,_size);
+	char* reply = new char[size];
+	int flag = udpSocket->writeToSocket(_message,_size);	
 	if(flag<0){
 		delete [] reply;
 		perror("Failed to send the message\n");

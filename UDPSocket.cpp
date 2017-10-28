@@ -12,6 +12,7 @@
 #include <cstdio>
 #include <cstring>
 #include <string>
+#include <iostream>
 
 
 UDPSocket::UDPSocket (){
@@ -59,7 +60,6 @@ int UDPSocket::writeToSocket (char * buffer, int maxBytes ){
 int UDPSocket::readFromSocketWithBlock (char * buffer, int maxBytes ){
 	lock();
 	unsigned int aLength = sizeof(peerAddr);
-
 	int res = recvfrom(sock, buffer, maxBytes, 0, (sockaddr*)&peerAddr, &aLength);
 	unlock();
 	return res;

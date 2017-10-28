@@ -1,4 +1,7 @@
 #include "Server.h"
+#include <iostream>
+
+
 
 Server::Server(char* _listen_hostname, int _listen_port){
 	udpServerSocket = new UDPServerSocket();
@@ -22,16 +25,20 @@ void Server::sendReply(Message* _message){
 //char operations
 
 char* Server::getRequest(){
-	char* buffer = NULL;
+	char* buffer = new char[1024];
 	udpServerSocket->readFromSocketWithBlock(buffer, 1024);
+	std::cout << buffer << std::endl;
 	return buffer;
 }
 
 char* Server::doOperation(char* _message){
 	for(int i = 0; i < 1024; i++){
-		if(_message[i] == '\0'){
-			_message[i] = '9';
-			_message[i+1] = '\0';
+		if(_message[i] == NULL){
+			_message[i] = ':';
+			_message[i+1] = ':';
+			_message[i+2] = 'R';
+			_message[i+3] = NULL;
+			break;
 		}
 	}
 	
@@ -43,9 +50,14 @@ void Server::sendReply(char* _message){
 }
 
 void Server::serveRequest(){
-	char* _message = getRequest();
-	_message = doOperation(_message);
-	sendReply(_message);
+	while(1){
+		char* _message = getRequest();
+		if (_message[0] == 'q' && _message[1] == NULL)
+			break;
+
+		_message = doOperation(_message);
+		sendReply(_message);
+	}
 }
 
 Server::~Server(){

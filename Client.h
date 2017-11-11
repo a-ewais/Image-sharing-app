@@ -14,6 +14,8 @@ class Client
 {
 private:
 	UDPClientSocket * udpSocket;
+	int send_message(Message* message);
+	Message* get_respond(int id);
 public:
 	Client(char * _hostname, int _port);
 	char* execute(char * _Message, int _size);

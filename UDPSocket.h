@@ -9,6 +9,8 @@
 #ifndef UDPSOCKET_H
 #define UDPSOCKET_H
 
+#define MAX_DATAGRAM_SIZE 7*1024   //8 KB
+
 class UDPSocket
 {
 protected:
@@ -28,10 +30,9 @@ public:
 	//bool initializeServer (char * _myAddr, int _myPort); //Done
 	//bool initializeClient (char * _peerAddr, int _peerPort); //Done
 	int writeToSocket (char * buffer, int maxBytes ); //temporary
-	int writeToSocketAndWait (char * buffer, int maxBytes,int microSec );
+	int writeToSocketAndWait (char * buffer, int maxBytes,int milliSec );
 	int readFromSocketWithNoBlock (char * buffer, int maxBytes );
-	int readFromSocketWithTimeout (char * buffer, int maxBytes, int timeoutSec,
-	int timeoutMilli);
+	int readFromSocketWithTimeout (char * buffer, int maxBytes, int timeoutSec);
 	int readFromSocketWithBlock (char * buffer, int maxBytes ); //temporary
 	int readSocketWithNoBlock (char * buffer, int maxBytes );
 	int readSocketWithTimeout (char * buffer, int maxBytes, int timeoutSec, int

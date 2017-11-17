@@ -14,13 +14,13 @@ class Server
 {
 private:
 	UDPServerSocket* udpServerSocket;
-	//Message* getRequest();
-	//Message* doOperation();
-	//void sendReply (Message* _message);
+	Message* getRequest();
+	Message* doOperation(Message* _message);
+	void sendReply (Message* _message);
 	
-	char* getRequest();
-	char* doOperation(char* _message);
-	void sendReply(char* _message);
+//	char* getRequest();
+//	char* doOperation(char* _message);
+//	void sendReply(char* _message);
 public:
 	Server(char* _listen_hostname, int _listen_port);
 	void serveRequest();

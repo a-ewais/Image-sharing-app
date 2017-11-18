@@ -33,7 +33,6 @@ Message::Message(char* data){
 	if(data==NULL)
 		cout<<"data corrupted or NULL\n";
 	int size = Base64_Marshal::Base64decode_len(data)-1;
-	cout<<size<<endl;
 	char * temp = new char [size];
 	cout<<Base64_Marshal::Base64decode(temp, data)<<endl;
 	uint32_t* type = reinterpret_cast<uint32_t*>(temp);
@@ -52,6 +51,7 @@ Message::Message(char* data){
 		message = new char[message_size];
 		memcpy(message, temp+24, message_size);
 	}
+	delete [] temp;
 }
 
 Message::Message(vector<Message*>& parts){
@@ -172,6 +172,10 @@ void Message::setMessageType(enum MessageType _message_type){
 	message_type = _message_type;
 }
 
+void Message::setRPCId(int c)
+{
+	rpc_id = c;
+}
 void Message::print(){
 	printf("RPC Id: %d\nparts number: %d\npart number:%d\noperation: %d\nmessage_size: %d\n",rpc_id,parts_num,part_num,operation,message_size);
 	cout<<message<<endl;

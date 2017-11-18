@@ -24,7 +24,7 @@ private:
 	pthread_mutex_t out_mutex, in_mutex;
 	pthread_cond_t cond;
 	bool initializeClient (char * _peerAddr, int _peerPort);
-	static void messenger(UDPClientSocket* me);
+	static void* messenger(void* me);
 	void send(Message* m);
 
 public:

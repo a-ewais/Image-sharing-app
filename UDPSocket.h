@@ -38,6 +38,7 @@ public:
 //	int readSocketWithNoBlock (char * buffer, int maxBytes );
 //	int readSocketWithTimeout (char * buffer, int maxBytes, int timeoutSec, int
 //	timeoutMilli);
+	void setPeer(sockaddr_in x);
 	int getMyPort (); //Done
 	int getPeerPort (); //Done
 	void enable();	//Done

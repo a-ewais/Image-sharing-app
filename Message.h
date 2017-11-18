@@ -48,6 +48,7 @@ class Message
 		void setOperation (int _operation); //Done
 		void setMessage (const char * message, size_t message_size); //Done
 		void setMessageType (MessageType message_type); //Done
+		void setRPCId(int c);
 		void print();
 		~Message();
 };

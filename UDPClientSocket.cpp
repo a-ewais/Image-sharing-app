@@ -6,6 +6,7 @@
  */
 #include "UDPClientSocket.h"
 #include <sys/socket.h>
+#include <pthread.h>
 #include <netdb.h>
 #include <unistd.h>
 #include <cstdio>
@@ -18,8 +19,8 @@ extern "C" {
 char * inet_ntoa(struct in_addr);
 }
 
-void UDPClientSocket::messenger(UDPClientSocket* me){
-
+void* UDPClientSocket::messenger(void* arg){
+	UDPClientSocket* me = (UDPClientSocket*)arg;
 	int WORK;
 	while(true){
 		WORK = 0;
@@ -48,7 +49,6 @@ void UDPClientSocket::messenger(UDPClientSocket* me){
 						temp = new Message(me->parts[temp->getRPCId()]);
 						pthread_mutex_lock(&me->in_mutex);
 						me->waitFor[temp->getRPCId()] = temp;
-						me->waitFor.erase(temp->getRPCId());
 						pthread_cond_signal(&me->cond);
 						pthread_mutex_unlock(&me->in_mutex);
 					}
@@ -84,6 +84,8 @@ UDPClientSocket::UDPClientSocket(char * _peerAddr, int _peerPort):UDPSocket(){
 	cond = PTHREAD_COND_INITIALIZER;
 	if(!initializeClient(_peerAddr, _peerPort))
 		cout<<"failed to initialize Socket\n";
+	pthread_t p;
+	pthread_create( &p, NULL, &UDPClientSocket::messenger, this);
 
 }
 bool UDPClientSocket::initializeClient (char * _peerAddr, int _peerPort){

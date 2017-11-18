@@ -109,6 +109,11 @@ int UDPSocket::getPeerPort (){
 	unlock();
 	return res;
 }
+void UDPSocket::setPeer(sockaddr_in x){
+	peerAddr.sin_family = x.sin_family;
+	peerAddr.sin_port = x.sin_port;
+	peerAddr.sin_addr.s_addr = x.sin_addr.s_addr;
+}
 void UDPSocket::enable(){
 	lock();
 	if(enabled)
@@ -117,6 +122,7 @@ void UDPSocket::enable(){
 		enabled = true;
 	unlock();
 }
+
 void UDPSocket::disable(){
 	lock();
 	if(!enabled)

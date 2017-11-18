@@ -13,7 +13,7 @@
 #include <cstring>
 #include <string>
 #include <iostream>
-
+#include <poll.h>
 
 UDPSocket::UDPSocket (){
 	if((sock = socket(AF_INET, SOCK_DGRAM, 0))<0) {
@@ -65,6 +65,36 @@ int UDPSocket::readFromSocketWithBlock (char * buffer, int maxBytes ){
 	return res;
 }
 
+int UDPSocket::readFromSocketWithTimeout(char* buffer, int maxBytes, int timeoutSec){
+	lock();
+	struct pollfd fd;
+	int res;
+	fd.fd = sock;
+	fd.events = POLLIN;
+	res = poll(&fd, 1, timeoutSec*1000); // 1000 ms timeout
+	if(res>0){
+		unsigned int aLength = sizeof(peerAddr);
+		int res = recvfrom(sock, buffer, maxBytes, 0, (sockaddr*)&peerAddr, &aLength);
+	}
+	unlock();
+	return res;
+}
+
+bool UDPSocket::readyToRead(){
+	lock();
+	struct pollfd fd;
+	int res;
+	fd.fd = sock;
+	fd.events = POLLIN;
+	res = poll(&fd, 1, 0); // 1000 ms timeout
+	if(res>0)
+		return true;
+	else
+		return false;
+	unlock();
+	return res;
+}
+
 int UDPSocket::getMyPort(){
 	int res;
 	lock();
@@ -109,7 +139,9 @@ void UDPSocket::lock(){
 void UDPSocket::unlock(){
 	pthread_mutex_unlock(&mutex);
 }
-
+int UDPSocket::getSocketHandler(){
+	return sock;
+}
 UDPSocket::~UDPSocket(){
 	printf("Destroying Socket\n");
 	lock();

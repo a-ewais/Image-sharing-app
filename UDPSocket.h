@@ -29,15 +29,15 @@ public:
 	char * getFilterAddress ();		//what is that?
 	//bool initializeServer (char * _myAddr, int _myPort); //Done
 	//bool initializeClient (char * _peerAddr, int _peerPort); //Done
-	int writeToSocket (char * buffer, int maxBytes ); //temporary
-	int writeToSocketAndWait (char * buffer, int maxBytes,int milliSec );
+	int writeToSocket (char * buffer, int maxBytes ); //Done
+	int writeToSocketAndWait (char * buffer, int maxBytes,int milliSec ); //wait for what??
 	int readFromSocketWithNoBlock (char * buffer, int maxBytes );
-	int readFromSocketWithTimeout (char * buffer, int maxBytes, int timeoutSec);
-	int readFromSocketWithBlock (char * buffer, int maxBytes ); //temporary
-	int readSocketWithNoBlock (char * buffer, int maxBytes );
-	int readSocketWithTimeout (char * buffer, int maxBytes, int timeoutSec, int
-	timeoutMilli);
-	int readSocketWithBlock (char * buffer, int maxBytes );
+	int readFromSocketWithTimeout (char * buffer, int maxBytes, int timeoutSec); //Done
+	int readFromSocketWithBlock (char * buffer, int maxBytes ); //Done
+	bool readyToRead();
+//	int readSocketWithNoBlock (char * buffer, int maxBytes );
+//	int readSocketWithTimeout (char * buffer, int maxBytes, int timeoutSec, int
+//	timeoutMilli);
 	int getMyPort (); //Done
 	int getPeerPort (); //Done
 	void enable();	//Done
@@ -45,7 +45,7 @@ public:
 	bool isEnabled();	//Done
 	void lock();	//Done
 	void unlock();	//Done
-	int getSocketHandler(); //will cause Problem...leave it for now
+	int getSocketHandler(); //Done
 	~UDPSocket ( ); //Done
 };
 

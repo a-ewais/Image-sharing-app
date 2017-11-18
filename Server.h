@@ -15,8 +15,8 @@ class Server
 private:
 	UDPServerSocket* udpServerSocket;
 	Message* getRequest();
-	Message* doOperation(Message* _message);
-	void sendReply (Message* _message);
+	virtual Message* doOperation(Message* _message);
+	virtual void sendReply (Message* _message);
 	
 //	char* getRequest();
 //	char* doOperation(char* _message);

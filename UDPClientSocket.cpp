@@ -10,12 +10,80 @@
 #include <unistd.h>
 #include <cstdio>
 #include <cstring>
+#include <iostream>
+#include <time.h>
+using namespace std;
 
 extern "C" {
 char * inet_ntoa(struct in_addr);
 }
 
-UDPClientSocket::UDPClientSocket():UDPSocket(){
+static void UDPClientSocket::messenger(UDPClientSocket* me){
+	pthread_mutex_t &in = &(me->in_mutex), &out = &(me->out_mutex);
+	int WORK;
+	while(true){
+		WORK = 0;
+		if(me->readyToRead())
+		{
+			WORK++;
+			char* incoming = new char[MAX_DATAGRAM_SIZE];
+			int trials = 2;
+			while(trials--){
+				int res = me->readFromSocketWithBlock(incoming, MAX_DATAGRAM_SIZE);
+				if(res<-1)
+					cout<<"Error reading packet..\n";
+				else
+					break;
+			}
+			Message* temp = new Message(incoming);
+			pthread_mutex_lock(&in);
+			if(waitFor.find(temp->getRPCId())!=waitFor.end()){
+				if(temp->isComplete()){
+					me->waitFor[temp->getRPCId()] = temp;
+					pthread_cond_signal(&cond);
+					pthread_mutex_unlock(&in);
+				}else{
+					me->parts[temp->getRPCId()].push_back(temp);
+					if(me->parts[temp->getRPCId()].size()==temp->getPartsNum()){
+						temp = new Message(me->parts[temp->getRPCId()]);
+						pthread_mutex_lock(&in);
+						me->waitFor[temp->getRPCId()] = temp;
+						waitFor.erase(temp->getRPCId());
+						pthread_cond_signal(&cond);
+						pthread_mutex_unlock(&in);
+					}
+				}
+			}else
+				delete [] temp;
+		}
+		pthread_mutex_lock(&out);
+		if(!me->outbox.empty())
+		{
+			WORK++;
+			Message* temp = me->outbox.front();
+			me->outbox.pop();
+			pthread_mutex_unlock(&out);
+			int trials = 3;
+			while(trials--){
+				int t = 0;
+				char* x = temp->marshal(t);
+				int res = me->writeToSocket(x,t);
+				if(res<0)
+					cout<<"error sending packet\n";
+			}
+		}
+		else
+			pthread_mutex_unlock(&out);
+		if(!WORK)
+			sleep(3);
+	}
+}
+UDPClientSocket::UDPClientSocket(char * _peerAddr, int _peerPort):UDPSocket(){
+	in_mutex = PTHREAD_MUTEX_INITIALIZER;
+	out_mutex = PTHREAD_MUTEX_INITIALIZER;
+	cond = PTHREAD_COND_INITIALIZER;
+	if(!initializeClient(_peerAddr, _peerPort))
+		cout<<"failed to initialize Socket\n";
 
 }
 bool UDPClientSocket::initializeClient (char * _peerAddr, int _peerPort){
@@ -55,7 +123,38 @@ bool UDPClientSocket::initializeClient (char * _peerAddr, int _peerPort){
 	unlock();
 	return true;
  }
+
+void UDPClientSocket::send(Message* m){			//no delivery guarantees
+	vector<Message*> temp_parts;
+	if(m->getMessageSize()+32 > MAX_DATAGRAM_SIZE)
+		temp_parts = m->split(MAX_DATAGRAM_SIZE);
+	else
+		temp_parts.push_back(m);
+	pthread_mutex_lock(&out_mutex);
+	for(int i=0;i<temp_parts.size();i++)
+		outbox.push(temp_parts[i]);
+	pthread_mutex_unlock(&out_mutex);
+}
+
+
+Message* UDPClientSocket::sendWaitForReply(Message* m, int waitSec){		//send request..wait for reply
+	pthread_mutex_lock(&in_mutex);
+	waitFor[m->getRPCId()] = NULL;
+	pthread_mutex_unlock(&in_mutex);
+	send(m);
+	struct timespec time_to_wait = {0, 0};
+	time_to_wait.tv_sec = time(NULL) + waitSec;
+	pthread_mutex_lock(&in_mutex);
+	pthread_cond_timedwait(&cond, &in_mutex, &time_to_wait);
+	Message* temp = waitFor[m->getRPCId()];
+	pthread_mutex_unlock(&in_mutex);
+	return temp;
+}
+
 UDPClientSocket::~UDPClientSocket (){
+	pthread_mutex_destroy(&in_mutex);
+	pthread_mutex_destroy(&out_mutex);
+	pthread_cond_destroy(&cond);
 }
 
 

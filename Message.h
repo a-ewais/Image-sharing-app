@@ -12,10 +12,9 @@
 #ifndef MESSAGE_H
 #define MESSAGE_H
 #include "Base64_Marshal.h"
-static int count = 0;
 
 enum MessageType {Request, Reply , Ack};
-
+static int rpc_count = 0;
 class Message
 {
 	private:
@@ -30,21 +29,25 @@ class Message
 		size_t message_size;
 
 	public:
-		Message(Message* big, int _part_num,int _size);
-		Message(int operation, char * p_message, size_t p_message_size, int p_rpc_id);
-		Message(char * marshalled_base64);
-		Message(char * mess, int size);
-		Message(std::vector<Message *> parts);
-		std::vector <Message*> split(int);
-		char * marshal (int& size);
-		int getOperation ();
-		int getRPCId();
-		void * getMessage();
-		size_t getMessageSize();
-		MessageType getMessageType();
-		void setOperation (int _operation);
-		void setMessage (void * message, size_t message_size);
-		void setMessageType (MessageType message_type);
+		Message(MessageType type); //Done
+		Message(Message* big, int _part_num,int _size); //Done
+//		Message(int operation, char * p_message, size_t p_message_size, int p_rpc_id);
+		Message(char * marshalled_base64); //Done
+//		Message(char * mess, int size);
+		Message(std::vector<Message *>& parts);	//Done
+		std::vector <Message*> split(int);  //Done
+		bool isComplete();
+		char * marshal (int& size);	//Done
+		int getPartsNum();	//Done
+		int getPartNum();	//Done
+		int getOperation ();	//Done
+		int getRPCId();		//Done
+		char * getMessage();	//Done
+		size_t getMessageSize();	//Done
+		MessageType getMessageType();	//Done
+		void setOperation (int _operation); //Done
+		void setMessage (char * message, size_t message_size); //Done
+		void setMessageType (MessageType message_type); //Done
 		~Message();
 };
 

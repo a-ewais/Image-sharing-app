@@ -6,11 +6,11 @@
  */
 
 #include "UDPSocket.h"
-
+#include "Message.h"
 #ifndef UDPSERVERSOCKET_H_
 #define UDPSERVERSOCKET_H_
 
-class UDPServerSocket : public UDPSocket
+class UDPServerSocket:public UDPSocket
 {
 	bool initializeServer (char * _myAddr, int _myPort);
 public:

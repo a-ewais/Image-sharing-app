@@ -13,6 +13,7 @@
 #include<string>
 #include<cstdio>
 #include <fstream>
+#include <algorithm>
 #include <streambuf>
 using namespace std;
 
@@ -47,6 +48,7 @@ int main(int argc, char *argv[]){
 //	m->print();
 
 	vector<Message*> l = m->split(7*1024);
+	random_shuffle(l.begin(),l.end());
 	cout<<l.size()<<endl;
 	vector<Message*> after;
 	for(int i=0;i<l.size();i++){

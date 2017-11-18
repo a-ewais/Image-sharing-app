@@ -15,7 +15,7 @@ extern "C" {
 char * inet_ntoa(struct in_addr);
 }
 
-UDPServerSocket::UDPServerSocket():UDPSocket(){
+UDPServerSocket::UDPServerSocket(char * _myAddr, int _myPort):UDPSocket(){
 
 }
 bool UDPServerSocket::initializeServer (char * _myAddr, int _myPort){

@@ -19,11 +19,12 @@ extern "C" {
 string encodeIpPort(sockaddr_in raw){
 	string s = "";
 	s += to_string(raw.sin_addr.s_addr)+","+ to_string(raw.sin_port);
+//	cout<<"the encoded IP Port is: "<<s<<endl;
 	return s;
 }
 sockaddr_in decodeIpPort(string s){
 	string first = "", sec = "";
-	bool flag = false;
+	bool flag = true;
 	for(int i=0;i<s.size();i++)
 	{
 		if(s[i]==',')
@@ -37,9 +38,12 @@ sockaddr_in decodeIpPort(string s){
 			sec+=s[i];
 	}
 	sockaddr_in res;
+//	cout<<"the ip looks like this: "<<first<<endl;
 	res.sin_addr.s_addr = stoul(first);
 	res.sin_port = stoi(sec);
 }
+
+
 UDPServerSocket::UDPServerSocket(char * _myAddr, int _myPort):UDPSocket(){
 	in_mutex = PTHREAD_MUTEX_INITIALIZER;
 	out_mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -49,6 +53,7 @@ UDPServerSocket::UDPServerSocket(char * _myAddr, int _myPort):UDPSocket(){
 	pthread_t p;
 	pthread_create( &p, NULL, &UDPServerSocket::messenger, this);
 }
+
 bool UDPServerSocket::initializeServer (char * _myAddr, int _myPort){
 	lock();
 	myAddress = new char[strlen(_myAddr)+1];
@@ -74,6 +79,7 @@ void* UDPServerSocket::messenger(void* arg){
 	while(true){
 		WORK = 0;
 		if(me->readyToRead()){
+			cout<<"it is ready to read\n";
 			WORK++;
 			char* incoming = new char[MAX_DATAGRAM_SIZE];
 			int trials = 2;
@@ -98,7 +104,7 @@ void* UDPServerSocket::messenger(void* arg){
 
 			if(temp->isComplete()){
 				pthread_mutex_lock(&me->in_mutex);
-				me->outbox.push(temp);
+				me->inbox.push(temp);
 				pthread_mutex_unlock(&me->in_mutex);
 			}else{
 				me->parts[temp->getRPCId()].push_back(temp);
@@ -114,6 +120,7 @@ void* UDPServerSocket::messenger(void* arg){
 		pthread_mutex_lock(&me->out_mutex);
 		if(!me->outbox.empty())
 		{
+			cout<<"it is not empty\n";
 			WORK++;
 			Message* temp = me->outbox.front();
 			me->outbox.pop();
@@ -121,12 +128,15 @@ void* UDPServerSocket::messenger(void* arg){
 			int trials = 3;
 			while(trials--){
 				int t = 0;
-				temp->setRPCId(me->id_ip[temp->getRPCId()].first);
-				me->setPeer(decodeIpPort(me->id_ip[temp->getRPCId()].second));
 				char* x = temp->marshal(t);
+				cout<<x<<endl;
 				int res = me->writeToSocket(x,t);
 				if(res<0)
 					cout<<"error sending packet\n";
+				else{
+					cout<<"packet sent\n";
+					break;
+				}
 			}
 		}
 		else
@@ -142,6 +152,7 @@ void UDPServerSocket::sendReply(Message* m){
 		temp_parts = m->split(MAX_DATAGRAM_SIZE);
 	else
 		temp_parts.push_back(m);
+	cout<<"this message is split into "<<temp_parts.size()<<" parts\n";
 	pthread_mutex_lock(&out_mutex);
 	for(int i=0;i<temp_parts.size();i++)
 		outbox.push(temp_parts[i]);
@@ -150,20 +161,20 @@ void UDPServerSocket::sendReply(Message* m){
 
 bool UDPServerSocket::readyRequest(){
 	bool flag = true;
-	pthread_mutex_lock(&out_mutex);
-	if(outbox.empty())
+	pthread_mutex_lock(&in_mutex);
+	if(inbox.empty())
 		flag = false;
-	pthread_mutex_unlock(&out_mutex);
+	pthread_mutex_unlock(&in_mutex);
 	return flag;
 }
 
 Message* UDPServerSocket::getRequest(){
 	if(!readyRequest())
 		return NULL;
-	pthread_mutex_lock(&out_mutex);
+	pthread_mutex_lock(&in_mutex);
 	Message * temp = inbox.front();
 	inbox.pop();
-	pthread_mutex_unlock(&out_mutex);
+	pthread_mutex_unlock(&in_mutex);
 	return temp;
 }
 UDPServerSocket::~UDPServerSocket (){

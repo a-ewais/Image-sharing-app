@@ -87,12 +87,8 @@ bool UDPSocket::readyToRead(){
 	fd.fd = sock;
 	fd.events = POLLIN;
 	res = poll(&fd, 1, 0); // 1000 ms timeout
-	if(res>0)
-		return true;
-	else
-		return false;
 	unlock();
-	return res;
+	return (res>0)? true: false;
 }
 
 int UDPSocket::getMyPort(){

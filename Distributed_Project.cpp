@@ -24,7 +24,7 @@ int main(int argc, char *argv[]){
 	if(argv[1][0] == '0'){
 		UDPServerSocket serv ("localhost", 64000);
 		int duration = 10;
-		while(duration--){
+		while(true){
 			if(serv.readyRequest())
 			{
 				Message* temp = serv.getRequest();
@@ -32,12 +32,15 @@ int main(int argc, char *argv[]){
 				std::ifstream t("Text.txt");
 				std::string all((std::istreambuf_iterator<char>(t)),
 									std::istreambuf_iterator<char>());
+				cout<<all<<endl;
 				Message* m= new Message(Reply);
 				m->setOperation(temp->getOperation());
 				m->setRPCId(temp->getRPCId());
 				m->setMessage(all.c_str(), all.size());
+				m->print();
+				serv.sendReply(m);
 			}else{
-				sleep(3);
+				sleep(2);
 			}
 		}
 	}
@@ -50,6 +53,7 @@ int main(int argc, char *argv[]){
 			Message* request = new Message(Request);
 			request->setMessage(_temp.c_str(),_temp.size());
 			Message* response = cli.execute(request);
+			response->print();
 		}
 	}
 

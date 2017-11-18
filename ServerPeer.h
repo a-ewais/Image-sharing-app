@@ -14,7 +14,7 @@ class ServerPeer: protected Server{
 
    		Message* doOperation(Message* _message); //overload...dispatcher
     public:
-        ServerPeer();
+        ServerPeer(char* _listen_hostname, int _listen_port);
         ~ServerPeer();
 };
 

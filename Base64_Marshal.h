@@ -2,7 +2,7 @@
 #include <string.h>
 #ifndef BASE64_MARSHAL
 #define BASE64_MARSHAL
-static const unsigned char pr2six[256] =
+const unsigned char pr2six[256] =
 	{
 		/* ASCII table */
 		64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
@@ -22,13 +22,13 @@ static const unsigned char pr2six[256] =
 		64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
 		64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64
 	};
-static const char basis_64[] =
+const char basis_64[] =
 	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 class Base64_Marshal{
 
 public:
 
-	int Base64decode_len(const char *bufcoded)
+	static int Base64decode_len(const char *bufcoded)
 	{
 		int nbytesdecoded;
 		register const unsigned char *bufin;

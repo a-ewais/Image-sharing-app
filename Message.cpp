@@ -32,17 +32,26 @@ Message::Message(Message* big,int _parts_num, int _part_num, int _size, int _mx_
 Message::Message(char* data){
 	if(data==NULL)
 		cout<<"data corrupted or NULL\n";
-	message_type = (MessageType) ntohl((uint32_t &)data);
-	rpc_id = ntohl((uint32_t &)data+4);
-	parts_num = ntohl((uint32_t &)data+8);
-	part_num = ntohl((uint32_t &)data+12);
-	operation = ntohl((uint32_t &)data+16);
-	message = NULL;
-	message_size = 0;
-	if(message_type != Ack)
-		return;
-	message_size = Base64_Marshal::Base64decode((char *)message, data+24);
-	cout<<message_size<<" part: "<<part_num<<endl;
+	int size = Base64_Marshal::Base64decode_len(data)-1;
+	cout<<size<<endl;
+	char * temp = new char [size];
+	cout<<Base64_Marshal::Base64decode(temp, data)<<endl;
+	uint32_t* type = reinterpret_cast<uint32_t*>(temp);
+	uint32_t* id = reinterpret_cast<uint32_t*>(temp+4);
+	uint32_t* parts = reinterpret_cast<uint32_t*>(temp+8);
+	uint32_t* part = reinterpret_cast<uint32_t*>(temp+12);
+	uint32_t* op = reinterpret_cast<uint32_t*>(temp+16);
+	uint32_t* siz = reinterpret_cast<uint32_t*>(temp+20);
+	message_type = (MessageType) ntohl(*type);
+	rpc_id = ntohl(*id);
+	parts_num = ntohl(*parts);
+	part_num = ntohl(*part);
+	operation = ntohl(*op);
+	message_size = ntohl(*siz);
+	if(message_size){
+		message = new char[message_size];
+		memcpy(message, temp+24, message_size);
+	}
 }
 
 Message::Message(vector<Message*>& parts){
@@ -76,26 +85,31 @@ Message::Message(vector<Message*>& parts){
 }
 
 char * Message::marshal(int &size){
-	char* to_send = NULL;
-	size = message_size + 28;
-	to_send = new char[size];
-	int& type=(int&)to_send, id= (int&)to_send+4, parts = (int&)to_send+8, part = (int&)to_send+12,
-			op = (int&) to_send+16, siz = (int&) to_send+20;
-	type = htonl(message_type);
-	id = htonl(rpc_id);
-	parts = htonl(parts_num);
-	part = htonl(part_num);
-	op = htonl(operation);
-	siz = htonl (message_size);
-	if(message_size){
-		int encoded_bytes = Base64_Marshal::Base64encode(to_send+24 ,(const char*) message, message_size);
-		std::cout<<encoded_bytes<<" "<<size-20<<std::endl;
-	}
 
+	size = Base64_Marshal::Base64encode_len(message_size+24);
+	char* to_send = new char[size];
+	char* s = new char[message_size+24];
+	uint32_t* type = reinterpret_cast<uint32_t*>(s);
+	uint32_t* id = reinterpret_cast<uint32_t*>(s+4);
+	uint32_t* parts = reinterpret_cast<uint32_t*>(s+8);
+	uint32_t* part = reinterpret_cast<uint32_t*>(s+12);
+	uint32_t* op = reinterpret_cast<uint32_t*>(s+16);
+	uint32_t* siz = reinterpret_cast<uint32_t*>(s+20);
+	*type = htonl(message_type);
+	*id = htonl(rpc_id);
+	*parts = htonl(parts_num);
+	*part = htonl(part_num);
+	*op = htonl(operation);
+	*siz = htonl (message_size);
+	memcpy(s+24, message, message_size);
+	int encoded_bytes = Base64_Marshal::Base64encode(to_send ,(const char*) s, message_size+24);
+	delete [] s;
+	size = encoded_bytes;
 	return to_send;
 }
 
 vector<Message*> Message::split(int max_size){
+	max_size /= 2;
 	vector<Message*> res;
 	int parts = ceil(message_size/(float)max_size);
 	for (int i=0;i<parts;i++)

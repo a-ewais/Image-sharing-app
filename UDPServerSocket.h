@@ -12,9 +12,13 @@
 
 class UDPServerSocket : public UDPSocket
 {
+	bool initializeServer (char * _myAddr, int _myPort);
 public:
- UDPServerSocket ();
-bool initializeServer (char * _myAddr, int _myPort);
+ UDPServerSocket (char * _myAddr, int _myPort);
+ bool readyRequest();  //returns true if there is a ready request
+ Message* getRequest();	//returns a message if there is a ready request, Null otherwise
+ void sendReply(Message* m);	//sends the reply to the request sender
+ bool sendReplyWaitAck(Message* m, int waitSec);		//sends the reply and waits for ack for waitSec
 ~UDPServerSocket ( );
 };
 

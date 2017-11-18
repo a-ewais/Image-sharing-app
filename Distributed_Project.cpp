@@ -42,11 +42,21 @@ int main(int argc, char *argv[]){
 
 	Message* m= new Message(Reply);
 	m->setMessage(all.c_str(), all.size());
-	m->print();
+	int temp = 0;
+
+//	m->print();
+
 	vector<Message*> l = m->split(7*1024);
 	cout<<l.size()<<endl;
+	vector<Message*> after;
+	for(int i=0;i<l.size();i++){
+		temp = 0;
+		after.push_back(new Message(l[i]->marshal(temp)));
+		delete l[i];
+	}
 
-	Message* mm = new Message(l);
+	Message* mm = new Message(after);
+	mm->print();
 	string aft(mm->getMessage());
 	cout<<aft.size()<<endl;
 	cout<<sizeof(aft)<<endl;

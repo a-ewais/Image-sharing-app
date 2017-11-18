@@ -2,11 +2,11 @@
 #include <iostream>
 
 
-
-Server::Server(char* _listen_hostname, int _listen_port){
-	udpServerSocket = new UDPServerSocket();
-	udpServerSocket->initializeServer(_listen_hostname, _listen_port);
-}
+//
+//Server::Server(char* _listen_hostname, int _listen_port){
+//	udpServerSocket = new UDPServerSocket();
+//	udpServerSocket->initializeServer(_listen_hostname, _listen_port);
+//}
 /*------------------------------------------*/
 /*Message operation
 Message* Server::getRequest(){
@@ -48,16 +48,16 @@ void Server::sendReply(Message* _message){
 //void Server::sendReply(char* _message){
 //	udpServerSocket->writeToSocket(_message, 1024);
 //}
-
-void Server::serveRequest(){
-	while(1){
-		Message* _message = getRequest();
-		_message = doOperation(_message);
-		if(_message!=NULL)
-			sendReply(_message);
-	}
-}
-
-Server::~Server(){
-
-}
+//
+//void Server::serveRequest(){
+//	while(1){
+//		Message* _message = getRequest();
+//		_message = doOperation(_message);
+//		if(_message!=NULL)
+//			sendReply(_message);
+//	}
+//}
+//
+//Server::~Server(){
+//
+//}

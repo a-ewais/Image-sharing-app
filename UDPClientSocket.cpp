@@ -18,8 +18,8 @@ extern "C" {
 char * inet_ntoa(struct in_addr);
 }
 
-static void UDPClientSocket::messenger(UDPClientSocket* me){
-	pthread_mutex_t &in = &(me->in_mutex), &out = &(me->out_mutex);
+void UDPClientSocket::messenger(UDPClientSocket* me){
+
 	int WORK;
 	while(true){
 		WORK = 0;
@@ -36,33 +36,33 @@ static void UDPClientSocket::messenger(UDPClientSocket* me){
 					break;
 			}
 			Message* temp = new Message(incoming);
-			pthread_mutex_lock(&in);
-			if(waitFor.find(temp->getRPCId())!=waitFor.end()){
+			pthread_mutex_lock(&me->in_mutex);
+			if(me->waitFor.find(temp->getRPCId())!=me->waitFor.end()){
 				if(temp->isComplete()){
 					me->waitFor[temp->getRPCId()] = temp;
-					pthread_cond_signal(&cond);
-					pthread_mutex_unlock(&in);
+					pthread_cond_signal(&me->cond);
+					pthread_mutex_unlock(&me->in_mutex);
 				}else{
 					me->parts[temp->getRPCId()].push_back(temp);
 					if(me->parts[temp->getRPCId()].size()==temp->getPartsNum()){
 						temp = new Message(me->parts[temp->getRPCId()]);
-						pthread_mutex_lock(&in);
+						pthread_mutex_lock(&me->in_mutex);
 						me->waitFor[temp->getRPCId()] = temp;
-						waitFor.erase(temp->getRPCId());
-						pthread_cond_signal(&cond);
-						pthread_mutex_unlock(&in);
+						me->waitFor.erase(temp->getRPCId());
+						pthread_cond_signal(&me->cond);
+						pthread_mutex_unlock(&me->in_mutex);
 					}
 				}
 			}else
 				delete [] temp;
 		}
-		pthread_mutex_lock(&out);
+		pthread_mutex_lock(&me->out_mutex);
 		if(!me->outbox.empty())
 		{
 			WORK++;
 			Message* temp = me->outbox.front();
 			me->outbox.pop();
-			pthread_mutex_unlock(&out);
+			pthread_mutex_unlock(&me->out_mutex);
 			int trials = 3;
 			while(trials--){
 				int t = 0;
@@ -73,7 +73,7 @@ static void UDPClientSocket::messenger(UDPClientSocket* me){
 			}
 		}
 		else
-			pthread_mutex_unlock(&out);
+			pthread_mutex_unlock(&me->out_mutex);
 		if(!WORK)
 			sleep(3);
 	}
@@ -147,6 +147,8 @@ Message* UDPClientSocket::sendWaitForReply(Message* m, int waitSec){		//send req
 	pthread_mutex_lock(&in_mutex);
 	pthread_cond_timedwait(&cond, &in_mutex, &time_to_wait);
 	Message* temp = waitFor[m->getRPCId()];
+	waitFor.erase(m->getRPCId());
+//	parts.erase(m->getRPCId());
 	pthread_mutex_unlock(&in_mutex);
 	return temp;
 }

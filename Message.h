@@ -30,7 +30,7 @@ class Message
 
 	public:
 		Message(MessageType type); //Done
-		Message(Message* big, int _part_num,int _size); //Done
+		Message(Message* big,int _parts_num, int _part_num,int _size, int _mx_size); //Done
 //		Message(int operation, char * p_message, size_t p_message_size, int p_rpc_id);
 		Message(char * marshalled_base64); //Done
 //		Message(char * mess, int size);
@@ -46,8 +46,9 @@ class Message
 		size_t getMessageSize();	//Done
 		MessageType getMessageType();	//Done
 		void setOperation (int _operation); //Done
-		void setMessage (char * message, size_t message_size); //Done
+		void setMessage (const char * message, size_t message_size); //Done
 		void setMessageType (MessageType message_type); //Done
+		void print();
 		~Message();
 };
 

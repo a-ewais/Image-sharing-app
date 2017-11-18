@@ -16,14 +16,11 @@ private:
 	UDPServerSocket* udpServerSocket;
 	Message* getRequest();
 	virtual Message* doOperation(Message* _message);
-	virtual void sendReply (Message* _message);
-	
-//	char* getRequest();
-//	char* doOperation(char* _message);
-//	void sendReply(char* _message);
+	void sendReply (Message* _message);
+	bool sendReplyWithAck(Message* _message);
 public:
 	Server(char* _listen_hostname, int _listen_port);
-	void serveRequest();
+	void startListen();
 	~Server();
 };
 

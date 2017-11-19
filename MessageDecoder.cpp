@@ -1,17 +1,96 @@
 #include "MessageDecoder.h"
+#include <sstream>
+#include <vector>
+#include <iterator>
+
+using namespace std; 
 
 MessageDecoder::MessageDecoder(){
-
 }
 
 MessageDecoder::~MessageDecoder(){
-
 }
 
-Message* MessageDecoder::encode(std::vector<Parameter>){
-
-}
-
-std::vector<Parameter> MessageDecoder::decode(Message* _message){
+void MessageDecoder::encode(Message& _message, std::vector<Parameter>& params, int& _operation, MessageType& _type){
     
+    string messageContent;
+    _message.setOperation(_operation);
+    _message.setMessageType(Request);
+
+    switch(_operation){
+        case 1:
+            messageContent.append("s;");
+            messageContent.append(params[0].getString());
+            messageContent.append(";s;");
+            messageContent.append(params[1].getString());
+            messageContent.append(";");
+            _message.setMessage(messageContent.c_str(), messageContent.size());
+        break;
+        case 2:
+            //Extract Message
+            // string token = signIn(username,password,ip); 
+            //Send Reply 
+        break;
+        case 3:
+
+            //Extract Message
+        //    stillUp(username,token); 
+            //Send Reply 
+        break;
+        case 4:
+            // string username,token;
+            //Extract Message
+            // stillUp(username,token);
+            //Send Reply 
+        break;
+        case 5:
+            //Extract Message
+            //pendingRequest()
+            //Send Reply 
+        break;
+        case 6:
+            // string username,token;
+            //Extract Message
+            // getListOfOnlineUsers(username,token);
+            //Send Reply 
+        break;
+        case 7:
+            // string  token,userID,imageID;
+            //Extract Message
+            // string image = getImage(token,userID,imageID);
+            //Send Reply 
+        break;
+        case 8:
+            //Extract Message
+            //Call Function 1
+            //Send Reply 
+            break;
+        default:
+            //Extract Message
+            //Call Function 1
+            //Send Reply 
+        break;
+    }
+
+}
+
+void MessageDecoder::decode(Message& _message, std::vector<Parameter>& params, int& _operation, MessageType& _type){
+    _operation = _message.getOperation();
+    _type = _message.getMessageType();
+
+    string s(_message.getMessage());
+    istringstream iss(s);
+    vector<string> tokens{istream_iterator<string>{iss}, istream_iterator<string>{}};
+
+    switch(_operation){
+        case 1:
+            Parameter username, password;
+            username.setString(tokens[0]);
+            password.setString(tokens[1]);
+            params.push_back(username);
+            params.push_back(password);
+            break;
+    }
+
+
 }

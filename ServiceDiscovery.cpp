@@ -1,4 +1,5 @@
 #include "ServiceDiscovery.h"
+#include "ServerPeer.h"
 #include <iostream>
 #include <stdio.h>      /* printf, NULL */
 #include <stdlib.h>     /* srand, rand */
@@ -16,9 +17,25 @@ bool ServiceDiscovery::auth(string username, string token){
     return false;
 } //check if in token_user? true: false;
 
+string ServiceDiscovery::signUp(string username, string password,string ip){
+    srand(time(NULL));
+    string token;
+    users[username]=password;
+    do{
+        token = to_string(rand()%10000);
+    }while(token_user.count(token)>0);
+
+    token_user[token] = username;
+    online_users[username]=ip;
+        // pending_requests needs username or token?
+    return token;
+
+    // return NULL;
+}
+
 //TO DO
 //Recieve IP
-string ServiceDiscovery::signIn(string username, string password){
+string ServiceDiscovery::signIn(string username, string password,string ip){
     srand(time(NULL));
     string token;
     if(users[username]==password){
@@ -27,7 +44,7 @@ string ServiceDiscovery::signIn(string username, string password){
         }while(token_user.count(token)>0);
 
         token_user[token] = username;
-        // add to the online_users online_user[username]=;
+        online_users[username]=ip;
         // pending_requests needs username or token?
         return token;
     }
@@ -65,13 +82,7 @@ void ServiceDiscovery::down(string username, string token){
 // } //auth()? add to pending requests: ignore.
 
 Message* ServiceDiscovery::doOperation(Message* _message){
-    int operation = _message->getOperation();
-    switch(operation){
-        case 1:
-            //Extract Message
-            //Call Function 1
-            //Send Reply 
-    }
+    
 }
 ServiceDiscovery:: ~ServiceDiscovery(){
 

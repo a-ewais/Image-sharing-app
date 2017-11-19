@@ -13,8 +13,8 @@ private:
 public:
     MessageDecoder();
     ~MessageDecoder();
-    Message* encode(std::vector<Parameter>);
-    std::vector<Parameter> decode(Message* _message);
+    void encode(Message&, std::vector<Parameter>&, int&, MessageType&);
+    void decode(Message& _message, std::vector<Parameter>&, int&, MessageType&);
 };
 
 #endif

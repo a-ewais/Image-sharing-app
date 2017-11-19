@@ -3,6 +3,7 @@
 #include <vector>
 #include <iterator>
 #include <iostream>
+#include <string>
 
 using namespace std; 
 
@@ -21,25 +22,27 @@ void MessageDecoder::encode(Message& _message, std::vector<Parameter>& params, i
     switch(_operation){
         case 5:
         break;
-        case 8:
+        case 8:{
             messageContent.append(params[0].getString());
             messageContent.append(";");
             messageContent.append(params[1].getString());
             messageContent.append(";");
             messageContent.append(params[2].getString());
+        }
             break;
-        case 9:
+        case 9:{
             messageContent.append(params[0].getString());
             messageContent.append(";");
             messageContent.append(params[1].getString());
             messageContent.append(";");
-            messageContent.append(params[2].getInt();
+            messageContent.append(to_string(params[2].getInt()));
+        }
             break;
-        default:
+        default:{
             messageContent.append(params[0].getString());
             messageContent.append(";");
             messageContent.append(params[1].getString());
-            
+        }
         break;
     }
     _message.setMessage(messageContent.c_str(), messageContent.size());
@@ -48,6 +51,7 @@ void MessageDecoder::encode(Message& _message, std::vector<Parameter>& params, i
 void MessageDecoder::decode(Message& _message, std::vector<Parameter>& params, int& _operation, MessageType& _type){
     _operation = _message.getOperation();
     _type = _message.getMessageType();
+
     std::vector<std::string> tokens;
 
     char* pch = strtok (_message.getMessage(),";");
@@ -58,16 +62,19 @@ void MessageDecoder::decode(Message& _message, std::vector<Parameter>& params, i
     }
 
     switch(_operation){
-        case 5:
+        case 5:{}
         break;
-        case 1 || 2 || 8:
-            Parameter param1;
+        case 1:
+        case 2:
+        case 8:
+		{
+			Parameter param1;
             param1.setString(tokens[0]);
             params.push_back(param1);
+		}
         break;
-        case 3 || 4 || 9:
-        break;
-        case 6 || 7:
+        case 6:
+        case 7:{
             Parameter param1;
             std::vector<std::string> _vs;
             for(std::vector<std::string>::iterator it = tokens.begin(); it != tokens.end(); ++it) {
@@ -75,11 +82,13 @@ void MessageDecoder::decode(Message& _message, std::vector<Parameter>& params, i
             }
             param1.setVectorString(_vs);
             params.push_back(param1);
+        }
         break;
-        case 10:
+        case 10:{
             Parameter param1;
-            param1.setBoolean(tokens[0]);
-            params.push_back(param1);            
+            param1.setBoolean(std::stoi(tokens[0]));
+            params.push_back(param1);
+        }
         break;
     }
 

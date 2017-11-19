@@ -31,8 +31,8 @@ class ServiceDiscovery:protected Server{
 		map<string, string> users;		//<username,password>
 
 		bool auth(string username, string token); //check if in token_user? true: false;
-		string signIn(string username, string password,string ip);  //check if in (users)?generate random token..add to token_user..check if he has pending requests..receive ack...return token: return error.
-		string signUp(string username, string password,string ip);
+		string signIn(string username, string password);  //check if in (users)?generate random token..add to token_user..check if he has pending requests..receive ack...return token: return error.
+		string signUp(string username, string password);
 		vector<string> getListOfOnlineUsers(string username, string token); //auth()? return online_users as vector: return error
 		void stillUp(string username, string token); //auth()? update time_cnt in token_time: ignore
 		void down(string username, string token); //auth()? delete token from token_time..update online users

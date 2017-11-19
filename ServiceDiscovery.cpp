@@ -17,7 +17,7 @@ bool ServiceDiscovery::auth(string username, string token){
     return false;
 } //check if in token_user? true: false;
 
-string ServiceDiscovery::signUp(string username, string password,string ip){
+string ServiceDiscovery::signUp(string username, string password){
     srand(time(NULL));
     string token;
     users[username]=password;
@@ -26,7 +26,7 @@ string ServiceDiscovery::signUp(string username, string password,string ip){
     }while(token_user.count(token)>0);
 
     token_user[token] = username;
-    online_users[username]=ip;
+    // online_users[username]=ip;
         // pending_requests needs username or token?
     return token;
 
@@ -35,7 +35,7 @@ string ServiceDiscovery::signUp(string username, string password,string ip){
 
 //TO DO
 //Recieve IP
-string ServiceDiscovery::signIn(string username, string password,string ip){
+string ServiceDiscovery::signIn(string username, string password){
     srand(time(NULL));
     string token;
     if(users[username]==password){
@@ -44,7 +44,7 @@ string ServiceDiscovery::signIn(string username, string password,string ip){
         }while(token_user.count(token)>0);
 
         token_user[token] = username;
-        online_users[username]=ip;
+        // online_users[username]=ip;
         // pending_requests needs username or token?
         return token;
     }

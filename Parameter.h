@@ -10,6 +10,7 @@ private:
     int i;
     float f;
     std::vector<std::string> vs;
+    bool b;
 public:
     Parameter();
     ~Parameter();
@@ -18,10 +19,12 @@ public:
     bool setInt(int);
     bool setFloat(float);
     bool setVectorString(std::vector<std::string>);
+    bool setBoolean(bool);
 
     std::string getString();
     int getInt();
     float getFloat();
+    bool getBoolean();
     std::vector<std::string> getVectorString();
 };
 

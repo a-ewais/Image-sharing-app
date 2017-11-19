@@ -16,87 +16,71 @@ void MessageDecoder::encode(Message& _message, std::vector<Parameter>& params, i
     
     string messageContent;
     _message.setOperation(_operation);
-    _message.setMessageType(Request);
+    _message.setMessageType(_type);
 
     switch(_operation){
-        case 1:
+        case 5:
+        break;
+        case 8:
             messageContent.append(params[0].getString());
             messageContent.append(";");
             messageContent.append(params[1].getString());
-            _message.setMessage(messageContent.c_str(), messageContent.size());
-        break;
-        case 2:
-            //Extract Message
-            // string token = signIn(username,password,ip); 
-            //Send Reply 
-        break;
-        case 3:
-
-            //Extract Message
-        //    stillUp(username,token); 
-            //Send Reply 
-        break;
-        case 4:
-            // string username,token;
-            //Extract Message
-            // stillUp(username,token);
-            //Send Reply 
-        break;
-        case 5:
-            //Extract Message
-            //pendingRequest()
-            //Send Reply 
-        break;
-        case 6:
-            // string username,token;
-            //Extract Message
-            // getListOfOnlineUsers(username,token);
-            //Send Reply 
-        break;
-        case 7:
-            // string  token,userID,imageID;
-            //Extract Message
-            // string image = getImage(token,userID,imageID);
-            //Send Reply 
-        break;
-        case 8:
-            //Extract Message
-            //Call Function 1
-            //Send Reply 
+            messageContent.append(";");
+            messageContent.append(params[2].getString());
+            break;
+        case 9:
+            messageContent.append(params[0].getString());
+            messageContent.append(";");
+            messageContent.append(params[1].getString());
+            messageContent.append(";");
+            messageContent.append(params[2].getInt();
             break;
         default:
-            //Extract Message
-            //Call Function 1
-            //Send Reply 
+            messageContent.append(params[0].getString());
+            messageContent.append(";");
+            messageContent.append(params[1].getString());
+            
         break;
     }
-
+    _message.setMessage(messageContent.c_str(), messageContent.size());
 }
 
 void MessageDecoder::decode(Message& _message, std::vector<Parameter>& params, int& _operation, MessageType& _type){
-	cout << "Started Decode!" << endl;
     _operation = _message.getOperation();
     _type = _message.getMessageType();
-	cout << "Checkpoint 1!" << endl;
-	std::vector<std::string> tokens;
+    std::vector<std::string> tokens;
 
     char* pch = strtok (_message.getMessage(),";");
     while (pch != NULL)
     {
     	tokens.push_back(pch);
-    	printf ("%s\n",pch);
     	pch = strtok (NULL, " ,.-");
     }
 
     switch(_operation){
-        case 1:
-            Parameter username, password;
-            username.setString(tokens[0]);
-            cout << tokens[0] << endl;
-            password.setString(tokens[1]);
-            params.push_back(username);
-            params.push_back(password);
-            break;
+        case 5:
+        break;
+        case 1 || 2 || 8:
+            Parameter param1;
+            param1.setString(tokens[0]);
+            params.push_back(param1);
+        break;
+        case 3 || 4 || 9:
+        break;
+        case 6 || 7:
+            Parameter param1;
+            std::vector<std::string> _vs;
+            for(std::vector<std::string>::iterator it = tokens.begin(); it != tokens.end(); ++it) {
+                _vs.push_back(*it);
+            }
+            param1.setVectorString(_vs);
+            params.push_back(param1);
+        break;
+        case 10:
+            Parameter param1;
+            param1.setBoolean(tokens[0]);
+            params.push_back(param1);            
+        break;
     }
 
 }

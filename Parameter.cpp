@@ -44,6 +44,19 @@ bool Parameter::setVectorString(std::vector<std::string> _vs){
     }
 }
 
+bool Parameter::setBoolean(bool _b){
+    try{
+        b = _b;
+        return 1;
+    }catch (std::exception e){
+        return 0;
+    }
+}
+
+bool Parameter::getBoolean(){
+    return b;
+}
+
 std::string Parameter::getString(){
     return s;
 }

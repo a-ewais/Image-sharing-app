@@ -2,6 +2,7 @@
 #define MESSAGE_DECODER_H
 
 #include "Message.h"
+#include "Parameter.h"
 #include <vector>
 #include <string>
 
@@ -12,8 +13,8 @@ private:
 public:
     MessageDecoder();
     ~MessageDecoder();
-    Message* encode(std::vector<std::string>);
-    std::vector<std::string> decode(Message* _message);
+    Message* encode(std::vector<Parameter>);
+    std::vector<Parameter> decode(Message* _message);
 };
 
 #endif

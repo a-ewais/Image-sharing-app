@@ -8,10 +8,10 @@ MessageDecoder::~MessageDecoder(){
 
 }
 
-Message* MessageDecoder::encode(std::vector<std::string>){
+Message* MessageDecoder::encode(std::vector<Parameter>){
 
 }
 
-std::vector<std::string> MessageDecoder::decode(Message* _message){
+std::vector<Parameter> MessageDecoder::decode(Message* _message){
     
 }

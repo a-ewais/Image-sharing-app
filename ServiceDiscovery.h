@@ -21,6 +21,7 @@ using namespace std;
 class ServiceDiscovery:protected Server{
 	public:
 		ServiceDiscovery(char* _listen_hostname, int _listen_port);
+		~ServiceDiscovery();
 	private:
 		Server* server;
 		map<string, pair<string,Message> > pending_requests;  // <user_to, pair<user_from, Message>>

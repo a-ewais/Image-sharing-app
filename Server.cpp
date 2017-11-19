@@ -16,7 +16,8 @@ void Server::sendReply(Message* _message){
 	udpServerSocket->sendReply(_message);
 }
 bool Server::sendReplyWithAck(Message* _message){
-	return udpServerSocket->sendReplyWaitAck(_message, 3);
+	//return udpServerSocket->sendReplyWaitAck(_message, 3);
+	return 1;
 }
 
 Message* Server::getRequest(){

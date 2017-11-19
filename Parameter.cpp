@@ -1,6 +1,6 @@
 #include "Parameter.h"
 
-Parameter::Parameter():s(NULL), i(-1), f(-1.0){
+Parameter::Parameter(){
 
 }
 

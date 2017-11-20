@@ -13,7 +13,7 @@ using namespace std;
 #ifndef UDPSERVERSOCKET_H_
 #define UDPSERVERSOCKET_H_
 
-class UDPServerSocket:public UDPSocket
+class UDPServerSocket:private UDPSocket
 {
 	map <int, pair<int, string> > id_ip;
 	map <pair<int, string>, int> ip_id;

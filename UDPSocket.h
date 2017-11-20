@@ -23,7 +23,6 @@ protected:
 	int peerPort;
 	bool enabled;
 	pthread_mutex_t mutex;
-public:
 	UDPSocket ();	//Done
 	void setFilterAddress (char * _filterAddress); //what is it?
 	char * getFilterAddress ();		//what is that?

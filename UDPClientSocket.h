@@ -15,7 +15,7 @@ using namespace std;
 #define UDPCLIENTSOCKET_H
 
 
-class UDPClientSocket : public UDPSocket
+class UDPClientSocket : private UDPSocket
 {
 private:
 	queue<Message *> outbox;

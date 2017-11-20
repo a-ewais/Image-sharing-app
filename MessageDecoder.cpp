@@ -40,7 +40,7 @@ sockaddr_in MessageDecoder::decodeIpPort(string s){
 	return res;
 }
 
-void MessageDecoder::encode(Message& _message, std::vector<Parameter>& params, int& _operation, MessageType& _type){
+void MessageDecoder::encode(Message& _message, std::vector<Parameter>& params, int _operation, MessageType _type){
     
     string messageContent;
     _message.setOperation(_operation);

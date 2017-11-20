@@ -75,9 +75,9 @@ void MessageDecoder::encode(Message& _message, std::vector<Parameter>& params, i
     _message.setMessage(messageContent.c_str(), messageContent.size());
 }
 
-void MessageDecoder::decode(Message& _message, std::vector<Parameter>& params, int& _operation, MessageType& _type){
-    _operation = _message.getOperation();
-    _type = _message.getMessageType();
+void MessageDecoder::decode(Message& _message, std::vector<Parameter>& params){
+    int _operation = _message.getOperation();
+    MessageType _type = _message.getMessageType();
 
     std::vector<std::string> tokens;
 

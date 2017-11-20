@@ -15,13 +15,13 @@ class Server
 private:
 	UDPServerSocket* udpServerSocket;
 	Message* getRequest();
-	virtual Message* doOperation(Message* _message);
+	virtual Message* doOperation(Message* _message) = 0;
 	void sendReply (Message* _message);
 	bool sendReplyWithAck(Message* _message);
 public:
 	Server(char* _listen_hostname, int _listen_port);
 	void startListen();
-	~Server();
+	virtual ~Server() = 0;
 };
 
 

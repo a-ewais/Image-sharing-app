@@ -8,16 +8,16 @@ Server::~Server(){
 	delete udpServerSocket;
 }
 
-Message* Server::doOperation(Message* _message){
-
-}
-
 void Server::sendReply(Message* _message){
 	udpServerSocket->sendReply(_message);
 }
+
 bool Server::sendReplyWithAck(Message* _message){
-	//return udpServerSocket->sendReplyWaitAck(_message, 3);
-	return 1;
+	bool received = udpServerSocket->sendReplyWaitAck(_message, 3);
+	if(!received)
+		printf("No acknowledgment received. Network Error!\n");
+
+	return received;
 }
 
 Message* Server::getRequest(){

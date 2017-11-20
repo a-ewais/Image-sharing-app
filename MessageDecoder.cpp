@@ -12,6 +12,33 @@ MessageDecoder::MessageDecoder(){
 
 MessageDecoder::~MessageDecoder(){
 }
+string MessageDecoder::encodeIpPort(sockaddr_in raw){
+	string s = "";
+	s += to_string(raw.sin_addr.s_addr)+","+ to_string(raw.sin_port);
+//	cout<<"the encoded IP Port is: "<<s<<endl;
+	return s;
+}
+sockaddr_in MessageDecoder::decodeIpPort(string s){
+	string first = "", sec = "";
+	bool flag = true;
+	for(int i=0;i<s.size();i++)
+	{
+		if(s[i]==',')
+		{
+			flag=false;
+			continue;
+		}
+		if(flag)
+			first+=s[i];
+		else
+			sec+=s[i];
+	}
+	sockaddr_in res;
+//	cout<<"the ip looks like this: "<<first<<endl;
+	res.sin_addr.s_addr = stoul(first);
+	res.sin_port = stoi(sec);
+	return res;
+}
 
 void MessageDecoder::encode(Message& _message, std::vector<Parameter>& params, int& _operation, MessageType& _type){
     

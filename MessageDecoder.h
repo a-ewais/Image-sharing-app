@@ -13,8 +13,10 @@ private:
 public:
     MessageDecoder();
     ~MessageDecoder();
-    void encode(Message& _message, std::vector<Parameter>&, int&, MessageType&);
-    void decode(Message& _message, std::vector<Parameter>&, int&, MessageType&);
+    static std::string encodeIpPort(sockaddr_in raw);
+    static sockaddr_in decodeIpPort(std::string s);
+    static void encode(Message& _message, std::vector<Parameter>&, int&, MessageType&);
+    static void decode(Message& _message, std::vector<Parameter>&, int&, MessageType&);
 };
 
 #endif

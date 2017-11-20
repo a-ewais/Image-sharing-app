@@ -41,6 +41,7 @@ sockaddr_in decodeIpPort(string s){
 //	cout<<"the ip looks like this: "<<first<<endl;
 	res.sin_addr.s_addr = stoul(first);
 	res.sin_port = stoi(sec);
+	return res;
 }
 
 

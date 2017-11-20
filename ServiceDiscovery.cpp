@@ -17,7 +17,7 @@ bool ServiceDiscovery::auth(string username, string token){
     return false;
 } //check if in token_user? true: false;
 
-string ServiceDiscovery::signUp(string username, string password){
+string ServiceDiscovery::signUp(string username, string password, string addr){
     srand(time(NULL));
     string token;
     users[username] = password;
@@ -26,8 +26,8 @@ string ServiceDiscovery::signUp(string username, string password){
     }while(token_user.count(token)>0);
 
     token_user[token] = username;
-    // online_users[username]=ip;
-        // pending_requests needs username or token?
+    online_users[username]=addr;
+    // pending_requests needs username or token?
     return token;
 
     // return NULL;
@@ -35,7 +35,7 @@ string ServiceDiscovery::signUp(string username, string password){
 
 //TO DO
 //Recieve IP
-string ServiceDiscovery::signIn(string username, string password){
+string ServiceDiscovery::signIn(string username, string password, string addr){
     srand(time(NULL));
     string token;
     if(users[username]==password){
@@ -44,7 +44,7 @@ string ServiceDiscovery::signIn(string username, string password){
         }while(token_user.count(token)>0);
 
         token_user[token] = username;
-        // online_users[username]=ip;
+        online_users[username]=addr;
         // pending_requests needs username or token?
         return token;
     }
@@ -59,10 +59,11 @@ map<string, string> ServiceDiscovery::getListOfOnlineUsers(string username, stri
     return {NULL};
 }
 
-void ServiceDiscovery::stillUp(string username, string token){
+void ServiceDiscovery::stillUp(string username, string token, string addr){
     if(auth(username,token)){
         token_time[token]++;
     }
+    online_users[username]=addr;
 } //auth()? update time_cnt in token_time: ignore
 
 void ServiceDiscovery::down(string username, string token){
@@ -72,6 +73,7 @@ void ServiceDiscovery::down(string username, string token){
     }
 }
 
+//TODO: Handle Pending Requests
 // void ServiceDiscovery::pendingRequest(string username, string token, string to_user, Message m){
 //     if(auth(username,token)){
 
@@ -79,7 +81,7 @@ void ServiceDiscovery::down(string username, string token){
 // } //auth()? add to pending requests: ignore.
 
 Message* ServiceDiscovery::doOperation(Message* _message){
-	Message* reply_message;
+	Message reply_message(Reply);
 
     vector<Parameter> args;
     vector<Parameter> reply_args;
@@ -91,46 +93,43 @@ Message* ServiceDiscovery::doOperation(Message* _message){
 
     switch(operation){
     case 1:
-    	//signup
-    	string token = this->signUp(args[0].getString(), args[1].getString());
+    	string token = signUp(args[0].getString(), args[1].getString(), args[2].getString());
     	Parameter arg1;
     	arg1.setString(token);
     	reply_args.push_back(arg1);
     	break;
     case 2:
-    	//signin
-    	string token = this->signIn(args[0].getString(), args[1].getString());
+    	string token = signIn(args[0].getString(), args[1].getString(), args[2].getString());
     	Parameter arg1;
     	arg1.setString(token);
     	reply_args.push_back(arg1);
     	break;
     case 3:
-    	//stillup
+    	stillUp(args[0].getString(), args[1].getString(), args[2].getString());
     	break;
     case 4:
-    	//down
+    	down(args[0].getString(), args[1].getString());
     	break;
     case 5:
     	//pendingrequest
     	break;
     case 6:
     	//GetListofOnlineUsers
-    	break;
-    case 7:
-    	//GetListofImages
-    	break;
-    case 8:
-    	//GetImage
-    	break;
-    case 9:
-    	//UpdateViews
+    	map<string, string> _mss = getListOfOnlineUsers(args[0].getString(), args[1].getString());
+    	Parameter arg1;
+    	arg1.setMapSS(_mss);
+    	reply_args.push_back(arg1);
     	break;
     case 10:
     	//Auth
+    	bool _auth = auth(args[0].getString(), args[1].getString());
+    	Parameter arg1;
+    	arg1.setBoolean(_auth);
+    	reply_args.push_back(arg1);
     	break;
     }
 
-	MessageDecoder::encode(*reply_message, reply_args, operation, Reply);
+	MessageDecoder::encode(reply_message, reply_args, operation, Reply);
     return reply_message;
 }
 ServiceDiscovery:: ~ServiceDiscovery(){

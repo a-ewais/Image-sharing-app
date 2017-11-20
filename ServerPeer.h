@@ -7,6 +7,8 @@
 
 class ServerPeer: protected Server{
     private:
+		std::vector<std::string> imageList;
+
         std::vector<std::string> getListofImages(std::string token, std::string userID);
         std::string getImage(std::string token, std::string userID, std::string imageID);
         void updateViews(std::string token, std::string userID, int count);

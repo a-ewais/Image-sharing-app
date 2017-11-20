@@ -85,7 +85,7 @@ void MessageDecoder::decode(Message& _message, std::vector<Parameter>& params, i
     while (pch != NULL)
     {
     	tokens.push_back(pch);
-    	pch = strtok (NULL, " ,.-");
+    	pch = strtok (NULL, ";");
     }
 
     switch(_operation){

@@ -12,12 +12,14 @@ ServiceDiscovery::ServiceDiscovery(char* _listen_hostname, int _listen_port):Ser
 }
 
 bool ServiceDiscovery::auth(string username, string token){
+	cout << "SERVICEDISCOVERY::AUTH!";
     if(token_user[token]==username)
         return true;
     return false;
 } //check if in token_user? true: false;
 
 string ServiceDiscovery::signUp(string username, string password, string addr){
+	cout << "SERVICEDISCOVERY::SIGNUP!";
     srand(time(NULL));
     string token;
     users[username] = password;
@@ -32,6 +34,7 @@ string ServiceDiscovery::signUp(string username, string password, string addr){
 }
 
 string ServiceDiscovery::signIn(string username, string password, string addr){
+	cout << "SERVICEDISCOVERY::SIGNIN!";
     srand(time(NULL));
     string token;
     if(users[username]==password){
@@ -49,6 +52,7 @@ string ServiceDiscovery::signIn(string username, string password, string addr){
 }  //check if in (users)?generate random token..add to token_user..check if he has pending requests..receive ack...return token: return error.
 
 map<string, string> ServiceDiscovery::getListOfOnlineUsers(string username, string token){
+	cout << "SERVICEDISCOVERY::getListofOnlineUsers!";
     if(auth(username,token)){
     	return online_users;
     }
@@ -56,6 +60,7 @@ map<string, string> ServiceDiscovery::getListOfOnlineUsers(string username, stri
 }
 
 void ServiceDiscovery::stillUp(string username, string token, string addr){
+	cout << "SERVICEDISCOVERY::stillUp!";
     if(auth(username,token)){
         token_time[token]++;
     }
@@ -63,6 +68,7 @@ void ServiceDiscovery::stillUp(string username, string token, string addr){
 } //auth()? update time_cnt in token_time: ignore
 
 void ServiceDiscovery::down(string username, string token){
+	cout << "SERVICEDISCOVERY::DOWN!";
     if(auth(username,token)){
         token_time.erase(token);
         online_users.erase(username); 
@@ -77,6 +83,7 @@ void ServiceDiscovery::down(string username, string token){
 // } //auth()? add to pending requests: ignore.
 
 Message* ServiceDiscovery::doOperation(Message* _message){
+	cout << "SERVICEDISCOVERY::doOperation!";
 	Message reply_message(Reply);
 
     vector<Parameter> args;

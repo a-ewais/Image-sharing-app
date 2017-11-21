@@ -2,21 +2,23 @@
 #define SERVER_PEER_H
 
 #include "Server.h"
+#include "Client.h"
 #include <vector>
 #include <string>
 
 class ServerPeer: protected Server{
     private:
 		std::vector<std::string> imageList;
+		Client* serviceDiscoveryClient;
 
-        std::vector<std::string> getListofImages(std::string token, std::string userID);
-        std::string getImage(std::string token, std::string userID, std::string imageID);
+        std::vector<std::string> getListofImages(std::string username, std::string token);
+        std::string getImage(std::string username, std::string token, std::string imageID);
         void updateViews(std::string token, std::string userID, int count);
         void revokeViews(std::string token, std::string userID);
 
    		Message* doOperation(Message* _message); //overload...dispatcher
     public:
-        ServerPeer(char* _listen_hostname, int _listen_port);
+        ServerPeer(char* _listen_hostname, int _listen_port, Client* serviceDiscoveryClient);
         ~ServerPeer();
 };
 

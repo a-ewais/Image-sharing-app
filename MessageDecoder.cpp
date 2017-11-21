@@ -54,6 +54,7 @@ void MessageDecoder::encode(Message& _message, std::vector<Parameter>& params, i
 			messageContent.append(params[1].getString());
 			messageContent.append(";");
 			messageContent.append(params[2].getString());
+			messageContent.append(";");
 		}
 		break;
 		case 4:
@@ -63,6 +64,7 @@ void MessageDecoder::encode(Message& _message, std::vector<Parameter>& params, i
 			messageContent.append(params[0].getString());
 			messageContent.append(";");
 			messageContent.append(params[1].getString());
+			messageContent.append(";");
 		}
 		break;
 		case 9:{
@@ -71,6 +73,7 @@ void MessageDecoder::encode(Message& _message, std::vector<Parameter>& params, i
 				messageContent.append(params[1].getString());
 				messageContent.append(";");
 				messageContent.append(std::to_string(params[2].getInt()));
+				messageContent.append(";");
 			}
 		break;
 
@@ -108,6 +111,7 @@ void MessageDecoder::encode(Message& _message, std::vector<Parameter>& params, i
     	break;
     	case 10:{
     		messageContent.append(std::to_string(params[0].getBoolean()));
+			messageContent.append(";");
     	}
     	break;
     	}

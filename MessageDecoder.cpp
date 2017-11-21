@@ -179,7 +179,9 @@ void MessageDecoder::decode(Message* _message, std::vector<Parameter>& params){
     	switch(_operation){
     	case 1:
     	case 2:{
-
+    		Parameter arg1;
+    		arg1.setString(tokens[0]);
+    		params.push_back(arg1);
     	}
     	break;
     	case 6:{

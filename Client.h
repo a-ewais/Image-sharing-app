@@ -12,6 +12,7 @@
 class Client
 {
 private:
+	string peerUserName;
 	UDPClientSocket * udpSocket;
 public:
 	Client(char * _hostname, int _port);
@@ -20,12 +21,11 @@ public:
 	map<string, string> requestListOfOnlineUsers(string token, string username);
 	bool auth(string username, string token);
 	bool up(string username, string token, sockaddr_in addr);
-	void down(string username, string token);
-	vector<string> requestListOfImages(string username, string token, sockaddr_in peer);
-	string requestImage(string username, string token, sockaddr_in peer, string imageId);
-	bool updateViews(string username, string token, sockaddr_in peer, string imgId, int views);
-	bool revokeView(string username, string token, sockaddr_in peer, string imgId);
-	bool revokeViewFailed(string username, string token, string userRevoked, string imgId);
+	bool down(string username, string token);
+	vector<string> requestListOfImages(string username, string token);
+	string requestImage(string username, string token, string imageId);
+	bool updateViews(string username, string token, string imgId, int views);
+	bool revokeView(string username, string token, string imgId);
 	~Client();
 };
 

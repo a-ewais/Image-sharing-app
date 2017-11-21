@@ -15,6 +15,7 @@ using namespace std;
 
 class UDPServerSocket:private UDPSocket
 {
+private:
 	map <int, pair<int, string> > id_ip;
 	map <pair<int, string>, int> ip_id;
 	map <int, vector<Message*> > parts;
@@ -24,11 +25,12 @@ class UDPServerSocket:private UDPSocket
 	static void* messenger(void* arg);
 
 public:
-	 UDPServerSocket (char * _myAddr, int _myPort);
-	 bool readyRequest();  //returns true if there is a ready request
-	 Message* getRequest();	//returns a message if there is a ready request, Null otherwise
-	 void sendReply(Message* m);	//sends the reply to the request sender
-	 bool sendReplyWaitAck(Message* m, int waitSec);		//sends the reply and waits for ack for waitSec
+	UDPServerSocket (char * _myAddr, int _myPort);
+	bool readyRequest();  //returns true if there is a ready request
+	Message* getRequest();	//returns a message if there is a ready request, Null otherwise
+	void sendReply(Message* m);	//sends the reply to the request sender
+	bool sendReplyWaitAck(Message* m, int waitSec);		//sends the reply and waits for ack for waitSec
+	sockaddr_in getMyAddr();
 	~UDPServerSocket ();
 };
 

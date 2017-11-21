@@ -17,6 +17,7 @@ private:
 public:
 	Client(char * _hostname, int _port);
 	Message* execute(Message * _message);
+	string signup(string username, string password, sockaddr_in addr);
 	string login(string username, string password, sockaddr_in addr);
 	map<string, string> requestListOfOnlineUsers(string token, string username);
 	bool auth(string username, string token);

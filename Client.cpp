@@ -18,9 +18,24 @@ Message * Client::execute(Message* message){
 	Message* temp = udpSocket->sendWaitForReply(message, 30);
 	if(temp==NULL)
 		cout<<"failed to send message..network error\n";
-	else
+	else{
 		cout<<"message number: "<<temp->getRPCId()<<" sent successfully and received reply\n";
+//		temp->print();
+	}
 	return temp;
+}
+string Client::signup(string username, string password, sockaddr_in addr){
+	Message r(Request);
+	vector<Parameter> args(3);
+	args[0].setString(username);
+	args[1].setString(password);
+	args[2].setString(MessageDecoder::encodeIpPort(addr));
+	MessageDecoder::encode(r, args, 1, Request);
+	Message* reply = execute(&r);
+	args.clear();
+	MessageDecoder::decode(reply, args);
+	delete reply;
+	return args[0].getString();
 }
 string Client::login(string username, string password, sockaddr_in addr){
 	Message r(Request);

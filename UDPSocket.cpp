@@ -12,7 +12,6 @@
 #include <cstdio>
 #include <cstring>
 #include <string>
-#include <iostream>
 #include <poll.h>
 
 UDPSocket::UDPSocket (){
@@ -29,26 +28,6 @@ UDPSocket::UDPSocket (){
 	//TODO:setBroadcast(s)
 }
 
-//bool UDPSocket::initializeServer (char * _myAddr, int _myPort){
-//	lock();
-//	myAddress = new char[strlen(_myAddr)+1];
-//	strcpy(myAddress,_myAddr);
-//	myPort = _myPort;
-//	myAddr.sin_family = AF_INET;
-//	myAddr.sin_port = htons(myPort);
-//	myAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-//	if(bind(sock, (const sockaddr*)(&myAddr), sizeof(struct sockaddr_in))!= 0){
-//		perror("Bind failed\n");
-//		close(sock);
-//		unlock();
-//		return false;
-//	}
-//	unlock();
-//	return true;
-//}
-//bool UDPSocket::initializeServer (char * _myAddr, int _myPort){
-//	return false;
-//}
 int UDPSocket::writeToSocket (char * buffer, int maxBytes ){
 	lock();
 	int res = sendto(sock, buffer, maxBytes,
@@ -148,8 +127,6 @@ UDPSocket::~UDPSocket(){
 	printf("Destroying Socket\n");
 	lock();
 	close(sock);
-	delete []myAddress;
-	delete []peerAddress;
 	unlock();
 	pthread_mutex_destroy(&mutex);
 	printf("socket destroyed\n");

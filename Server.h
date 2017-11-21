@@ -20,6 +20,7 @@ private:
 	bool sendReplyWithAck(Message* _message);
 public:
 	Server(char* _listen_hostname, int _listen_port);
+	sockaddr_in getMyAddr();
 	void startListen();
 	virtual ~Server() = 0;
 };

@@ -38,14 +38,15 @@ protected:
 //	int readSocketWithTimeout (char * buffer, int maxBytes, int timeoutSec, int
 //	timeoutMilli);
 	void setPeer(sockaddr_in x);
-	int getMyPort (); //Done
-	int getPeerPort (); //Done
 	void enable();	//Done
 	void disable(); //Done
 	bool isEnabled();	//Done
 	void lock();	//Done
 	void unlock();	//Done
 	int getSocketHandler(); //Done
+	int getMyPort (); //Done
+	int getPeerPort (); //Done
+
 	virtual ~UDPSocket ( ); //Done
 };
 

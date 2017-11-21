@@ -24,6 +24,9 @@ Message* Server::getRequest(){
 	return udpServerSocket->getRequest();
 }
 
+sockaddr_in Server::getMyAddr(){
+	return udpServerSocket->getMyAddr();
+}
 void Server::startListen(){
 	while(1){
 		if(udpServerSocket->readyRequest()){

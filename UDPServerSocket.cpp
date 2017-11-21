@@ -178,6 +178,9 @@ Message* UDPServerSocket::getRequest(){
 	pthread_mutex_unlock(&in_mutex);
 	return temp;
 }
+sockaddr_in UDPServerSocket::getMyAddr(){
+	return this->myAddr;
+}
 UDPServerSocket::~UDPServerSocket (){
 	pthread_mutex_destroy(&in_mutex);
 	pthread_mutex_destroy(&out_mutex);

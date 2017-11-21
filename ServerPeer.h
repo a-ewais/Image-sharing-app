@@ -6,7 +6,7 @@
 #include <vector>
 #include <string>
 
-class ServerPeer: protected Server{
+class ServerPeer: public Server{
     private:
 		std::vector<std::string> imageList;
 		Client* serviceDiscoveryClient;

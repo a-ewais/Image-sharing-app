@@ -26,7 +26,8 @@ void* UDPClientSocket::messenger(void* arg){
 		WORK = 0;
 		pthread_mutex_lock(&me->out_mutex);
 		if(!me->outbox.empty())
-		{	cout<<"it is not empty\n";
+		{
+//			cout<<"it is not empty\n";
 			WORK++;
 			Message* temp = me->outbox.front();
 			me->outbox.pop();
@@ -35,12 +36,12 @@ void* UDPClientSocket::messenger(void* arg){
 			while(trials--){
 				int t = 0;
 				char* x = temp->marshal(t);
-				cout<<x<<endl;
+//				cout<<x<<endl;
 				int res = me->writeToSocket(x,t);
 				if(res<0)
 					cout<<"error sending packet\n";
 				else{
-					cout<<"packet sent\n";
+//					cout<<"packet sent\n";
 					break;
 				}
 			}
@@ -50,13 +51,13 @@ void* UDPClientSocket::messenger(void* arg){
 
 		if(me->readyToRead())
 		{
-			cout<<"it is ready to read\n";
+//			cout<<"it is ready to read\n";
 			WORK++;
 			char* incoming = new char[MAX_DATAGRAM_SIZE];
 			int trials = 2;
 			while(trials--){
 				int res = me->readFromSocketWithTimeout(incoming, MAX_DATAGRAM_SIZE,0);
-				if(res<-1)
+				if(res<=-1)
 					cout<<"Error reading packet..\n";
 				else{
 					break;
@@ -67,22 +68,28 @@ void* UDPClientSocket::messenger(void* arg){
 			if(me->waitFor.find(temp->getRPCId())!=me->waitFor.end()){
 				if(temp->isComplete()){
 					me->waitFor[temp->getRPCId()] = temp;
+//					cout<<"complete\n";
+//					temp->print();
 					pthread_cond_signal(&me->cond);
-//					pthread_mutex_unlock(&me->in_mutex);
+					pthread_mutex_unlock(&me->in_mutex);
 				}else{
+//					cout<<"not Complete\n";
 					me->parts[temp->getRPCId()].push_back(temp);
 					if(me->parts[temp->getRPCId()].size()==temp->getPartsNum()){
 						temp = new Message(me->parts[temp->getRPCId()]);
 						me->waitFor[temp->getRPCId()] = temp;
 						pthread_cond_signal(&me->cond);
-//						pthread_mutex_unlock(&me->in_mutex);
+						pthread_mutex_unlock(&me->in_mutex);
 					}
-//						else
-//						pthread_mutex_unlock(&me->in_mutex);
+					else
+						pthread_mutex_unlock(&me->in_mutex);
 				}
-			}else
-				delete temp;
-			pthread_mutex_unlock(&me->in_mutex);
+			}else{
+//				cout<<"not found in waitFor\n";
+				pthread_mutex_unlock(&me->in_mutex);
+			}
+
+			delete [] incoming;
 		}
 
 		if(!WORK)
@@ -146,7 +153,7 @@ void UDPClientSocket::send(Message* m){			//no delivery guarantees
 		temp_parts.push_back(m);
 	pthread_mutex_lock(&out_mutex);
 	for(int i=0;i<temp_parts.size();i++){
-		temp_parts[i]->print();
+		//temp_parts[i]->print();
 		outbox.push(temp_parts[i]);
 	}
 	pthread_mutex_unlock(&out_mutex);
@@ -159,7 +166,7 @@ Message* UDPClientSocket::sendWaitForReply(Message* m, int waitSec){		//send req
 	pthread_mutex_unlock(&in_mutex);
 	send(m);
 	struct timespec time_to_wait = {0, 0};
-	time_to_wait.tv_sec = time(NULL) + waitSec+1000;
+	time_to_wait.tv_sec = time(NULL) + waitSec+100;
 	pthread_mutex_lock(&in_mutex);
 	pthread_cond_timedwait(&cond, &in_mutex, &time_to_wait);
 	Message* temp = waitFor[m->getRPCId()];

@@ -46,7 +46,7 @@ protected:
 	void lock();	//Done
 	void unlock();	//Done
 	int getSocketHandler(); //Done
-	~UDPSocket ( ); //Done
+	virtual ~UDPSocket ( ); //Done
 };
 
 #endif /* UDPSOCKET_H_ */

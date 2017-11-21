@@ -84,6 +84,7 @@ void MessageDecoder::encode(Message& _message, std::vector<Parameter>& params, i
     	case 1:
     	case 2:{
 			messageContent.append(params[0].getString());
+			messageContent.append(";");
     	}
     	break;
     	case 6:{

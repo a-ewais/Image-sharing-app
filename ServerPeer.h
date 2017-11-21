@@ -6,6 +6,8 @@
 #include <vector>
 #include <string>
 
+struct Image; //delete it
+
 class ServerPeer: public Server{
     private:
 		std::vector<std::string> imageList;
@@ -19,6 +21,10 @@ class ServerPeer: public Server{
    		Message* doOperation(Message* _message); //overload...dispatcher
     public:
         ServerPeer(char* _listen_hostname, int _listen_port, Client* serviceDiscoveryClient);
+        void writePeerImage(string& username,string &imagename, Image&);
+        Image* readPeerImage(string& _username, string& _imagename);
+        vector<string> getListOfMyImages();
+        Image* getMyImage(string& imagename);
         ~ServerPeer();
 };
 

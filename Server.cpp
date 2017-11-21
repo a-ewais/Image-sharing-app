@@ -1,5 +1,6 @@
 #include "Server.h"
-
+#include <string>
+using namespace std;
 Server::Server(char* _listen_hostname, int _listen_port){
 	udpServerSocket = new UDPServerSocket(_listen_hostname, _listen_port);
 }
@@ -26,6 +27,9 @@ Message* Server::getRequest(){
 
 sockaddr_in Server::getMyAddr(){
 	return udpServerSocket->getMyAddr();
+}
+pair<string, int> Server::getMyAddrPair(){
+	return udpServerSocket->getMyAddrPair();
 }
 void Server::startListen(){
 	while(1){

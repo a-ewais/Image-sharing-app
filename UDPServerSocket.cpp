@@ -131,6 +131,7 @@ void* UDPServerSocket::messenger(void* arg){
 				int t = 0;
 				char* x = temp->marshal(t);
 				cout<<x<<endl;
+				me->setPeer(decodeIpPort(me->id_ip[temp->getRPCId()].second));
 				int res = me->writeToSocket(x,t);
 				if(res<0)
 					cout<<"error sending packet\n";
@@ -180,6 +181,10 @@ Message* UDPServerSocket::getRequest(){
 }
 sockaddr_in UDPServerSocket::getMyAddr(){
 	return this->myAddr;
+}
+
+pair<string, int> UDPServerSocket::getMyAddrPair(){
+	return {string(myAddress), myPort};
 }
 UDPServerSocket::~UDPServerSocket (){
 	pthread_mutex_destroy(&in_mutex);

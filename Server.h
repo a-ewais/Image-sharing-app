@@ -21,6 +21,7 @@ private:
 public:
 	Server(char* _listen_hostname, int _listen_port);
 	sockaddr_in getMyAddr();
+	pair<string, int> getMyAddrPair();
 	void startListen();
 	virtual ~Server() = 0;
 };

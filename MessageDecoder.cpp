@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 
+using namespace std;
 MessageDecoder::MessageDecoder(){
 }
 
@@ -38,6 +39,26 @@ sockaddr_in MessageDecoder::decodeIpPort(std::string s){
 	return res;
 }
 
+string MessageDecoder::encodeIpPortPair(string hostName, int port){
+	return hostName+to_string(port);
+}
+pair<string,int> MessageDecoder::decodeIpPortPair(string s){
+	std::string first = "", sec = "";
+	bool flag = true;
+	for(int i=0;i<s.size();i++)
+	{
+		if(s[i]==':')
+		{
+			flag=false;
+			continue;
+		}
+		if(flag)
+			first+=s[i];
+		else
+			sec+=s[i];
+	}
+	return {first,stoi(sec)};
+}
 void MessageDecoder::encode(Message& _message, std::vector<Parameter>& params, int _operation, MessageType _type){
     
 	std::string messageContent;

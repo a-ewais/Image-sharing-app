@@ -15,18 +15,19 @@ private:
 	string peerUserName;
 	UDPClientSocket * udpSocket;
 public:
-	Client(char * _hostname, int _port);
+	Client(char * _hostname, int _port, string peerUserName);
 	Message* execute(Message * _message);
-	string signup(string username, string password, sockaddr_in addr);
-	string login(string username, string password, sockaddr_in addr);
-	map<string, string> requestListOfOnlineUsers(string token, string username);
-	bool auth(string username, string token);
-	bool up(string username, string token, sockaddr_in addr);
-	bool down(string username, string token);
-	vector<string> requestListOfImages(string username, string token);
-	string requestImage(string username, string token, string imageId);
-	bool updateViews(string username, string token, string imgId, int views);
-	bool revokeView(string username, string token, string imgId);
+	string signup(string& username, string& password, string& hostname, int port);
+	string login(string& username, string& password, string& hostname, int port);
+	map<string, string> requestListOfOnlineUsers(string& token, string& username);
+	bool auth(string& username, string& token);
+	bool up(string& username, string& token, string& hostname, int port);
+	bool down(string& username, string& token);
+	vector<string> requestListOfImages(string& username, string& token);
+	string requestImage(string& username, string& token, string& imageId);
+	bool updateViews(string& username, string& token, string& imgId, int views);
+	bool revokeView(string& username, string& token, string& imgId);
+	void viewNotify(string& username, string& token,string& imgId);
 	~Client();
 };
 

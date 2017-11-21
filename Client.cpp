@@ -9,8 +9,9 @@
 #include"Client.h"
 #include"MessageDecoder.h"
 using namespace std;
-Client::Client(char* _hostname, int _port){
+Client::Client(char* _hostname, int _port, string _peerUserName){
 	udpSocket = new UDPClientSocket(_hostname, _port);
+	peerUserName = _peerUserName;
 }
 
 Message * Client::execute(Message* message){
@@ -24,12 +25,12 @@ Message * Client::execute(Message* message){
 	}
 	return temp;
 }
-string Client::signup(string username, string password, sockaddr_in addr){
+string Client::signup(string& username, string& password, string& host, int port){
 	Message r(Request);
 	vector<Parameter> args(3);
 	args[0].setString(username);
 	args[1].setString(password);
-	args[2].setString(MessageDecoder::encodeIpPort(addr));
+	args[2].setString(MessageDecoder::encodeIpPortPair(host, port));
 	MessageDecoder::encode(r, args, 1, Request);
 	Message* reply = execute(&r);
 	args.clear();
@@ -37,12 +38,12 @@ string Client::signup(string username, string password, sockaddr_in addr){
 	delete reply;
 	return args[0].getString();
 }
-string Client::login(string username, string password, sockaddr_in addr){
+string Client::login(string& username, string& password, string& host, int port){
 	Message r(Request);
 	vector<Parameter> args(3);
 	args[0].setString(username);
 	args[1].setString(password);
-	args[2].setString(MessageDecoder::encodeIpPort(addr));
+	args[2].setString(MessageDecoder::encodeIpPortPair(host, port));
 	MessageDecoder::encode(r, args, 2, Request);
 	Message* reply = execute(&r);
 	args.clear();
@@ -50,7 +51,7 @@ string Client::login(string username, string password, sockaddr_in addr){
 	delete reply;
 	return args[0].getString();
 }
-map<string, string> Client::requestListOfOnlineUsers(string token, string username){
+map<string, string> Client::requestListOfOnlineUsers(string& token, string& username){
 	Message r(Request);
 	vector<Parameter> args(2);
 	args[0].setString(username);
@@ -62,7 +63,7 @@ map<string, string> Client::requestListOfOnlineUsers(string token, string userna
 	delete reply;
 	return args[0].getMapSS();
 }
-bool Client::auth(string username, string token){
+bool Client::auth(string& username, string& token){
 	Message r(Request);
 	vector<Parameter> args(2);
 	args[0].setString(username);
@@ -74,12 +75,12 @@ bool Client::auth(string username, string token){
 	delete reply;
 	return args[0].getBoolean();
 }
-bool Client::up(string username, string token, sockaddr_in addr){
+bool Client::up(string& username, string& token, string& host, int port){
 	Message r(Request);
 	vector<Parameter> args(3);
 	args[0].setString(username);
 	args[1].setString(token);
-	args[2].setString(MessageDecoder::encodeIpPort(addr));
+	args[2].setString(MessageDecoder::encodeIpPortPair(host, port));
 	//TODO: add ip port field in up
 	MessageDecoder::encode(r, args, 3, Request);
 	Message* reply = execute(&r);
@@ -88,7 +89,7 @@ bool Client::up(string username, string token, sockaddr_in addr){
 	delete reply;
 	return true;
 }
-bool Client::down(string username, string token){
+bool Client::down(string& username, string& token){
 	Message r(Request);
 	vector<Parameter> args(2);
 	args[0].setString(username);
@@ -100,7 +101,7 @@ bool Client::down(string username, string token){
 	delete reply;
 	return true;
 }
-vector<string> Client::requestListOfImages(string username, string token){
+vector<string> Client::requestListOfImages(string& username, string& token){
 	Message r(Request);
 	vector<Parameter> args(2);
 	args[0].setString(username);
@@ -112,7 +113,7 @@ vector<string> Client::requestListOfImages(string username, string token){
 	delete reply;
 	return args[0].getVectorString();
 }
-string Client::requestImage(string username, string token, string imageId){
+string Client::requestImage(string& username, string& token, string& imageId){
 	Message r(Request);
 	vector<Parameter> args(3);
 	args[0].setString(username);
@@ -125,7 +126,7 @@ string Client::requestImage(string username, string token, string imageId){
 	delete reply;
 	return args[0].getString();
 }
-bool Client::updateViews(string username, string token,  string imgId, int views){
+bool Client::updateViews(string& username, string& token,  string& imgId, int views){
 	Message r(Request);
 	vector<Parameter> args(4);
 	args[0].setString(username);
@@ -140,7 +141,7 @@ bool Client::updateViews(string username, string token,  string imgId, int views
 	return true;
 }
 
-bool Client::revokeView(string username, string token, string imgId){
+bool Client::revokeView(string& username, string& token, string& imgId){
 	if(!updateViews(username, token, imgId, 0))
 	{
 		Message r(Request);

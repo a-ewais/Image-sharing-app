@@ -31,6 +31,7 @@ public:
 	void sendReply(Message* m);	//sends the reply to the request sender
 	bool sendReplyWaitAck(Message* m, int waitSec);		//sends the reply and waits for ack for waitSec
 	sockaddr_in getMyAddr();
+	pair<string, int> getMyAddrPair();
 	~UDPServerSocket ();
 };
 

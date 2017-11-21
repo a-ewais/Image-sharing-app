@@ -25,8 +25,8 @@ std::string ServerPeer::getImage(std::string token, std::string userID, std::str
 	//TODO: AUTHENTICATE WITH SERVER DISCOVERY
 	streampos size;
 	char * memblock;
-
-	ifstream file (imageID, ios::in|ios::binary|ios::ate);
+	string imageLocation = "MyImages" + imageID;
+	ifstream file (imageLocation, ios::in|ios::binary|ios::ate);
 	if (file.is_open()){
 		size = file.tellg();
 		memblock = new char [size];

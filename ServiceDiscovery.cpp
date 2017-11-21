@@ -29,12 +29,8 @@ string ServiceDiscovery::signUp(string username, string password, string addr){
     online_users[username]=addr;
     // pending_requests needs username or token?
     return token;
-
-    // return NULL;
 }
 
-//TO DO
-//Recieve IP
 string ServiceDiscovery::signIn(string username, string password, string addr){
     srand(time(NULL));
     string token;

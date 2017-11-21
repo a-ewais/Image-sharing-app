@@ -21,8 +21,8 @@ std::vector<std::string> ServerPeer::getListofImages(std::string username, std::
 	cout << "SERVERPEER::getListofImages!";
 	if(serviceDiscoveryClient->auth(username, token))
 		return imageList;
-
-	 return NULL;
+	std::vector<std::string> null_string;
+	return null_string;
 }
 
 std::string ServerPeer::getImage(std::string username, std::string token, std::string imageID){
@@ -58,13 +58,13 @@ void ServerPeer::revokeViews(std::string token, std::string userID){
 
 Message* ServerPeer::doOperation(Message* _message){
 	cout << "SERVERPEER::doOperation!";
-	Message reply_message(Reply);
+	Message* reply_message = new Message(Reply);
 
     vector<Parameter> args;
     vector<Parameter> reply_args;
 
     int operation = _message->getOperation();
-    MessageType = _message->getMessageType();
+    //MessageType _type = _message->getMessageType();
 
     MessageDecoder::decode(_message, args);
 
@@ -89,6 +89,6 @@ Message* ServerPeer::doOperation(Message* _message){
     	break;
     }
 
-	MessageDecoder::encode(reply_message, reply_args, operation, Reply);
+	MessageDecoder::encode(*reply_message, reply_args, operation, Reply);
     return reply_message;
 }

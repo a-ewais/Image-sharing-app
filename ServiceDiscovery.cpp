@@ -56,7 +56,8 @@ map<string, string> ServiceDiscovery::getListOfOnlineUsers(string username, stri
     if(auth(username,token)){
     	return online_users;
     }
-    return {NULL};
+    std::map<string, string> mss;
+    return mss;
 }
 
 void ServiceDiscovery::stillUp(string username, string token, string addr){
@@ -84,55 +85,62 @@ void ServiceDiscovery::down(string username, string token){
 
 Message* ServiceDiscovery::doOperation(Message* _message){
 	cout << "SERVICEDISCOVERY::doOperation!";
-	Message reply_message(Reply);
+	Message* reply_message = new Message(Reply);
 
     vector<Parameter> args;
     vector<Parameter> reply_args;
 
     int operation = _message->getOperation();
-    MessageType = _message->getMessageType();
+    MessageType _type = _message->getMessageType();
 
     MessageDecoder::decode(_message, args);
 
     switch(operation){
-    case 1:
+    case 1:{
     	string token = signUp(args[0].getString(), args[1].getString(), args[2].getString());
     	Parameter arg1;
     	arg1.setString(token);
     	reply_args.push_back(arg1);
+    }
     	break;
-    case 2:
+    case 2:{
     	string token = signIn(args[0].getString(), args[1].getString(), args[2].getString());
     	Parameter arg1;
     	arg1.setString(token);
     	reply_args.push_back(arg1);
+    }
     	break;
-    case 3:
+    case 3:{
     	stillUp(args[0].getString(), args[1].getString(), args[2].getString());
+    }
     	break;
-    case 4:
+    case 4:{
     	down(args[0].getString(), args[1].getString());
+    }
     	break;
-    case 5:
+    case 5:{
     	//pendingrequest
+    }
     	break;
-    case 6:
+    case 6:{
     	//GetListofOnlineUsers
     	map<string, string> _mss = getListOfOnlineUsers(args[0].getString(), args[1].getString());
     	Parameter arg1;
     	arg1.setMapSS(_mss);
     	reply_args.push_back(arg1);
+    }
     	break;
-    case 10:
+    case 10:{
     	//Auth
     	bool _auth = auth(args[0].getString(), args[1].getString());
     	Parameter arg1;
     	arg1.setBoolean(_auth);
     	reply_args.push_back(arg1);
+    }
     	break;
     }
 
-	MessageDecoder::encode(reply_message, reply_args, operation, Reply);
+	MessageDecoder::encode(*reply_message, reply_args, operation, Reply);
     return reply_message;
 }
 ServiceDiscovery:: ~ServiceDiscovery(){

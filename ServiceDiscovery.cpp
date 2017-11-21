@@ -85,6 +85,7 @@ void ServiceDiscovery::down(string username, string token){
 
 Message* ServiceDiscovery::doOperation(Message* _message){
 	cout << "SERVICEDISCOVERY::doOperation!";
+	_message->print();
 	Message* reply_message = new Message(Reply);
 
     vector<Parameter> args;
@@ -127,6 +128,7 @@ Message* ServiceDiscovery::doOperation(Message* _message){
     	map<string, string> _mss = getListOfOnlineUsers(args[0].getString(), args[1].getString());
     	Parameter arg1;
     	arg1.setMapSS(_mss);
+    	cout << arg1.getMapSS()["3wais"] << endl;
     	reply_args.push_back(arg1);
     }
     	break;
@@ -141,6 +143,8 @@ Message* ServiceDiscovery::doOperation(Message* _message){
     }
 
 	MessageDecoder::encode(*reply_message, reply_args, operation, Reply);
+	reply_message->print();
+	cout << "SERVICE DISCOVERY OUT!" << endl;
     return reply_message;
 }
 ServiceDiscovery:: ~ServiceDiscovery(){

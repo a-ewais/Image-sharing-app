@@ -117,6 +117,7 @@ void MessageDecoder::encode(Message& _message, std::vector<Parameter>& params, i
     	break;
     	}
     }
+
     _message.setMessage(messageContent.c_str(), messageContent.size());
 }
 

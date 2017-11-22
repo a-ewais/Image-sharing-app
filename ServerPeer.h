@@ -5,26 +5,28 @@
 #include "Client.h"
 #include <vector>
 #include <string>
-
-struct Image; //delete it
+#include <opencv2/opencv.hpp>
 
 class ServerPeer: public Server{
     private:
-		std::vector<std::string> imageList;
 		Client* serviceDiscoveryClient;
+		string myPath;
+		string myImagesPath;
+		string loadedImagesPath;
 
         std::vector<std::string> getListofImages(std::string username, std::string token);
         std::string getImage(std::string username, std::string token, std::string imageID);
         void updateViews(std::string token, std::string userID, int count);
         void revokeViews(std::string token, std::string userID);
+        vector<string> loadFileNames(string path);
 
    		Message* doOperation(Message* _message); //overload...dispatcher
     public:
         ServerPeer(char* _listen_hostname, int _listen_port, Client* serviceDiscoveryClient);
-        void writePeerImage(string& username,string &imagename, Image&);
-        Image* readPeerImage(string& _username, string& _imagename);
+        void writePeerImage(string& username, string& imagename, cv::Mat& image);
+        cv::Mat readPeerImage(string& username, string& imagename);
         vector<string> getListOfMyImages();
-        Image* getMyImage(string& imagename);
+        cv::Mat getMyImage(string& imagename);
         ~ServerPeer();
 };
 

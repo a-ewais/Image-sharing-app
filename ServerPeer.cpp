@@ -4,12 +4,19 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <sys/stat.h>
+#include <dirent.h>
+#include <stdio.h>
 
 using namespace std;
 
 ServerPeer::ServerPeer(char* _listen_hostname, int _listen_port, Client* _serviceDiscoveryClient):Server(_listen_hostname, _listen_port){
-	system("mkdir MyImages");
-	system("mkdir LoadedImages");
+	const int dir_err_owned = mkdir("MyImages", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+	const int dir_err_loaded = mkdir("LoadedImages", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+
+	myPath = get_current_dir_name();
+	myImagesPath = myPath + "/MyImages/";
+	loadedImagesPath = myPath + "/LoadedImages/";
 	serviceDiscoveryClient = _serviceDiscoveryClient;
 }
 
@@ -17,31 +24,53 @@ ServerPeer::~ServerPeer(){
 
 }
 
+vector<string> ServerPeer::loadFileNames(string path){
+	std::vector<std::string> results;
+	DIR* dir_point = opendir(path.c_str());
+	dirent* entry = readdir(dir_point);
+	while (entry){									// if !entry then end of directory
+		if (entry->d_type == DT_REG){		// if entry is a regular file
+			std::string fname = entry->d_name;	// filename
+			results.push_back(fname);		// add filename to results vector
+		}
+		entry = readdir(dir_point);
+	}
+
+	return results;
+}
+
 std::vector<std::string> ServerPeer::getListofImages(std::string username, std::string token){
 	cout << "SERVERPEER::getListofImages!";
+	std::vector<std::string> results;
+
 	if(serviceDiscoveryClient->auth(username, token))
-		return imageList;
-	std::vector<std::string> null_string;
-	return null_string;
+		results = loadFileNames(myImagesPath);
+
+	return results;
 }
 
 std::string ServerPeer::getImage(std::string username, std::string token, std::string imageID){
 	cout << "SERVERPEER::getImage!";
 	if(serviceDiscoveryClient->auth(username, token)){
-		streampos size;
-		char * memblock;
-		string imageLocation = "MyImages" + imageID;
-		ifstream file (imageLocation, ios::in|ios::binary|ios::ate);
-		if (file.is_open()){
-			size = file.tellg();
-			memblock = new char [size];
-			file.seekg (0, ios::beg);
-			file.read (memblock, size);
-			file.close();
-			string image(memblock, size);
-			delete[] memblock;
-			return image;
-		}else return NULL;
+		string imageLocation = myImagesPath + imageID;
+		cv::Mat image = cv::imread(imageLocation, CV_LOAD_IMAGE_COLOR);
+		unsigned char* dataImage = image.data;
+		std:: string s(dataImage);
+		return s;
+//		streampos size;
+//		char * memblock;
+//		string imageLocation = myImagesPath + imageID;
+//		ifstream file (imageLocation, ios::in|ios::binary|ios::ate);
+//		if (file.is_open()){
+//			size = file.tellg();
+//			memblock = new char [size];
+//			file.seekg (0, ios::beg);
+//			file.read (memblock, size);
+//			file.close();
+//			string image(memblock, size);
+//			delete[] memblock;
+//			return image;
+//		}else return NULL;
 	}
 	else return NULL;
 }
@@ -92,3 +121,26 @@ Message* ServerPeer::doOperation(Message* _message){
 	MessageDecoder::encode(*reply_message, reply_args, operation, Reply);
     return reply_message;
 }
+
+void ServerPeer::writePeerImage(string& username,string &imagename, cv::Mat& image){
+	const int dir_err_owned = mkdir(username.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+	string imagePath = loadedImagesPath + username + "/" + imagename;
+	cv::imwrite(imagePath, image);
+}
+
+cv::Mat ServerPeer::readPeerImage(string& username, string& imagename){
+	string imagePath = loadedImagesPath + imagename;
+	cv::Mat image = cv::imread(imagePath, CV_LOAD_IMAGE_COLOR);
+	return image;
+}
+
+vector<string> ServerPeer::getListOfMyImages(){
+	return loadFileNames(myImagesPath);
+}
+
+cv::Mat ServerPeer::getMyImage(string& imagename){
+	string imagePath = myImagesPath + imagename;
+	cv::Mat image = cv::imread(imagePath, CV_LOAD_IMAGE_COLOR);
+	return image;
+}
+

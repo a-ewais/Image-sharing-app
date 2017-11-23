@@ -22,6 +22,7 @@ Message * Client::execute(Message* message){
 	}
 	return temp;
 }
+
 string Client::signup(string& username, string& password, string& host, int port){
 	Message r(Request);
 	vector<Parameter> args(3);
@@ -35,6 +36,7 @@ string Client::signup(string& username, string& password, string& host, int port
 	delete reply;
 	return args[0].getString();
 }
+
 string Client::login(string& username, string& password, string& host, int port){
 	Message r(Request);
 	vector<Parameter> args(3);
@@ -48,6 +50,7 @@ string Client::login(string& username, string& password, string& host, int port)
 	delete reply;
 	return args[0].getString();
 }
+
 map<string, string> Client::requestListOfOnlineUsers(string& token, string& username){
 	Message r(Request);
 	vector<Parameter> args(2);
@@ -60,6 +63,7 @@ map<string, string> Client::requestListOfOnlineUsers(string& token, string& user
 	delete reply;
 	return args[0].getMapSS();
 }
+
 bool Client::auth(string& username, string& token){
 	Message r(Request);
 	vector<Parameter> args(2);
@@ -72,13 +76,13 @@ bool Client::auth(string& username, string& token){
 	delete reply;
 	return args[0].getBoolean();
 }
+
 bool Client::up(string& username, string& token, string& host, int port){
 	Message r(Request);
 	vector<Parameter> args(3);
 	args[0].setString(username);
 	args[1].setString(token);
 	args[2].setString(MessageDecoder::encodeIpPortPair(host, port));
-	//TODO: add ip port field in up
 	MessageDecoder::encode(r, args, 3, Request);
 	Message* reply = execute(&r);
 	if(reply==NULL)
@@ -86,6 +90,7 @@ bool Client::up(string& username, string& token, string& host, int port){
 	delete reply;
 	return true;
 }
+
 bool Client::down(string& username, string& token){
 	Message r(Request);
 	vector<Parameter> args(2);
@@ -98,6 +103,7 @@ bool Client::down(string& username, string& token){
 	delete reply;
 	return true;
 }
+
 vector<string> Client::requestListOfImages(string& username, string& token){
 	Message r(Request);
 	vector<Parameter> args(2);
@@ -110,7 +116,8 @@ vector<string> Client::requestListOfImages(string& username, string& token){
 	delete reply;
 	return args[0].getVectorString();
 }
-cv::Mat Client::requestImage(string& username, string& token, string& imageId){
+
+string Client::requestImage(string& username, string& token, string& imageId){
 	Message r(Request);
 	vector<Parameter> args(3);
 	args[0].setString(username);
@@ -121,10 +128,10 @@ cv::Mat Client::requestImage(string& username, string& token, string& imageId){
 	args.clear();
 	MessageDecoder::decode(reply, args);
 	delete reply;
-//	return args[0].getString();
-	cv::Mat image;
-	return image;
+	string imageData = args[0].getString();
+	return imageData;
 }
+
 bool Client::updateViews(string& username, string& token,  string& imgId, int views){
 	Message r(Request);
 	vector<Parameter> args(4);

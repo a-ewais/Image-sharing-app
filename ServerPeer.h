@@ -17,13 +17,13 @@ class ServerPeer: public Server{
         std::vector<std::string> getListofImages(std::string username, std::string token);
         std::string getImage(std::string username, std::string token, std::string imageID);
         void updateViews(std::string username, std::string token, std::string imageID, int count);
-        void revokeViews(std::string username, std::string token, std::string imageID);
         vector<string> loadFileNames(string path);
+        cv::Mat extractImage(string, string, bool);
 
    		Message* doOperation(Message* _message); //overload...dispatcher
     public:
         ServerPeer(char* _listen_hostname, int _listen_port, Client* serviceDiscoveryClient);
-        void writePeerImage(string& username, string& imagename, cv::Mat& image);
+        void writePeerImage(string& username, string& imagename, string& image);
         cv::Mat readPeerImage(string& username, string& imagename);
         vector<string> getListOfMyImages();
         void updateLocalViews(std::string userID, std::string imageID, int count);

@@ -47,8 +47,8 @@ string ServiceDiscovery::signIn(string username, string password, string addr){
         // pending_requests needs username or token?
         return token;
     }
-
-    return NULL;
+    token = "";
+    return token;
 }  //check if in (users)?generate random token..add to token_user..check if he has pending requests..receive ack...return token: return error.
 
 map<string, string> ServiceDiscovery::getListOfOnlineUsers(string username, string token){
@@ -77,11 +77,11 @@ void ServiceDiscovery::down(string username, string token){
 }
 
 //TODO: Handle Pending Requests
-// void ServiceDiscovery::pendingRequest(string username, string token, string to_user, Message m){
-//     if(auth(username,token)){
+ void ServiceDiscovery::pendingRequest(string username, string token, string to_user, string imageID){
+     if(auth(username,token)){
 
-//      }
-// } //auth()? add to pending requests: ignore.
+      }
+ }
 
 Message* ServiceDiscovery::doOperation(Message* _message){
 	cout << "SERVICEDISCOVERY::doOperation!";
@@ -92,7 +92,6 @@ Message* ServiceDiscovery::doOperation(Message* _message){
     vector<Parameter> reply_args;
 
     int operation = _message->getOperation();
-    MessageType _type = _message->getMessageType();
 
     MessageDecoder::decode(_message, args);
 

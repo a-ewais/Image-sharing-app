@@ -54,10 +54,10 @@ vector<string> User::getListOfPeerImages(string _username){
 	Client* cli = clients[_username];
 //	if(!cli->isEnabled())
 //		cli->enable();
-	//TODO:uncomment..maybe save the vector for later!?
-	vector<string> _listofImages = cli->requestListOfImages(username, token);
-//	cli->diable();
 
+	vector<string> _listofImages = cli->requestListOfImages(username, token);
+	imageLists[_username] = _listofImages;
+//	cli->diable();
 	return _listofImages;
 }
 
@@ -65,12 +65,12 @@ int User::requestPeerImage(string _username, string _imagename){
 	Client* cli = clients[_username];
 //	if(!cli->isEnabled())
 //		cli->enable();
-	cv::Mat image = cli->requestImage(username, token, _imagename);
+	string image = cli->requestImage(username, token, _imagename);
 	myServer->writePeerImage(_username, _imagename, image);
-	int permViews;
+	//TODO: GET NUMBER OF PERMITTED VIEWS
+	int permViews = 1;
 //	permViews = temp.getViews();
 //	cli->disable();
-	//TODO: uncomment
 	return permViews;
 }
 
@@ -83,9 +83,11 @@ cv::Mat User::viewPeerImage(string _username, string _imagename){
 vector<string> User::viewMyImages(){
 	return myServer->getListOfMyImages();
 }
+
 cv::Mat User::viewMyImage(string imagename){
 	return myServer->getMyImage(imagename);
 }
+
 void User::updateMyImage(cv::Mat newImage){
 	//TODO: can be deleted
 }
@@ -108,9 +110,9 @@ void User::updatePeerImage(string _username, string _imagename, int _views){
 	Client* cli = clients[_username];
 	//	if(!cli->isEnabled())
 	//		cli->enable();
-	cli->updateViews(username,token,_imagename,_views);
+	if(cli->updateViews(username, token, _imagename, _views))
+		myServer->updateLocalViews(_username, _imagename, _views);
 	//	cli->disable();
-	myServer->updateLocalViews(_username, _imagename, _views);
 }
 
 User::~User() {

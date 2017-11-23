@@ -37,7 +37,7 @@ class ServiceDiscovery:protected Server{
 		map<string, string> getListOfOnlineUsers(string username, string token); //auth()? return online_users as vector: return error
 		void stillUp(string username, string token, string addr); //auth()? update time_cnt in token_time: ignore
 		void down(string username, string token); //auth()? delete token from token_time..update online users
-		void pendingRequest(string username, string token, string to_user, Message m); //auth()? add to pending requests: ignore.
+		void pendingRequest(string username, string token, string to_user, string imageID); //auth()? add to pending requests: ignore.
 		Message* doOperation(Message* _message); //overload...dispatcher
 };
 #endif /* SERVICEDISCOVERY_H_ */

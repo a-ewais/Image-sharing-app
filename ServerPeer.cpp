@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
+#include <map>
 
 using namespace std;
 
@@ -33,7 +34,7 @@ vector<string> ServerPeer::loadFileNames(string path){
 	while (entry){									// if !entry then end of directory
 		if (entry->d_type == DT_REG){		// if entry is a regular file
 			std::string fname = entry->d_name;	// filename
-			results.push_back(fname);		// add filename to results vector
+			results.push_back(fname.substr(6, std::string::npos));		// add filename to results vector
 		}
 		entry = readdir(dir_point);
 	}
@@ -53,24 +54,61 @@ std::vector<std::string> ServerPeer::getListofImages(std::string username, std::
 
 std::string ServerPeer::getImage(std::string username, std::string token, std::string imageID){
 	cout << "SERVERPEER::getImage!";
+	std::string dataImage = "";
 	if(serviceDiscoveryClient->auth(username, token)){
-		string imageLocation = myImagesPath + imageID;
-		cv::Mat image = cv::imread(imageLocation, CV_LOAD_IMAGE_COLOR);
-		string dataImage (image.begin<unsigned char>(), image.end<unsigned char>());
+		string imageLocation = myImagesPath + "steg_" + imageID;
+//		cv::Mat image = cv::imread(imageLocation, cv::IMREAD_UNCHANGED);
+//		unsigned char* dataImage = image.data;
+//		std::string _dataImage(reinterpret_cast<char*>(dataImage));
+		std::ifstream fin(imageLocation, std::ios::in | std::ios::binary);
+		std::ostringstream oss;
+		oss << fin.rdbuf();
+		std::string dataImage(oss.str());
 		return dataImage;
 	}
-	else return NULL;
+	else return dataImage;
 }
 
 void ServerPeer::updateLocalViews(std::string userID, std::string imageID, int count){
-	string extract_command;
-	extract_command.append("steghide extract -p 123 -sf ");
-	extract_command.append(myImagesPath);
-	extract_command.append(imageID);
+	string extract_command = "steghide extract -p 123 -sf " + myImagesPath + "steg_" + imageID;
 	system(extract_command.c_str());
 
-	ofstream viewData(imageID + ".data.txt");
+	extract_command = "steghide extract -p 123 -sf " + myImagesPath + "data_" + imageID;
+	system(extract_command.c_str());
 
+	string line;
+	ifstream viewData(imageID + ".data.txt");
+	map<std::string, int> data;
+
+	if(viewData.is_open()){
+		while(getline(viewData,line)){
+			int delimiter = line.find(';');
+			string username = line.substr(0, delimiter);
+			string views = line.substr(delimiter, string::npos);
+			data[username] = stoi(views);
+		}
+		viewData.close();
+	}
+
+	if(count == 0)
+		data.erase(userID);
+	else
+		data[userID] = count;
+
+	string remove_old_command = "rm " + imageID + ".data.txt";
+	system(remove_old_command.c_str());
+
+	ofstream newData(imageID + ".data.txt");
+	if(newData.is_open()){
+		for (std::map<string,int>::iterator it=data.begin(); it!=data.end(); ++it)
+		    newData << it->first << ";" << it->second << '\n';
+	}
+
+	string create_new_command;
+	create_new_command = "steghide embed -p 123 -cf " + imageID + " -ef " + imageID + ".data.txt -sf data_" + imageID;
+	system(create_new_command.c_str());
+	create_new_command = "steghide embed -p 123 -cf default.jpeg -ef data_" + imageID + " -sf steg_" + imageID;
+	system(create_new_command.c_str());
 
 }
 
@@ -78,12 +116,6 @@ void ServerPeer::updateViews(std::string username, std::string token, std::strin
 	cout << "SERVERPEER::updateViews!";
 	if(serviceDiscoveryClient->auth(username, token))
 		updateLocalViews(username, imageID, count);
-}
-
-void ServerPeer::revokeViews(std::string username, std::string token, std::string imageID){
-	cout << "SERVERPEER::revokeViews!";
-	if(serviceDiscoveryClient->auth(username, token))
-		updateLocalViews(username, imageID, 0);
 }
 
 Message* ServerPeer::doOperation(Message* _message){
@@ -114,7 +146,7 @@ Message* ServerPeer::doOperation(Message* _message){
     }
     	break;
     case 9:{
-
+    	updateViews(args[0].getString(), args[1].getString(), args[2].getString(), args[3].getInt());
     }
     	break;
     }
@@ -123,15 +155,16 @@ Message* ServerPeer::doOperation(Message* _message){
     return reply_message;
 }
 
-void ServerPeer::writePeerImage(string& username,string &imagename, cv::Mat& image){
+void ServerPeer::writePeerImage(string& username,string &imagename, string& image){
 	const int dir_err_owned = mkdir(username.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 	string imagePath = loadedImagesPath + username + "/" + imagename;
-	cv::imwrite(imagePath, image);
+	std::ofstream fin(imagePath, std::ios::out | std::ios::binary);
+	fin << image;
+	fin.close();
 }
 
 cv::Mat ServerPeer::readPeerImage(string& username, string& imagename){
-	string imagePath = loadedImagesPath + imagename;
-	cv::Mat image = cv::imread(imagePath, CV_LOAD_IMAGE_UNCHANGED);
+	cv::Mat image = extractImage(username, imagename, 0);
 	return image;
 }
 
@@ -140,8 +173,21 @@ vector<string> ServerPeer::getListOfMyImages(){
 }
 
 cv::Mat ServerPeer::getMyImage(string& imagename){
-	string imagePath = myImagesPath + imagename;
-	cv::Mat image = cv::imread(imagePath, CV_LOAD_IMAGE_UNCHANGED);
+	cv::Mat image = extractImage("", imagename, 1);
 	return image;
 }
 
+cv::Mat ServerPeer::extractImage(string username, string imagename, bool owned){
+	string imagePath;
+	if(owned)
+		imagePath = myImagesPath + "steg_" +  imagename;
+	else
+		imagePath = loadedImagesPath + username + "/steg_" + imagename;
+
+	string extract_command = "steghide extract -p 123 -sf " + imagePath;
+	system(extract_command.c_str());
+
+	string _image = "data_" + imagename;
+	cv::Mat image = cv::imread(_image, cv::IMREAD_UNCHANGED);
+	return image;
+}

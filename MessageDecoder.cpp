@@ -128,7 +128,8 @@ void MessageDecoder::encode(Message& _message, std::vector<Parameter>& params, i
     	}
     	break;
     	case 8:{
-    		//TODO: Handle Image Encode
+    		std::string image = params[0].getString();
+    		messageContent.append(image);
     	}
     	break;
     	case 10:{
@@ -226,7 +227,10 @@ void MessageDecoder::decode(Message* _message, std::vector<Parameter>& params){
     	}
     	break;
     	case 8:{
-    		//TODO: Handle Image Decode
+    		Parameter arg1;
+    		std::string image(_message->getMessage());
+    		arg1.setString(image);
+    		params.push_back(arg1);
     	}
     	break;
     	case 10:{

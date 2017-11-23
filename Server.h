@@ -1,9 +1,3 @@
-/*
- * Server.h
- *
- *  Created on: Oct 26, 2017
- *      Author: ewais
- */
 #include "Message.h"
 #include "UDPServerSocket.h"
 

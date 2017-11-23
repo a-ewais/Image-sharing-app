@@ -7,6 +7,8 @@
 #include <sys/stat.h>
 #include <dirent.h>
 #include <stdio.h>
+#include <opencv2/opencv.hpp>
+#include <opencv2/core/core.hpp>
 
 using namespace std;
 
@@ -54,35 +56,34 @@ std::string ServerPeer::getImage(std::string username, std::string token, std::s
 	if(serviceDiscoveryClient->auth(username, token)){
 		string imageLocation = myImagesPath + imageID;
 		cv::Mat image = cv::imread(imageLocation, CV_LOAD_IMAGE_COLOR);
-		unsigned char* dataImage = image.data;
-		std:: string s(dataImage);
-		return s;
-//		streampos size;
-//		char * memblock;
-//		string imageLocation = myImagesPath + imageID;
-//		ifstream file (imageLocation, ios::in|ios::binary|ios::ate);
-//		if (file.is_open()){
-//			size = file.tellg();
-//			memblock = new char [size];
-//			file.seekg (0, ios::beg);
-//			file.read (memblock, size);
-//			file.close();
-//			string image(memblock, size);
-//			delete[] memblock;
-//			return image;
-//		}else return NULL;
+		string dataImage (image.begin<unsigned char>(), image.end<unsigned char>());
+		return dataImage;
 	}
 	else return NULL;
 }
 
-void ServerPeer::updateViews(std::string token, std::string userID, int count){
-	cout << "SERVERPEER::updateViews!";
+void ServerPeer::updateLocalViews(std::string userID, std::string imageID, int count){
+	string extract_command;
+	extract_command.append("steghide extract -p 123 -sf ");
+	extract_command.append(myImagesPath);
+	extract_command.append(imageID);
+	system(extract_command.c_str());
+
+	ofstream viewData(imageID + ".data.txt");
+
 
 }
 
-void ServerPeer::revokeViews(std::string token, std::string userID){
-	cout << "SERVERPEER::revokeViews!";
+void ServerPeer::updateViews(std::string username, std::string token, std::string imageID, int count){
+	cout << "SERVERPEER::updateViews!";
+	if(serviceDiscoveryClient->auth(username, token))
+		updateLocalViews(username, imageID, count);
+}
 
+void ServerPeer::revokeViews(std::string username, std::string token, std::string imageID){
+	cout << "SERVERPEER::revokeViews!";
+	if(serviceDiscoveryClient->auth(username, token))
+		updateLocalViews(username, imageID, 0);
 }
 
 Message* ServerPeer::doOperation(Message* _message){
@@ -130,7 +131,7 @@ void ServerPeer::writePeerImage(string& username,string &imagename, cv::Mat& ima
 
 cv::Mat ServerPeer::readPeerImage(string& username, string& imagename){
 	string imagePath = loadedImagesPath + imagename;
-	cv::Mat image = cv::imread(imagePath, CV_LOAD_IMAGE_COLOR);
+	cv::Mat image = cv::imread(imagePath, CV_LOAD_IMAGE_UNCHANGED);
 	return image;
 }
 
@@ -140,7 +141,7 @@ vector<string> ServerPeer::getListOfMyImages(){
 
 cv::Mat ServerPeer::getMyImage(string& imagename){
 	string imagePath = myImagesPath + imagename;
-	cv::Mat image = cv::imread(imagePath, CV_LOAD_IMAGE_COLOR);
+	cv::Mat image = cv::imread(imagePath, CV_LOAD_IMAGE_UNCHANGED);
 	return image;
 }
 

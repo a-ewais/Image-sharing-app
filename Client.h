@@ -5,6 +5,7 @@
  *      Author: ewais
  */
 #include "UDPClientSocket.h"
+#include <opencv2/opencv.hpp>
 
 #ifndef CLIENT_H_
 #define CLIENT_H_
@@ -24,7 +25,7 @@ public:
 	bool up(string& username, string& token, string& hostname, int port);
 	bool down(string& username, string& token);
 	vector<string> requestListOfImages(string& username, string& token);
-	string requestImage(string& username, string& token, string& imageId);
+	cv::Mat requestImage(string& username, string& token, string& imageId);
 	bool updateViews(string& username, string& token, string& imgId, int views);
 	bool revokeView(string& username, string& token, string& imgId);
 	void viewNotify(string& username, string& token,string& imgId);

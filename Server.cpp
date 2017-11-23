@@ -1,6 +1,8 @@
-#include "Server.h"
 #include <string>
+#include "Server.h"
+
 using namespace std;
+
 Server::Server(char* _listen_hostname, int _listen_port){
 	udpServerSocket = new UDPServerSocket(_listen_hostname, _listen_port);
 }
@@ -12,14 +14,6 @@ Server::~Server(){
 void Server::sendReply(Message* _message){
 	udpServerSocket->sendReply(_message);
 }
-
-//bool Server::sendReplyWithAck(Message* _message){
-//	bool received = udpServerSocket->sendReplyWaitAck(_message, 3);
-//	if(!received)
-//		printf("No acknowledgment received. Network Error!\n");
-//
-//	return received;
-//}
 
 Message* Server::getRequest(){
 	return udpServerSocket->getRequest();

@@ -1,17 +1,12 @@
-/*
- * User.h
- *
- *  Created on: Nov 21, 2017
- *      Author: ewais
- */
-
 #ifndef USER_H_
 #define USER_H_
 #include "Client.h"
 #include "ServiceDiscovery.h"
 #include "ServerPeer.h"
 
-struct Image;  //should contain the image and all its info..who owns it..who can see..number of views..
+struct Image{
+	;  //should contain the image and all its info..who owns it..who can see..number of views..
+};
 
 class User {
 private:
@@ -30,11 +25,11 @@ public:
 	vector<string> viewOnlineUsers();	//who is online
 	vector<string> getListOfPeerImages(string username);	//bayna y3ny
 	int requestPeerImage(string username, string imagename);  //returns number of views if granted..negative otherwise
-	Image* viewPeerImage(string username, string imagename);	//if it is granted...ask it from the server
+	cv::Mat viewPeerImage(string username, string imagename);	//if it is granted...ask it from the server
 	//from himself
 	vector<string> viewMyImages(); //returns list of my images
-	Image* viewMyImage(string imagename); //returns the image
-	void updateMyImage(Image newImage); //adds new viewers..update counts
+	cv::Mat viewMyImage(string imagename); //returns the image
+	void updateMyImage(cv::Mat newImage); //adds new viewers..update counts
 	//to other peers
 	void grantPeerImage(string username, string imagename, int views);
 	void revokePeerImage(string username, string imagename);

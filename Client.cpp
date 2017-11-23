@@ -1,14 +1,11 @@
-/*
- * Client.cpp
- *
- *  Created on: Oct 28, 2017
- *      Author: ewais
- */
 #include<iostream>
 #include<vector>
 #include"Client.h"
 #include"MessageDecoder.h"
+#include <opencv2/opencv.hpp>
+
 using namespace std;
+
 Client::Client(char* _hostname, int _port, string _peerUserName){
 	udpSocket = new UDPClientSocket(_hostname, _port);
 	peerUserName = _peerUserName;
@@ -113,7 +110,7 @@ vector<string> Client::requestListOfImages(string& username, string& token){
 	delete reply;
 	return args[0].getVectorString();
 }
-string Client::requestImage(string& username, string& token, string& imageId){
+cv::Mat Client::requestImage(string& username, string& token, string& imageId){
 	Message r(Request);
 	vector<Parameter> args(3);
 	args[0].setString(username);
@@ -124,7 +121,9 @@ string Client::requestImage(string& username, string& token, string& imageId){
 	args.clear();
 	MessageDecoder::decode(reply, args);
 	delete reply;
-	return args[0].getString();
+//	return args[0].getString();
+	cv::Mat image;
+	return image;
 }
 bool Client::updateViews(string& username, string& token,  string& imgId, int views){
 	Message r(Request);

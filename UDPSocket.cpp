@@ -1,9 +1,3 @@
-/*
- * UDPSocket.cpp
- *
- *  Created on: Oct 26, 2017
- *      Author: ewais
- */
 #include "UDPSocket.h"
 #include <sys/types.h>
 #include <sys/socket.h>

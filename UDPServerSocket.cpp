@@ -1,9 +1,3 @@
-/*
- * UDPServerSocket.cpp
- *
- *  Created on: Oct 27, 2017
- *      Author: ewais
- */
 #include "UDPServerSocket.h"
 #include <sys/socket.h>
 #include <netdb.h>

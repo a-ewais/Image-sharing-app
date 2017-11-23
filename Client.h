@@ -1,9 +1,3 @@
-/*
- * Client.h
- *
- *  Created on: Oct 26, 2017
- *      Author: ewais
- */
 #include "UDPClientSocket.h"
 #include <opencv2/opencv.hpp>
 

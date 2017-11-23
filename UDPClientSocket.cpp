@@ -1,9 +1,3 @@
-/*
- * UDPClientSocket.cpp
- *
- *  Created on: Oct 27, 2017
- *      Author: ewais
- */
 #include "UDPClientSocket.h"
 #include <sys/socket.h>
 #include <pthread.h>

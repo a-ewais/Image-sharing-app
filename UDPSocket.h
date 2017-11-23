@@ -1,9 +1,3 @@
-/*
- * UDPSocket.h
- *
- *  Created on: Oct 26, 2017
- *      Author: ewais
- */
 #include <pthread.h>
 #include <netinet/in.h>
 #ifndef UDPSOCKET_H

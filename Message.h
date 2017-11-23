@@ -1,10 +1,3 @@
-/*
- * Message.h
- *
- *  Created on: Oct 26, 2017
- *      Author: ewais
- */
-
 #include <cstdio>
 #include <netdb.h>
 #include <unistd.h>

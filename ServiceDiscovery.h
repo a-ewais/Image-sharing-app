@@ -1,10 +1,3 @@
-/*
- * ServiceDiscovery.h
- *
- *  Created on: Nov 17, 2017
- *      Author: ewais
- */
-
 #ifndef SERVICEDISCOVERY_H
 #define SERVICEDISCOVERY_H
 #include <iostream>
@@ -17,6 +10,7 @@
 #include <cstdlib>
 #include <ctime>
 #include "MessageDecoder.h"
+#include "DatabaseLinker.h"
 #include "Parameter.h"
 using namespace std;
 
@@ -30,6 +24,7 @@ class ServiceDiscovery:protected Server{
 		map<string, int> token_time;	//<token,time_cnt>...Periodically time_cnt--, delete tokens that reaches zero(thread).
 		map<string,string> online_users;		//list of <username,ip> of online users...convert to array before send
 		map<string, string> users;		//<username,password>
+		DatabaseLinker DL;
 
 		bool auth(string username, string token); //check if in token_user? true: false;
 		string signIn(string username, string password, string addr);  //check if in (users)?generate random token..add to token_user..check if he has pending requests..receive ack...return token: return error.

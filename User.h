@@ -18,7 +18,7 @@ private:
 	map<string, vector<string>> imageLists;
 
 public:
-	User(string serverIp, int serverPort);
+	User(string serverIp, int serverPort,string myIp, int myPort);
 	//from the service discovery
 	bool signUp(string userName, string password);
 	bool signIn(string userName, string password);

@@ -1,9 +1,9 @@
 #include <opencv2/core/core.hpp>
 #include "User.h"
 
-User::User(string serverIp, int serverPort) {
+User::User(string serverIp, int serverPort, string myIp, int myPort) {
 	clients["ServiceDiscovery"] = new Client(const_cast<char*>(serverIp.c_str()), serverPort, "ServiceDiscovery");
-	myServer = new ServerPeer(const_cast<char*>(serverIp.c_str()), serverPort, clients["ServiceDiscovery"]);
+	myServer = new ServerPeer(const_cast<char*>(myIp.c_str()), myPort, clients["ServiceDiscovery"]);
 }
 
 bool User::signUp(string _userName, string _password){
@@ -48,7 +48,7 @@ vector<string> User::viewOnlineUsers(){
 
 vector<string> User::getListOfPeerImages(string _username){
 	if(clients.find(_username)==clients.end()){
-		cout<<"new client\n";
+		cout<<"new client "<< _username;
 		pair<string,int> temp = MessageDecoder::decodeIpPortPair(listOfUsers[_username]);
 		clients[_username] = new Client(const_cast<char*>(temp.first.c_str()), temp.second, _username);
 	}

@@ -9,7 +9,7 @@ using namespace std;
 
 
 ServiceDiscovery::ServiceDiscovery(char* _listen_hostname, int _listen_port):Server(_listen_hostname, _listen_port){
-	void* arg;
+	void* arg = (void*) this;
     startListen(arg);
 }
 

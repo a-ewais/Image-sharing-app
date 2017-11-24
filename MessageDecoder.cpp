@@ -40,7 +40,9 @@ sockaddr_in MessageDecoder::decodeIpPort(std::string s){
 }
 
 string MessageDecoder::encodeIpPortPair(string hostName, int port){
-	return hostName+to_string(port);
+	string s = hostName+":"+to_string(port);
+	cout<<s<<endl;
+	return s;
 }
 pair<string,int> MessageDecoder::decodeIpPortPair(string s){
 	std::string first = "", sec = "";
@@ -57,6 +59,7 @@ pair<string,int> MessageDecoder::decodeIpPortPair(string s){
 		else
 			sec+=s[i];
 	}
+	cout<<"IP and Port: " <<first<<" "<<sec<<endl;
 	return {first,stoi(sec)};
 }
 void MessageDecoder::encode(Message& _message, std::vector<Parameter>& params, int _operation, MessageType _type){
@@ -203,9 +206,12 @@ void MessageDecoder::decode(Message* _message, std::vector<Parameter>& params){
     	case 1:
     	case 2:{
     		Parameter arg1;
+//    		cout<<"sa7\n";
     		if(tokens.empty())
     			tokens.push_back("");
+
     		arg1.setString(tokens[0]);
+//    		cout<<"3ada";
     		params.push_back(arg1);
     	}
     	break;

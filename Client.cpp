@@ -47,6 +47,7 @@ string Client::login(string& username, string& password, string& host, int port)
 	Message* reply = execute(&r);
 	args.clear();
 	MessageDecoder::decode(reply, args);
+//	reply->print();
 	delete reply;
 	return args[0].getString();
 }

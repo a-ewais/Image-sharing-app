@@ -36,6 +36,7 @@ bool User::signIn(string _userName, string _password){
 
 vector<string> User::viewOnlineUsers(){
 	Client* cli = clients["ServiceDiscovery"];
+	cout<<"list of ";
 	listOfUsers = cli->requestListOfOnlineUsers(token, username);
 	vector<string> _onlineUsers;
 
@@ -47,6 +48,7 @@ vector<string> User::viewOnlineUsers(){
 
 vector<string> User::getListOfPeerImages(string _username){
 	if(clients.find(_username)==clients.end()){
+		cout<<"new client\n";
 		pair<string,int> temp = MessageDecoder::decodeIpPortPair(listOfUsers[_username]);
 		clients[_username] = new Client(const_cast<char*>(temp.first.c_str()), temp.second, _username);
 	}

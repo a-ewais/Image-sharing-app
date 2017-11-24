@@ -15,24 +15,32 @@
 using namespace std;
 
 int main(int argc, char *argv[]){
+	int x;
 	User* u = new User("10.7.57.199", 64000);
-	if(u->signUp("Amrsaeed", "123"))
+	if(u->signUp("3wais", "1234"))
 		cout << "WOHOO\n";
 
-	if(!u->signIn("Amrsaeed", "12"))
+	if(!u->signIn("3waiss", "123"))
 		cout << "Not Authorized!\n";
-
-	if(u->signIn("Amrsaeed", "123"))
+//	cin>>x;
+	if(u->signIn("3wais", "1234"))
 		cout << "Authorized!\n";
-
+//	cin>>x;
 	vector<string> Online = u->viewOnlineUsers();
-	cout << Online[0] << endl;
-
+	for(int i=0;i<Online.size();i++)
+		cout << Online[i] << endl;
 	vector<string> images = u->viewMyImages();
 	cout << images[0] << ", " << images[1] << endl;
 	cv::Mat img = u->viewMyImage("Banana.jpg");
 	cv::imshow("Image 1", img);
 	cv::waitKey(0);
+	cout<<"gowa el peer\n";
+	images = u->getListOfPeerImages("Amrsaeed");
+
+	for(int i=0;i<images.size();i++)
+		cout << images[i] << endl;
+	int numOfViews = u->requestPeerImage("Amrsaeed", "Banana.jpg");
+
 
 
 //	if(argv[1][0]=='0'){

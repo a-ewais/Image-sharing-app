@@ -28,6 +28,7 @@ ServerPeer::~ServerPeer(){
 }
 
 vector<string> ServerPeer::loadFileNames(string path){
+	cout << "Wslt" << endl;
 	std::vector<std::string> results;
 	DIR* dir_point = opendir(path.c_str());
 	dirent* entry = readdir(dir_point);
@@ -170,6 +171,7 @@ cv::Mat ServerPeer::readPeerImage(string& username, string& imagename){
 }
 
 vector<string> ServerPeer::getListOfMyImages(){
+	cout << "In ServerPeer" << endl;
 	return loadFileNames(myImagesPath);
 }
 

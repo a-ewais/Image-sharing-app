@@ -6,40 +6,11 @@
 #include <cstring>
 #include <iostream>
 #include <string>
+#include "MessageDecoder.h"
 
 extern "C" {
 	char * inet_ntoa(struct in_addr);
 }
-string encodeIpPort(sockaddr_in raw){
-	string s = "";
-	s += to_string(ntohl(raw.sin_addr.s_addr))+","+ to_string(ntohs(raw.sin_port));
-//	cout<<"the encoded IP Port is: "<<s<<endl;
-	return s;
-}
-sockaddr_in decodeIpPort(string s){
-	string first = "", sec = "";
-	bool flag = true;
-	for(int i=0;i<s.size();i++)
-	{
-		if(s[i]==',')
-		{
-			flag=false;
-			continue;
-		}
-		if(flag)
-			first+=s[i];
-		else
-			sec+=s[i];
-	}
-	sockaddr_in res;
-	cout << "Original " << s << endl;
-	cout<<"the ip looks like this: "<<first<<endl;
-	res.sin_family = AF_INET;
-	res.sin_addr.s_addr = htonl(stoul(first));
-	res.sin_port = htons(stoi(sec));
-	return res;
-}
-
 
 UDPServerSocket::UDPServerSocket(char * _myAddr, int _myPort):UDPSocket(){
 	in_mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -89,13 +60,13 @@ void* UDPServerSocket::messenger(void* arg){
 			}
 			Message* temp = new Message(incoming);
 			delete [] incoming;
-			if(me->ip_id.find({temp->getRPCId(), encodeIpPort(me->peerAddr)})==me->ip_id.end()){
+			if(me->ip_id.find({temp->getRPCId(), MessageDecoder::encodeIpPort(me->peerAddr)})==me->ip_id.end()){
 				int new_rpc = rpc_count++;
-				me->ip_id[{temp->getRPCId(), encodeIpPort(me->peerAddr)}] = new_rpc;
-				me->id_ip[new_rpc] = {temp->getRPCId(), encodeIpPort(me->peerAddr)};
+				me->ip_id[{temp->getRPCId(), MessageDecoder::encodeIpPort(me->peerAddr)}] = new_rpc;
+				me->id_ip[new_rpc] = {temp->getRPCId(), MessageDecoder::encodeIpPort(me->peerAddr)};
 				temp->setRPCId(new_rpc);
 			}else{
-				int new_rpc = me->ip_id[{temp->getRPCId(), encodeIpPort(me->peerAddr)}];
+				int new_rpc = me->ip_id[{temp->getRPCId(), MessageDecoder::encodeIpPort(me->peerAddr)}];
 				temp->setRPCId(new_rpc);
 			}
 
@@ -129,7 +100,7 @@ void* UDPServerSocket::messenger(void* arg){
 				int localRPCId = temp->getRPCId();
 				temp->setRPCId(me->id_ip[localRPCId].first);
 				char* x = temp->marshal(t);
-				me->setPeer(decodeIpPort(me->id_ip[localRPCId].second));
+				me->setPeer(MessageDecoder::decodeIpPort(me->id_ip[localRPCId].second));
 				int res = me->writeToSocket(x,t);
 				if(res<0)
 					cout<<"error sending packet\n";

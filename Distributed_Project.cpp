@@ -11,9 +11,29 @@
 #include <algorithm>
 #include <streambuf>
 #include <ctime>
+#include "User.h"
 using namespace std;
 
 int main(int argc, char *argv[]){
+	User* u = new User("10.7.57.199", 64000);
+	if(u->signUp("Amrsaeed", "123"))
+		cout << "WOHOO\n";
+
+	if(!u->signIn("Amrsaeed", "12"))
+		cout << "Not Authorized!\n";
+
+	if(u->signIn("Amrsaeed", "123"))
+		cout << "Authorized!\n";
+
+	vector<string> Online = u->viewOnlineUsers();
+	cout << Online[0] << endl;
+
+	vector<string> images = u->viewMyImages();
+	cout << images[0] << ", " << images[1] << endl;
+	cv::Mat img = u->viewMyImage("Banana.jpg");
+	cv::imshow("Image 1", img);
+	cv::waitKey(0);
+
 
 //	if(argv[1][0]=='0'){
 //		Client* m  = new Client("localhost", 64000);

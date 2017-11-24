@@ -12,7 +12,7 @@ extern "C" {
 }
 string encodeIpPort(sockaddr_in raw){
 	string s = "";
-	s += to_string(raw.sin_addr.s_addr)+","+ to_string(raw.sin_port);
+	s += to_string(ntohl(raw.sin_addr.s_addr))+","+ to_string(ntohs(raw.sin_port));
 //	cout<<"the encoded IP Port is: "<<s<<endl;
 	return s;
 }
@@ -33,8 +33,9 @@ sockaddr_in decodeIpPort(string s){
 	}
 	sockaddr_in res;
 //	cout<<"the ip looks like this: "<<first<<endl;
-	res.sin_addr.s_addr = stoul(first);
-	res.sin_port = stoi(sec);
+	res.sin_family = AF_INET;
+	res.sin_addr.s_addr = htonl(stoul(first));
+	res.sin_port = htons(stoi(sec));
 	return res;
 }
 

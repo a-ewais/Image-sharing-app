@@ -34,7 +34,8 @@ vector<string> ServerPeer::loadFileNames(string path){
 	while (entry){									// if !entry then end of directory
 		if (entry->d_type == DT_REG){		// if entry is a regular file
 			std::string fname = entry->d_name;	// filename
-			results.push_back(fname.substr(6, std::string::npos));		// add filename to results vector
+			if(fname != "default.jpeg")
+				results.push_back(fname.substr(5));		// add filename to results vector
 		}
 		entry = readdir(dir_point);
 	}
@@ -184,10 +185,12 @@ cv::Mat ServerPeer::extractImage(string username, string imagename, bool owned){
 	else
 		imagePath = loadedImagesPath + username + "/steg_" + imagename;
 
-	string extract_command = "steghide extract -p 123 -sf " + imagePath;
+	string extract_command = "steghide extract -p 123 -sf " + imagePath + " -xf " + myImagesPath + "data_" + imagename;
 	system(extract_command.c_str());
 
-	string _image = "data_" + imagename;
+	string _image = myImagesPath + "data_" + imagename;
 	cv::Mat image = cv::imread(_image, cv::IMREAD_UNCHANGED);
+	string remove_command = "rm " + myImagesPath + "data_" + imagename;
+	system(remove_command.c_str());
 	return image;
 }

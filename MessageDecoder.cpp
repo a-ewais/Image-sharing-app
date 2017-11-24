@@ -203,6 +203,8 @@ void MessageDecoder::decode(Message* _message, std::vector<Parameter>& params){
     	case 1:
     	case 2:{
     		Parameter arg1;
+    		if(tokens.empty())
+    			tokens.push_back("");
     		arg1.setString(tokens[0]);
     		params.push_back(arg1);
     	}

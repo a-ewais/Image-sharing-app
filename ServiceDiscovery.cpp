@@ -128,7 +128,6 @@ Message* ServiceDiscovery::doOperation(Message* _message){
     	map<string, string> _mss = getListOfOnlineUsers(args[0].getString(), args[1].getString());
     	Parameter arg1;
     	arg1.setMapSS(_mss);
-    	cout << arg1.getMapSS()["3wais"] << endl;
     	reply_args.push_back(arg1);
     }
     	break;

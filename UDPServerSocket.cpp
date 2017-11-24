@@ -75,7 +75,7 @@ void* UDPServerSocket::messenger(void* arg){
 	while(true){
 		WORK = 0;
 		if(me->readyToRead()){
-			cout<<"it is ready to read\n";
+			cout<<"inbox is not empty\n";
 			WORK++;
 			char* incoming = new char[MAX_DATAGRAM_SIZE];
 			int trials = 2;
@@ -116,7 +116,7 @@ void* UDPServerSocket::messenger(void* arg){
 		pthread_mutex_lock(&me->out_mutex);
 		if(!me->outbox.empty())
 		{
-			cout<<"it is not empty\n";
+			cout<<"outbox is not empty";
 			WORK++;
 			Message* temp = me->outbox.front();
 			me->outbox.pop();
@@ -124,9 +124,10 @@ void* UDPServerSocket::messenger(void* arg){
 			int trials = 3;
 			while(trials--){
 				int t = 0;
+				int localRPCId = temp->getRPCId();
+				temp->setRPCId(me->id_ip[localRPCId].first);
 				char* x = temp->marshal(t);
-				cout<<x<<endl;
-				me->setPeer(decodeIpPort(me->id_ip[temp->getRPCId()].second));
+				me->setPeer(decodeIpPort(me->id_ip[localRPCId].second));
 				int res = me->writeToSocket(x,t);
 				if(res<0)
 					cout<<"error sending packet\n";

@@ -9,7 +9,8 @@ using namespace std;
 
 
 ServiceDiscovery::ServiceDiscovery(char* _listen_hostname, int _listen_port):Server(_listen_hostname, _listen_port){
-    startListen();
+	void* arg;
+    startListen(arg);
 }
 
 bool ServiceDiscovery::auth(string username, string token){

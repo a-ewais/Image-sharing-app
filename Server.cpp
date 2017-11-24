@@ -25,13 +25,15 @@ sockaddr_in Server::getMyAddr(){
 pair<string, int> Server::getMyAddrPair(){
 	return udpServerSocket->getMyAddrPair();
 }
-void Server::startListen(){
+void* Server::startListen(void* arg){
+	Server* me = (Server*)arg;
+
 	while(1){
-		if(udpServerSocket->readyRequest()){
-			Message* _message = getRequest();
+		if(me->udpServerSocket->readyRequest()){
+			Message* _message = me->getRequest();
 			if(_message!=NULL){
-				_message = doOperation(_message);
-				sendReply(_message);
+				_message = me->doOperation(_message);
+				me->sendReply(_message);
 			}
 		}
 	}

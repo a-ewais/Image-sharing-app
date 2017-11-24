@@ -21,6 +21,9 @@ ServerPeer::ServerPeer(char* _listen_hostname, int _listen_port, Client* _servic
 	myImagesPath = myPath + "/MyImages/";
 	loadedImagesPath = myPath + "/LoadedImages/";
 	serviceDiscoveryClient = _serviceDiscoveryClient;
+
+	pthread_t p;
+	pthread_create( &p, NULL, &Server::startListen, this);
 }
 
 ServerPeer::~ServerPeer(){

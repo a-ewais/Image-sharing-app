@@ -32,7 +32,8 @@ sockaddr_in decodeIpPort(string s){
 			sec+=s[i];
 	}
 	sockaddr_in res;
-//	cout<<"the ip looks like this: "<<first<<endl;
+	cout << "Original " << s << endl;
+	cout<<"the ip looks like this: "<<first<<endl;
 	res.sin_family = AF_INET;
 	res.sin_addr.s_addr = htonl(stoul(first));
 	res.sin_port = htons(stoi(sec));
@@ -113,6 +114,7 @@ void* UDPServerSocket::messenger(void* arg){
 			}
 
 		}
+
 		pthread_mutex_lock(&me->out_mutex);
 		if(!me->outbox.empty())
 		{
@@ -143,6 +145,7 @@ void* UDPServerSocket::messenger(void* arg){
 			sleep(1);
 		}
 	}
+
 }
 void UDPServerSocket::sendReply(Message* m){
 	vector<Message*> temp_parts;

@@ -23,6 +23,7 @@ class Message
 
 	public:
 		static int rpc_count;
+		static pthread_mutex_t rpc_mutex;
 		Message(MessageType type); //Done
 		Message(Message* big,int _parts_num, int _part_num,int _size, int _mx_size); //Done
 //		Message(int operation, char * p_message, size_t p_message_size, int p_rpc_id);
@@ -44,6 +45,7 @@ class Message
 		void setMessageType (MessageType message_type); //Done
 		void setRPCId(int c);
 		void print();
+		static int getNewRPC();
 		~Message();
 };
 

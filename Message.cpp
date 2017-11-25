@@ -5,9 +5,10 @@
 using namespace std;
 
 int Message::rpc_count = 0;
+pthread_mutex_t Message::rpc_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 Message::Message(MessageType type){
-	rpc_id = rpc_count++;
+	rpc_id = Message::getNewRPC();
 	message_type = type;
 	message_size = 0;
 	operation = 0;
@@ -26,6 +27,7 @@ Message::Message(Message* big,int _parts_num, int _part_num, int _size, int _mx_
 	memcpy(message, big->message+_mx_size*part_num, message_size);
 
 }
+
 Message::Message(char* data){
 	if(data==NULL)
 		cout<<"data corrupted or NULL\n";
@@ -79,6 +81,13 @@ Message::Message(vector<Message*>& parts){
 	}
 
 
+}
+
+int Message::getNewRPC(){
+	pthread_mutex_lock(&Message::rpc_mutex);
+	rpc_count++;
+	pthread_mutex_unlock(&Message::rpc_mutex);
+	return rpc_count;
 }
 
 char * Message::marshal(int &size){

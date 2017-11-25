@@ -1,5 +1,6 @@
 #include "login.h"
 #include "ui_login.h"
+#include "profile.h"
 #include<QMessageBox>
 #include <QPushButton>
 
@@ -9,7 +10,7 @@ Login::Login(QWidget *parent) :
     ui(new Ui::Login)
 {
     ui->setupUi(this);
-//    user = new User("10.7.57.199", 64000);
+    user = new User("10.7.57.199", 64000);
 }
 
 Login::~Login()

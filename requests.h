@@ -2,6 +2,7 @@
 #define REQUESTS_H
 
 #include <QWidget>
+#include <QListWidgetItem>
 #include "User.h"
 
 namespace Ui {
@@ -13,7 +14,7 @@ class Requests : public QWidget
     Q_OBJECT
 
 public:
-    Requests(QWidget *parent, User* _user;
+    Requests(QWidget *parent, User* _user);
     ~Requests();
 
 private slots:
@@ -21,9 +22,9 @@ private slots:
 
     void on_usersRequesting_itemClicked(QListWidgetItem *item);
 
-    void on_request_clicked();
+    void fillList();
 
-    void on_pushButton_clicked();
+    void on_request_clicked();
 
 private:
     Ui::Requests *ui;

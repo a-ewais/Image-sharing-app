@@ -44,8 +44,8 @@ void PeerProfile::on_request_clicked()
 {
     std::string _imagename = imagename.toUtf8().constData();
     std::string _online = online_user.toUtf8().constData();
-    if(imagename!="")
-        user->requestImageFromPeer(_online, _imagename);
+//    if(imagename!="")
+//        user->requestImageFromPeer(_online, _imagename);
 }
 
 void PeerProfile::on_back_clicked()

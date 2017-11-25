@@ -103,7 +103,7 @@ void ServiceDiscovery::down(string username, string token){
 Message* ServiceDiscovery::doOperation(Message* _message){
 	cout << "SERVICEDISCOVERY::doOperation!";
 	_message->print();
-	Message* reply_message = new Message(Reply);
+	Message* reply_message = new Message(Reply, _message->getRPCId());
 
     vector<Parameter> args;
     vector<Parameter> reply_args;

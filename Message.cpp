@@ -7,8 +7,8 @@ using namespace std;
 int Message::rpc_count = 0;
 pthread_mutex_t Message::rpc_mutex = PTHREAD_MUTEX_INITIALIZER;
 
-Message::Message(MessageType type){
-	rpc_id = Message::getNewRPC();
+Message::Message(MessageType type, int newRPCId){
+//	rpc_id = Message::getNewRPC();
 	message_type = type;
 	message_size = 0;
 	operation = 0;

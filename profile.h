@@ -6,6 +6,7 @@
 #include "User.h"
 #include "imageinformation.h"
 #include "peerprofile.h"
+#include "requests.h"
 
 namespace Ui {
 class Profile;
@@ -35,6 +36,7 @@ private:
     User* user;
     ImageInformation* info;
     PeerProfile* peerProfile;
+    Requests* request;
 
 };
 

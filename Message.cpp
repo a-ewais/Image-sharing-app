@@ -4,6 +4,8 @@
 #include <algorithm>
 using namespace std;
 
+int Message::rpc_count = 0;
+
 Message::Message(MessageType type){
 	rpc_id = rpc_count++;
 	message_type = type;

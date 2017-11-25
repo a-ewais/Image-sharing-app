@@ -44,7 +44,7 @@ void DatabaseLinker:: insert(string username, string password, string IP, bool o
     sqlite3_close(db);
 }
 
-string DatabaseLinker:: retreive( string var, string toRetreive){
+string DatabaseLinker:: retreive(string var, string toRetreive){
     Records records;
     string password;
     rc = sqlite3_open("test.db", &db);

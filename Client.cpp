@@ -111,6 +111,7 @@ vector<string> Client::requestListOfImages(string& username, string& token){
 	args[0].setString(username);
 	args[1].setString(token);
 	MessageDecoder::encode(r, args, 7, Request);
+	r.print();
 	Message* reply = execute(&r);
 	args.clear();
 	MessageDecoder::decode(reply, args);

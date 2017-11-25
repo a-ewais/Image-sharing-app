@@ -26,6 +26,8 @@ private slots:
 
     void on_request_clicked();
 
+    void on_back_clicked();
+
 private:
     Ui::Requests *ui;
     User* user;

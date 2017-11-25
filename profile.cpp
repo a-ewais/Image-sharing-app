@@ -64,3 +64,9 @@ void Profile::on_request_clicked()
     hide();
     request->showNormal();
 }
+
+void Profile::on_logout_clicked()
+{
+    this->parentWidget()->show();
+    this->close();
+}

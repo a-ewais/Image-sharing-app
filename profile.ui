@@ -213,6 +213,31 @@ selection-color: rgb(234, 110, 89);</string>
     <pixmap>../Downloads/top-logo.png</pixmap>
    </property>
   </widget>
+  <widget class="QPushButton" name="logout">
+   <property name="geometry">
+    <rect>
+     <x>420</x>
+     <y>610</y>
+     <width>141</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Ubuntu Mono</family>
+     <pointsize>12</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(14, 168, 146);
+selection-color: rgb(234, 110, 89);</string>
+   </property>
+   <property name="text">
+    <string>LOGOUT</string>
+   </property>
+  </widget>
   <zorder>logo</zorder>
   <zorder>label</zorder>
   <zorder>onlineUsers</zorder>
@@ -220,6 +245,7 @@ selection-color: rgb(234, 110, 89);</string>
   <zorder>onlinUser</zorder>
   <zorder>upload</zorder>
   <zorder>request</zorder>
+  <zorder>logout</zorder>
  </widget>
  <resources/>
  <connections/>

@@ -31,6 +31,8 @@ private slots:
 
     void fillList();
 
+    void on_logout_clicked();
+
 private:
     Ui::Profile *ui;
     User* user;

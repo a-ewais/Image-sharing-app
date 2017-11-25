@@ -61,35 +61,8 @@ s = socket(domain, SOCK_STREAM, 0);
   return 1;
 }
 int main(int argc, char *argv[]){
-	vector<string> ips;
-	cout<< print_addresses(AF_INET, ips)<<endl;
-	int x;
-	cout<< ips[2]<<endl;
-	User* u = new User("10.7.57.199", 64000, ips[2] , 64000);
-	if(u->signUp("3wais", "1234"))
-		cout << "WOHOO\n";
-
-	if(!u->signIn("3waiss", "123"))
-		cout << "Not Authorized!\n";
-//	cin>>x;
-	if(u->signIn("3wais", "1234"))
-		cout << "Authorized!\n";
-//	cin>>x;
-	vector<string> Online = u->viewOnlineUsers();
-	for(int i=0;i<Online.size();i++)
-		cout << Online[i] << endl;
-	vector<string> images = u->viewMyImages();
-	cout << images[0] << ", " << images[1] << endl;
-	cv::Mat img = u->viewMyImage("Banana.jpg");
-	cv::imshow("Image 1", img);
-	cv::waitKey(0);
-	cout<<"gowa el peer\n";
-	images = u->getListOfPeerImages("Amrsaeed");
-
-	for(int i=0;i<images.size();i++)
-		cout << images[i] << endl;
-	int numOfViews = u->requestPeerImage("Amrsaeed", "Banana.jpg");
-
+	ServiceDiscovery* m = new ServiceDiscovery("localhost", 64000);
+	delete m;
 
 
 //	if(argv[1][0]=='0'){

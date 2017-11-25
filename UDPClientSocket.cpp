@@ -62,14 +62,15 @@ void* UDPClientSocket::messenger(void* arg){
 			if(me->waitFor.find(temp->getRPCId())!=me->waitFor.end()){
 				if(temp->isComplete()){
 					me->waitFor[temp->getRPCId()] = temp;
-//					cout<<"complete\n";
+					cout<<"complete\n";
 //					temp->print();
 					pthread_cond_signal(&me->cond);
 					pthread_mutex_unlock(&me->in_mutex);
 				}else{
-//					cout<<"not Complete\n";
+					cout<<me->parts[temp->getRPCId()].size()<<endl;
 					me->parts[temp->getRPCId()].push_back(temp);
 					if(me->parts[temp->getRPCId()].size()==temp->getPartsNum()){
+						cout<<"heeeey...message complete\n";
 						temp = new Message(me->parts[temp->getRPCId()]);
 						me->waitFor[temp->getRPCId()] = temp;
 						pthread_cond_signal(&me->cond);
@@ -86,8 +87,8 @@ void* UDPClientSocket::messenger(void* arg){
 			delete [] incoming;
 		}
 
-		if(!WORK)
-			sleep(1);
+		if(!WORK);
+//			sleep(1);
 
 	}
 }
@@ -135,6 +136,11 @@ bool UDPClientSocket::initializeClient (char * _peerAddr, int _peerPort){
 		unlock();
 		return false;
 	}
+	size_t nn = 1024*1024;
+	if (setsockopt(socket, SOL_SOCKET, SO_RCVBUF, &nn, sizeof(nn)) == -1) {
+		cout<<"failed to resize buffer\n";
+	}
+
 	unlock();
 	return true;
  }

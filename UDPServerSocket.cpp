@@ -37,6 +37,10 @@ bool UDPServerSocket::initializeServer (char * _myAddr, int _myPort){
 		return false;
 	}
 	peerAddr.sin_family = AF_INET;
+	size_t nn = 1024*1024;
+	if (setsockopt(socket, SOL_SOCKET, SO_SNDBUF, &nn, sizeof(nn)) == -1) {
+			cout<<"failed to resize buffer\n";
+		}
 	unlock();
 	return true;
 }

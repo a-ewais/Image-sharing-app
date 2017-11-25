@@ -20,10 +20,10 @@ class Message
 		int operation;
 		char * message;
 		size_t message_size;
-		static int rpc_count;
-		static pthread_mutex_t rpc_mutex;
 
 	public:
+		static int rpc_count;
+		static pthread_mutex_t rpc_mutex;
 
 		Message(MessageType type,int newRPCId); //Done
 		Message(Message* big,int _parts_num, int _part_num,int _size, int _mx_size); //Done

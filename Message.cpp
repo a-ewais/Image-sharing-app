@@ -9,6 +9,7 @@ pthread_mutex_t Message::rpc_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 Message::Message(MessageType type, int newRPCId){
 //	rpc_id = Message::getNewRPC();
+	rpc_id = newRPCId;
 	message_type = type;
 	message_size = 0;
 	operation = 0;
@@ -85,7 +86,7 @@ Message::Message(vector<Message*>& parts){
 
 int Message::getNewRPC(){
 	pthread_mutex_lock(&Message::rpc_mutex);
-	int t = rpc_count++;
+	int t = Message::rpc_count++;
 	pthread_mutex_unlock(&Message::rpc_mutex);
 	return t;
 }

@@ -24,7 +24,7 @@ Message * Client::execute(Message* message){
 }
 
 string Client::signup(string& username, string& password, string& host, int port){
-	Message r(Request);
+	Message r(Request, Message::getNewRPC());
 	vector<Parameter> args(3);
 	args[0].setString(username);
 	args[1].setString(password);
@@ -38,7 +38,7 @@ string Client::signup(string& username, string& password, string& host, int port
 }
 
 string Client::login(string& username, string& password, string& host, int port){
-	Message r(Request);
+	Message r(Request, Message::getNewRPC());
 	vector<Parameter> args(3);
 	args[0].setString(username);
 	args[1].setString(password);
@@ -53,7 +53,7 @@ string Client::login(string& username, string& password, string& host, int port)
 }
 
 map<string, string> Client::requestListOfOnlineUsers(string& token, string& username){
-	Message r(Request);
+	Message r(Request, Message::getNewRPC());
 	vector<Parameter> args(2);
 	args[0].setString(username);
 	args[1].setString(token);
@@ -66,7 +66,7 @@ map<string, string> Client::requestListOfOnlineUsers(string& token, string& user
 }
 
 bool Client::auth(string& username, string& token){
-	Message r(Request);
+	Message r(Request, Message::getNewRPC());
 	vector<Parameter> args(2);
 	args[0].setString(username);
 	args[1].setString(token);
@@ -79,7 +79,7 @@ bool Client::auth(string& username, string& token){
 }
 
 bool Client::up(string& username, string& token, string& host, int port){
-	Message r(Request);
+	Message r(Request, Message::getNewRPC());
 	vector<Parameter> args(3);
 	args[0].setString(username);
 	args[1].setString(token);
@@ -93,7 +93,7 @@ bool Client::up(string& username, string& token, string& host, int port){
 }
 
 bool Client::down(string& username, string& token){
-	Message r(Request);
+	Message r(Request, Message::getNewRPC());
 	vector<Parameter> args(2);
 	args[0].setString(username);
 	args[1].setString(token);
@@ -106,7 +106,7 @@ bool Client::down(string& username, string& token){
 }
 
 vector<string> Client::requestListOfImages(string& username, string& token){
-	Message r(Request);
+	Message r(Request, Message::getNewRPC());
 	vector<Parameter> args(2);
 	args[0].setString(username);
 	args[1].setString(token);
@@ -120,7 +120,7 @@ vector<string> Client::requestListOfImages(string& username, string& token){
 }
 
 string Client::requestImage(string& username, string& token, string& imageId){
-	Message r(Request);
+	Message r(Request, Message::getNewRPC());
 	vector<Parameter> args(3);
 	args[0].setString(username);
 	args[1].setString(token);
@@ -135,7 +135,7 @@ string Client::requestImage(string& username, string& token, string& imageId){
 }
 
 bool Client::updateViews(string& username, string& token,  string& imgId, int views){
-	Message r(Request);
+	Message r(Request, Message::getNewRPC());
 	vector<Parameter> args(4);
 	args[0].setString(username);
 	args[1].setString(token);
@@ -152,7 +152,7 @@ bool Client::updateViews(string& username, string& token,  string& imgId, int vi
 bool Client::revokeView(string& username, string& token, string& imgId){
 	if(!updateViews(username, token, imgId, 0))
 	{
-		Message r(Request);
+		Message r(Request, Message::getNewRPC());
 		vector<Parameter> args(4);
 		args[0].setString(username);
 		args[1].setString(token);

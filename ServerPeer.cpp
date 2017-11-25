@@ -125,7 +125,7 @@ void ServerPeer::updateViews(std::string username, std::string token, std::strin
 
 Message* ServerPeer::doOperation(Message* _message){
 	cout << "SERVERPEER::doOperation!";
-	Message* reply_message = new Message(Reply);
+	Message* reply_message = new Message(Reply, _message->getRPCId());
 
     vector<Parameter> args;
     vector<Parameter> reply_args;

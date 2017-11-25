@@ -34,6 +34,7 @@ sockaddr_in MessageDecoder::decodeIpPort(std::string s){
 	}
 	sockaddr_in res;
 	cout<<"the ip looks like this: "<<first<<endl;
+	res.sin_family = AF_INET;
 	res.sin_addr.s_addr = htonl(stoul(first));
 	res.sin_port = htons(stoi(sec));
 	return res;

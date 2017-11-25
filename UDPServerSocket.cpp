@@ -37,8 +37,8 @@ bool UDPServerSocket::initializeServer (char * _myAddr, int _myPort){
 		return false;
 	}
 	peerAddr.sin_family = AF_INET;
-	size_t nn = 1024*1024;
-	if (setsockopt(socket, SOL_SOCKET, SO_SNDBUF, &nn, sizeof(nn)) == -1) {
+	size_t nn = 1024*1024*10;
+	if (setsockopt(sock, SOL_SOCKET, SO_SNDBUF, &nn, sizeof(nn)) == -1) {
 			cout<<"failed to resize buffer\n";
 		}
 	unlock();
@@ -135,8 +135,10 @@ void UDPServerSocket::sendReply(Message* m){
 		temp_parts.push_back(m);
 	cout<<"this message is split into "<<temp_parts.size()<<" parts\n";
 	pthread_mutex_lock(&out_mutex);
-	for(int i=0;i<temp_parts.size();i++)
+	for(int i=0;i<temp_parts.size();i++){
+		usleep(1000);
 		outbox.push(temp_parts[i]);
+	}
 	pthread_mutex_unlock(&out_mutex);
 }
 

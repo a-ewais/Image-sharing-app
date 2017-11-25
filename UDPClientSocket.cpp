@@ -136,8 +136,8 @@ bool UDPClientSocket::initializeClient (char * _peerAddr, int _peerPort){
 		unlock();
 		return false;
 	}
-	size_t nn = 1024*1024;
-	if (setsockopt(socket, SOL_SOCKET, SO_RCVBUF, &nn, sizeof(nn)) == -1) {
+	size_t nn = 1024*1024*10;
+	if (setsockopt(sock, SOL_SOCKET, SO_RCVBUF, &nn, sizeof(nn)) == -1) {
 		cout<<"failed to resize buffer\n";
 	}
 

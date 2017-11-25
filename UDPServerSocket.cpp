@@ -61,7 +61,8 @@ void* UDPServerSocket::messenger(void* arg){
 			Message* temp = new Message(incoming);
 			delete [] incoming;
 			if(me->ip_id.find({temp->getRPCId(), MessageDecoder::encodeIpPort(me->peerAddr)})==me->ip_id.end()){
-				int new_rpc = rpc_count++;
+				int new_rpc = Message::rpc_count++;
+				cout<<"the new local rpcid is: "<<new_rpc<<endl;
 				me->ip_id[{temp->getRPCId(), MessageDecoder::encodeIpPort(me->peerAddr)}] = new_rpc;
 				me->id_ip[new_rpc] = {temp->getRPCId(), MessageDecoder::encodeIpPort(me->peerAddr)};
 				temp->setRPCId(new_rpc);
@@ -95,7 +96,7 @@ void* UDPServerSocket::messenger(void* arg){
 			me->outbox.pop();
 			pthread_mutex_unlock(&me->out_mutex);
 			int trials = 3;
-			cout<<"this is the incoming message\n";
+			cout<<"this is the message to send\n";
 			temp->print();
 			int localRPCId = temp->getRPCId();
 			temp->setRPCId(me->id_ip[localRPCId].first);

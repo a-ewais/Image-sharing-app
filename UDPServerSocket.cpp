@@ -117,7 +117,8 @@ void* UDPServerSocket::messenger(void* arg){
 		else
 			pthread_mutex_unlock(&me->out_mutex);
 		if(!WORK){
-			sleep(1);
+//			sleep(1);
+			;
 		}
 	}
 

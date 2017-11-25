@@ -87,7 +87,7 @@ void* UDPClientSocket::messenger(void* arg){
 		}
 
 		if(!WORK)
-			sleep(3);
+			sleep(1);
 
 	}
 }

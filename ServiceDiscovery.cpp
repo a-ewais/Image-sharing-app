@@ -60,18 +60,16 @@ string ServiceDiscovery::signIn(string username, string password, string addr){
 map<string, string> ServiceDiscovery::getListOfOnlineUsers(string username, string token){
 	cout << "SERVICEDISCOVERY::getListofOnlineUsers!";
     vector<string> rec1, rec2;
+    map<string, string> mss;
 
     if(auth(username,token)){
-    	return online_users;
+    	//TODO:CHECK THE NUMBER OF returned values
+        rec1 = DL.getOnline("USERNAME");
+        rec2 = DL.getOnline("IP");
+
+        for (int i = 0; i < rec1.size(); i++)
+        	mss[rec1[i]] = rec2[i];
     }
-
-    map<string, string> mss;
-    rec1 = DL.getOnline("USERNAME");
-    rec2 = DL.getOnline("IP");
-
-    for (int i = 0; i < rec1.size(); i++)
-    	mss[rec1[i]] = rec2[i];
-
     return mss;
 }
 
@@ -101,8 +99,8 @@ void ServiceDiscovery::down(string username, string token){
  }
 
 Message* ServiceDiscovery::doOperation(Message* _message){
-	cout << "SERVICEDISCOVERY::doOperation!";
-	_message->print();
+//	cout << "SERVICEDISCOVERY::doOperation!";
+//	_message->print();
 	Message* reply_message = new Message(Reply, _message->getRPCId());
 
     vector<Parameter> args;
@@ -158,8 +156,8 @@ Message* ServiceDiscovery::doOperation(Message* _message){
     }
 
 	MessageDecoder::encode(*reply_message, reply_args, operation, Reply);
-	reply_message->print();
-	cout << "SERVICE DISCOVERY OUT!" << endl;
+//	reply_message->print();
+//	cout << "SERVICE DISCOVERY OUT!" << endl;
     return reply_message;
 }
 ServiceDiscovery:: ~ServiceDiscovery(){

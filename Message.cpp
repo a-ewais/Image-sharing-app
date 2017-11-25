@@ -85,9 +85,9 @@ Message::Message(vector<Message*>& parts){
 
 int Message::getNewRPC(){
 	pthread_mutex_lock(&Message::rpc_mutex);
-	rpc_count++;
+	int t = rpc_count++;
 	pthread_mutex_unlock(&Message::rpc_mutex);
-	return rpc_count;
+	return t;
 }
 
 char * Message::marshal(int &size){

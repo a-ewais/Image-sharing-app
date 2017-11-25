@@ -3,7 +3,7 @@
 #ifndef UDPSOCKET_H
 #define UDPSOCKET_H
 
-#define MAX_DATAGRAM_SIZE 7*1024   //8 KB
+#define MAX_DATAGRAM_SIZE 2*1024   //8 KB
 
 class UDPSocket
 {

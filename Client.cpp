@@ -129,8 +129,10 @@ string Client::requestImage(string& username, string& token, string& imageId){
 	Message* reply = execute(&r);
 	args.clear();
 	MessageDecoder::decode(reply, args);
+	cout<<reply->getMessageSize()<<endl;
 	delete reply;
 	string imageData = args[0].getString();
+	cout << imageData.size() << endl;
 	return imageData;
 }
 

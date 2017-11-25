@@ -60,7 +60,7 @@ void* UDPClientSocket::messenger(void* arg){
 			Message* temp = new Message(incoming);
 			pthread_mutex_lock(&me->in_mutex);
 			if(me->waitFor.find(temp->getRPCId())!=me->waitFor.end()){
-				if(temp->isComplete()){
+				if(temp->isComplete()&&!me->parts[temp->getRPCId()].size()){
 					me->waitFor[temp->getRPCId()] = temp;
 					cout<<"complete\n";
 //					temp->print();

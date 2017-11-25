@@ -161,9 +161,12 @@ Message* ServerPeer::doOperation(Message* _message){
 }
 
 void ServerPeer::writePeerImage(string& username,string &imagename, string& image){
-	const int dir_err_owned = mkdir(username.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-	string imagePath = loadedImagesPath + username + "/" + imagename;
+	string dir_path = loadedImagesPath + username;
+	const int dir_err_owned = mkdir(dir_path.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+
+	string imagePath = dir_path + "/" + imagename;
 	std::ofstream fin(imagePath, std::ios::out | std::ios::binary);
+	cout << image.size();
 	fin << image;
 	fin.close();
 }

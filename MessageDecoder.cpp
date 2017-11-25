@@ -237,7 +237,11 @@ void MessageDecoder::decode(Message* _message, std::vector<Parameter>& params){
     	break;
     	case 8:{
     		Parameter arg1;
-    		std::string image(_message->getMessage());
+    		string image;
+    		image.resize(_message->getMessageSize());
+    		for(int i = 0 ; i < _message->getMessageSize(); i++){
+    			image[i] = _message->getMessage()[i];
+    		}
     		arg1.setString(image);
     		params.push_back(arg1);
     	}

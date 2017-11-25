@@ -63,7 +63,6 @@ void ImageInformation::on_viewersList_itemClicked(QListWidgetItem *item)
 
 void ImageInformation::on_back_clicked()
 {
-//    profile = new Profile();
-//    hide();
-//    profile->showNormal();
+    this->parentWidget()->show();
+    this->close();
 }

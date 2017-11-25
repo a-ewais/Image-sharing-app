@@ -50,5 +50,6 @@ void PeerProfile::on_request_clicked()
 
 void PeerProfile::on_back_clicked()
 {
-
+    this->parentWidget()->show();
+    this->close();
 }

@@ -26,14 +26,15 @@ void Requests::fillList(){
 void Requests::on_imageRequested_itemClicked(QListWidgetItem *item)
 {
     image_name = item->text();
+    //    std::vector<std::string> u= user->requestedImages(send_to.toUtf8().constData());
+    //    for(int i=0; i<u.size(); ++i)
+    //       ui->usersRequesting->addItem(QString::fromStdString(u[i]));
 }
 
 void Requests::on_usersRequesting_itemClicked(QListWidgetItem *item)
 {
     send_to = item->text();
-//    std::vector<std::string> u= user->requestedImages(send_to.toUtf8().constData());
-//    for(int i=0; i<u.size(); ++i)
-//       ui->imageRequested->addItem(QString::fromStdString(u[i]));
+
 }
 
 void Requests::on_request_clicked()
@@ -44,4 +45,10 @@ void Requests::on_request_clicked()
         int x= std::stoi(s);
         user->grantPeerImage(send_to.toUtf8().constData(), image_name.toUtf8().constData(), x);
     }
+}
+
+void Requests::on_back_clicked()
+{
+    this->parentWidget()->show();
+    this->close();
 }

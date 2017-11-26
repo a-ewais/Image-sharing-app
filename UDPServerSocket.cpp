@@ -133,7 +133,7 @@ void* UDPServerSocket::messenger(void* arg){
 void UDPServerSocket::sendReply(Message* m){
 	vector<Message*> temp_parts;
 	if(m->getMessageSize()+32 > MAX_DATAGRAM_SIZE)
-		cout<<(sendReplyWaitAck(m,10)?"sent successfully\n":"failed to send\n")<<endl;
+        cout<<(sendReplyWaitAck(m,100)?"sent successfully\n":"failed to send\n")<<endl;
 	else{
 		temp_parts.push_back(m);
 		pthread_mutex_lock(&out_mutex);

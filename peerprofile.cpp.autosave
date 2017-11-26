@@ -45,9 +45,9 @@ void PeerProfile::on_back_clicked()
 void PeerProfile::on_imageList_itemClicked(QListWidgetItem *item)
 {
     imagename = item->text();
-//    ui->views->setText(QString::number());
     std::string _name = imagename.toUtf8().constData();
-    int x = user->viewsCount(online_user.toUtf8().constData(), _name);
+    int x = user->allowedViews(online_user.toUtf8().constData(), _name);
+    ui->views->setText(QString::number(x));
     cv::Mat img;
     if (x!=0){
         img = user->viewPeerImage(online_user.toUtf8().constData(), _name);

@@ -34,14 +34,21 @@ void DatabaseLinker:: createTable(){
     sqlite3_close(db);
 }
 
-void DatabaseLinker:: insert(string username, string password, string IP, bool online, string token){
+bool DatabaseLinker:: insert(string username, string password, string IP, bool online, string token){
     rc = sqlite3_open("test.db", &db);
     //Create SQL statement
     
     sql = "INSERT INTO USERS VALUES (" + C +username + C +"," + C+password+C + "," + C+IP+C + "," + C+to_string(online)+C+ "," +C+token+C + ");";
     const char* sqlChar = sql.c_str();
     rc = sqlite3_exec(db, sqlChar, callback, 0, &zErrMsg);
+    if( rc != SQLITE_OK ){
+         //fprintf(stderr, "SQL error: %s\n", zErrMsg);
+         sqlite3_free(zErrMsg);
+         return false;
+     }
+
     sqlite3_close(db);
+    return true;
 }
 
 string DatabaseLinker:: retreive(string var, string toRetreive){

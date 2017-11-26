@@ -14,7 +14,7 @@ public:
     DatabaseLinker();
     static int callback(void *NotUsed, int argc, char **argv, char **azColName);
     void createTable();
-    void insert(string username, string password, string IP, bool online, string token);
+    bool insert(string username, string password, string IP, bool online, string token);
     void remove();
     string retreive( string var, string toRetreive);
     void update( string var, string var_to_update, string newVal);

@@ -17,6 +17,9 @@ Profile::Profile(QWidget *parent, User* _user) :
 Profile::~Profile()
 {
     delete ui;
+    delete info;
+    delete peerProfile;
+    delete request;
 }
 
 void Profile::fillList(){

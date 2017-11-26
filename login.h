@@ -20,9 +20,10 @@ public:
     ~Login();
 
 private slots:
-    void on_login_clicked();
+    void on_login_clicked(); //checks if the username exists with a correct entered password it grants the user the access to profile screen.
+                             //if the username or password is incorrect a notification will be displayed.
 
-    void on_signup_clicked();
+    void on_signup_clicked(); //checks if the username does not exist it grants the user the access to profile screen otherwise asks for a new user
 
 private:
     Ui::Login *ui;

@@ -72,13 +72,23 @@ void MessageDecoder::encode(Message& _message, std::vector<Parameter>& params, i
 		switch(_operation){
 		case 1:
 		case 2:
-		case 3:
+		case 3:{
+			messageContent.append(params[0].getString());
+			messageContent.append(";");
+			messageContent.append(params[1].getString());
+			messageContent.append(";");
+			messageContent.append(params[2].getString());
+			messageContent.append(";");
+		}
+		break;
 		case 8:{
 			messageContent.append(params[0].getString());
 			messageContent.append(";");
 			messageContent.append(params[1].getString());
 			messageContent.append(";");
 			messageContent.append(params[2].getString());
+			messageContent.append(";");
+			messageContent.append(std::to_string(params[3].getInt()));
 			messageContent.append(";");
 		}
 		break;
@@ -163,10 +173,8 @@ void MessageDecoder::decode(Message* _message, std::vector<Parameter>& params){
 		switch(_operation){
 		case 1:
 		case 2:
-		case 3:
-		case 8:
-		{
-			Parameter arg1, arg2, arg3;
+		case 3:{
+			Parameter arg1, arg2, arg3, arg4;
 			arg1.setString(tokens[0]);
 			arg2.setString(tokens[1]);
 			arg3.setString(tokens[2]);
@@ -174,6 +182,20 @@ void MessageDecoder::decode(Message* _message, std::vector<Parameter>& params){
 			params.push_back(arg1);
 			params.push_back(arg2);
 			params.push_back(arg3);
+		}
+		break;
+		case 8:
+		{
+			Parameter arg1, arg2, arg3, arg4;
+			arg1.setString(tokens[0]);
+			arg2.setString(tokens[1]);
+			arg3.setString(tokens[2]);
+			arg4.setInt(std::stoi(tokens[3]));
+
+			params.push_back(arg1);
+			params.push_back(arg2);
+			params.push_back(arg3);
+			params.push_back(arg4);
 		}
 		break;
 		case 4:
@@ -207,12 +229,10 @@ void MessageDecoder::decode(Message* _message, std::vector<Parameter>& params){
     	case 1:
     	case 2:{
     		Parameter arg1;
-//    		cout<<"sa7\n";
     		if(tokens.empty())
     			tokens.push_back("");
 
     		arg1.setString(tokens[0]);
-//    		cout<<"3ada";
     		params.push_back(arg1);
     	}
     	break;
@@ -250,6 +270,10 @@ void MessageDecoder::decode(Message* _message, std::vector<Parameter>& params){
     		Parameter arg1;
     		arg1.setBoolean(stoi(tokens[0]));
     		params.push_back(arg1);
+    	}
+    	break;
+    	case 11:{
+
     	}
     	break;
     	}

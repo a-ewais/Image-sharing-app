@@ -19,20 +19,19 @@ private:
 
 public:
 	User(string serverIp, int serverPort,string myIp, int myPort);
-	//from the service discovery
+
 	bool signUp(string userName, string password);
 	bool signIn(string userName, string password);
 
-	//from other peers
-	vector<string> viewOnlineUsers();	//who is online
-	vector<string> getListOfPeerImages(string username);	//bayna y3ny
-	int requestPeerImage(string username, string imagename);  //returns number of views if granted..negative otherwise
-	cv::Mat viewPeerImage(string username, string imagename);	//if it is granted...ask it from the server
+	vector<string> viewOnlineUsers();
+	vector<string> getListOfPeerImages(string username);
+	void requestPeerImage(string username, string imagename, int views);
+	cv::Mat viewPeerImage(string username, string imagename);
 
-	//from himself
-	vector<string> viewMyImages(); //returns list of my images
-	cv::Mat viewMyImage(string imagename); //returns the image
-	void updateMyImage(cv::Mat newImage); //adds new viewers..update counts
+	vector<string> viewMyImages();
+	cv::Mat viewMyImage(string imagename);
+	void updateMyImage(cv::Mat newImage);
+	void uploadImage(string imgPath);
 
 	//to other peers
 	void grantPeerImage(string username, string imagename, int views);

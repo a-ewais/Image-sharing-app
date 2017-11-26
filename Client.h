@@ -19,7 +19,7 @@ public:
 	bool up(string& username, string& token, string& hostname, int port);
 	bool down(string& username, string& token);
 	vector<string> requestListOfImages(string& username, string& token);
-	string requestImage(string& username, string& token, string& imageId);
+	bool requestImage(string& username, string& token, string& imageId, int& views);
 	bool updateViews(string& username, string& token, string& imgId, int views);
 	bool revokeView(string& username, string& token, string& imgId);
 	void viewNotify(string& username, string& token,string& imgId);

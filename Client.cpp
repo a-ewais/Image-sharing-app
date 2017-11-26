@@ -119,21 +119,26 @@ vector<string> Client::requestListOfImages(string& username, string& token){
 	return args[0].getVectorString();
 }
 
-string Client::requestImage(string& username, string& token, string& imageId){
+bool Client::requestImage(string& username, string& token, string& imageId, int& views){
 	Message r(Request, Message::getNewRPC());
 	vector<Parameter> args(3);
 	args[0].setString(username);
 	args[1].setString(token);
 	args[2].setString(imageId);
+	args[3].setInt(views);
 	MessageDecoder::encode(r, args, 8, Request);
 	Message* reply = execute(&r);
-	args.clear();
-	MessageDecoder::decode(reply, args);
-	cout<<reply->getMessageSize()<<endl;
+	if(reply==NULL)
+		return false;
 	delete reply;
-	string imageData = args[0].getString();
-	cout << imageData.size() << endl;
-	return imageData;
+	return true;
+//	args.clear();
+//	MessageDecoder::decode(reply, args);
+//	cout<<reply->getMessageSize()<<endl;
+//	delete reply;
+//	string imageData = args[0].getString();
+//	cout << imageData.size() << endl;
+//	return imageData;
 }
 
 bool Client::updateViews(string& username, string& token,  string& imgId, int views){

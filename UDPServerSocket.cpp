@@ -133,16 +133,17 @@ void* UDPServerSocket::messenger(void* arg){
 void UDPServerSocket::sendReply(Message* m){
 	vector<Message*> temp_parts;
 	if(m->getMessageSize()+32 > MAX_DATAGRAM_SIZE)
-		temp_parts = m->split(MAX_DATAGRAM_SIZE);
-	else
+		cout<<(sendReplyWaitAck(m,3)?"sent successfully\n":"failed to send\n")<<endl;
+	else{
 		temp_parts.push_back(m);
-	cout<<"this message is split into "<<temp_parts.size()<<" parts\n";
-	pthread_mutex_lock(&out_mutex);
-	for(int i=0;i<temp_parts.size();i++){
+		cout<<"this message is split into "<<temp_parts.size()<<" parts\n";
+		pthread_mutex_lock(&out_mutex);
+		for(int i=0;i<temp_parts.size();i++){
 //		usleep(1000);
-		outbox.push(temp_parts[i]);
+			outbox.push(temp_parts[i]);
+		}
+		pthread_mutex_unlock(&out_mutex);
 	}
-	pthread_mutex_unlock(&out_mutex);
 }
 
 bool UDPServerSocket::sendReplyWaitAck(Message* m, int trials){

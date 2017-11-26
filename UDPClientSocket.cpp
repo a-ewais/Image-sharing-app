@@ -36,7 +36,7 @@ void* UDPClientSocket::messenger(void* arg){
 					cout<<"error sending packet\n";
 				else{
 //					cout<<"packet sent\n";
-					delete temp;
+//					delete temp;
 					break;
 				}
 			}

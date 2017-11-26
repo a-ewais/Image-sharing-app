@@ -145,13 +145,16 @@ void UDPServerSocket::sendReply(Message* m){
 }
 
 bool UDPServerSocket::sendReplyWaitAck(Message* m, int trials){
-	vector<Message*> temp_parts;
+	vector<Message*> temp_parts,copy;
 	vector<bool> recvAck;
 	temp_parts = m->split(MAX_DATAGRAM_SIZE);
+	copy.resize(temp_parts.size());
 	recvAck.assign(temp_parts.size(),false);
 	cout<<"this message is split into "<<temp_parts.size()<<" parts\n";
 	bool done = true;
 	while(trials--){
+		for(int i=0;i<temp_parts.size();i++)
+			copy[i](new Message(*temp_parts[i]));
 		done = true;
 		pthread_mutex_lock(&out_mutex);
 		for(int i=0;i<temp_parts.size();i++){
@@ -169,7 +172,8 @@ bool UDPServerSocket::sendReplyWaitAck(Message* m, int trials){
 			Message * temp = acks.front();
 			acks.pop();
 			recvAck[temp->getPartNum()] = true;
-			delete temp;
+
+//			delete temp;
 		}
 		pthread_mutex_unlock(&ack_mutex);
 	}

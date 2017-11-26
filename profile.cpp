@@ -51,7 +51,7 @@ void Profile::on_onlineUsers_itemClicked(QListWidgetItem *item)
 
 void Profile::on_upload_clicked()
 {
-    QString filename= QFileDialog::getOpenFileName(this, tr("Choose Image"), "c://", "Image file (*.*);;");
+    QString filename= QFileDialog::getOpenFileName(this, tr("Choose Image"), "c://", "Image file (*.jpg);;");
     QMessageBox::information(this,tr("File Name"),filename);
     cv::Mat img = cv::imread(filename.toUtf8().constData(), cv::IMREAD_COLOR);
     user->uploadImage(filename.toUtf8().constData());
@@ -70,6 +70,7 @@ void Profile::on_request_clicked()
 
 void Profile::on_logout_clicked()
 {
+//    user->down();
     this->parentWidget()->show();
     this->close();
 }

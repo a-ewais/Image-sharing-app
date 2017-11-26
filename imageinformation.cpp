@@ -13,6 +13,8 @@ ImageInformation::ImageInformation(QWidget *parent, QString str, User* _user) :
 
     ui->views->setText("");
     ui->imageName->setText(imagename);
+    displayImage();
+    fillList();
 }
 
 void ImageInformation::displayImage(){
@@ -20,6 +22,8 @@ void ImageInformation::displayImage(){
     std::string _name=imagename.toUtf8().constData();
     img = user->viewMyImage(_name);
     cv::cvtColor(img, img, cv::COLOR_BGR2RGB);
+    cv::Size size(690,580);
+    cv::resize(img,img,size);
     ui->image->setPixmap(QPixmap::fromImage(QImage(img.data, img.cols, img.rows, img.step, QImage::Format_RGB888)));
 }
 

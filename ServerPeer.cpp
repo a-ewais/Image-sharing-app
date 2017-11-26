@@ -18,8 +18,8 @@ ServerPeer::ServerPeer(char* _listen_hostname, int _listen_port, Client* _servic
 	mkdir("LoadedImages", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
 	myPath = get_current_dir_name();
-	myImagesPath = myPath + "/MyImages/";
-	loadedImagesPath = myPath + "/LoadedImages/";
+    myImagesPath = "./MyImages/";
+    loadedImagesPath = "./LoadedImages/";
 	serviceDiscoveryClient = _serviceDiscoveryClient;
 
 	pthread_t p;
@@ -69,67 +69,67 @@ std::string ServerPeer::getImage(std::string imageID){
 }
 
 void ServerPeer::decrementPeerImage(std::string userID, std::string imageID){
-	string extract_command = "steghide extract -p 123 -sf " + loadedImagesPath + userID + "/" + "steg_" + imageID;
-		system(extract_command.c_str());
+    string extract_command = "steghide extract -p 123 -sf " + loadedImagesPath + userID + "/steg_" + imageID + " -xf " + loadedImagesPath + userID + "/" + "data_" + imageID;
+    system(extract_command.c_str());
 
-		extract_command = "steghide extract -p 123 -sf " + loadedImagesPath + userID + "/" + "data_" + imageID;
-		system(extract_command.c_str());
+    extract_command = "steghide extract -p 123 -sf " + loadedImagesPath + userID + "/data_" + imageID + " -xf " + loadedImagesPath + userID + "/" + imageID + ".data.txt";
+    system(extract_command.c_str());
 
-		string line;
-		ifstream viewData(imageID + ".data.txt");
-		map<std::string, int> data;
+    string line;
+    ifstream viewData(imageID + ".data.txt");
+    map<std::string, int> data;
 
-		if(viewData.is_open()){
-			while(getline(viewData,line)){
-				int delimiter = line.find(';');
-				string username = line.substr(0, delimiter);
-				string views = line.substr(delimiter, string::npos);
-				data[username] = stoi(views);
-			}
-			viewData.close();
-		}
-		int count = data[userID];
-		count--;
+    if(viewData.is_open()){
+        while(getline(viewData,line)){
+            int delimiter = line.find(';');
+            string username = line.substr(0, delimiter);
+            string views = line.substr(delimiter, string::npos);
+            data[username] = stoi(views);
+        }
+        viewData.close();
+    }
+    int count = data[userID];
+    count--;
 
-		if(count == 0){
-			string remove_old_command = "rm " + loadedImagesPath + userID + "/" + imageID + ".data.txt";
-			system(remove_old_command.c_str());
-			remove_old_command = "rm data_" + loadedImagesPath + userID + "/" + imageID;
-			system(remove_old_command.c_str());
-			remove_old_command = "rm steg_" + loadedImagesPath + userID + "/" + imageID;
-			system(remove_old_command.c_str());
-			return;
-		}
-		else
-			data[userID] = count;
+    if(count == 0){
+        string remove_old_command = "rm " + loadedImagesPath + userID + "/" + imageID + ".data.txt";
+        system(remove_old_command.c_str());
+        remove_old_command = "rm data_" + loadedImagesPath + userID + "/" + imageID;
+        system(remove_old_command.c_str());
+        remove_old_command = "rm steg_" + loadedImagesPath + userID + "/" + imageID;
+        system(remove_old_command.c_str());
+        return;
+    }
+    else
+        data[userID] = count;
 
-		string remove_old_command = "rm " + imageID + ".data.txt";
-		system(remove_old_command.c_str());
+    string remove_old_command = "rm " + imageID + ".data.txt";
+    system(remove_old_command.c_str());
 
-		ofstream newData(imageID + ".data.txt");
-		if(newData.is_open()){
-			for (std::map<string,int>::iterator it=data.begin(); it!=data.end(); ++it)
-			    newData << it->first << ";" << it->second << '\n';
-		}
+    ofstream newData(imageID + ".data.txt");
+    if(newData.is_open()){
+        for (std::map<string,int>::iterator it=data.begin(); it!=data.end(); ++it)
+            newData << it->first << ";" << it->second << '\n';
+    }
 
-		string create_new_command;
-		create_new_command = "steghide embed -p 123 -cf " + loadedImagesPath + userID + "/" + imageID + " -ef " + loadedImagesPath + userID + "/" + imageID + ".data.txt -sf " + loadedImagesPath + userID + "/" + "data_" + imageID;
-		system(create_new_command.c_str());
-        create_new_command = "steghide embed -p 123 -cf " + loadedImagesPath + userID + "/" + ".default.jpeg -ef " + loadedImagesPath + userID + "/" + "data_" + imageID + " -sf " + loadedImagesPath + userID + "/" + "steg_" + imageID;
-		system(create_new_command.c_str());
+    string create_new_command;
+    create_new_command = "steghide embed -p 123 -cf " + loadedImagesPath + userID + "/" + imageID + " -ef " + loadedImagesPath + userID + "/" + imageID + ".data.txt -sf " + loadedImagesPath + userID + "/" + "data_" + imageID;
+    system(create_new_command.c_str());
+    create_new_command = "steghide embed -p 123 -cf " + loadedImagesPath + userID + "/" + ".default.jpeg -ef " + loadedImagesPath + userID + "/" + "data_" + imageID + " -sf " + loadedImagesPath + userID + "/" + "steg_" + imageID;
+    system(create_new_command.c_str());
 
-		remove_old_command = "rm " + loadedImagesPath + userID + "/" + imageID + ".data.txt";
-		system(remove_old_command.c_str());
-		remove_old_command = "rm data_" + loadedImagesPath + userID + "/" + imageID;
-		system(remove_old_command.c_str());
+    remove_old_command = "rm " + loadedImagesPath + userID + "/" + imageID + ".data.txt";
+    system(remove_old_command.c_str());
+    remove_old_command = "rm data_" + loadedImagesPath + userID + "/" + imageID;
+    system(remove_old_command.c_str());
 }
 
 void ServerPeer::updateLocalViews(std::string userID, std::string imageID, int count){
-	string extract_command = "steghide extract -p 123 -sf " + myImagesPath + "steg_" + imageID;
-	system(extract_command.c_str());
+    string extract_command = "steghide extract -p 123 -sf " + myImagesPath + "steg_" + imageID + " -xf " + myImagesPath + "data_" + imageID;
+    system(extract_command.c_str());
 
-	extract_command = "steghide extract -p 123 -sf " + myImagesPath + "data_" + imageID;
-	system(extract_command.c_str());
+    extract_command = "steghide extract -p 123 -sf " + myImagesPath + "data_" + imageID + " -xf " + myImagesPath + imageID + ".data.txt";
+    system(extract_command.c_str());
 
 	string line;
 	ifstream viewData(imageID + ".data.txt");
@@ -165,10 +165,12 @@ void ServerPeer::updateLocalViews(std::string userID, std::string imageID, int c
     create_new_command = "steghide embed -p 123 -cf " + myImagesPath + ".default.jpeg -ef " + myImagesPath + "data_" + imageID + " -sf " + myImagesPath + "steg_" + imageID;
 	system(create_new_command.c_str());
 
-	remove_old_command = "rm " + myImagesPath + imageID + ".data.txt";
-	system(remove_old_command.c_str());
-	remove_old_command = "rm data_" + myImagesPath + imageID;
-	system(remove_old_command.c_str());
+    remove_old_command = "rm " + myImagesPath + imageID + ".data.txt";
+    system(remove_old_command.c_str());
+    remove_old_command = "rm " + myImagesPath + "data_" + imageID;
+    system(remove_old_command.c_str());
+    remove_old_command = "rm " + myImagesPath + imageID;
+    system(remove_old_command.c_str());
 
 }
 
@@ -261,11 +263,11 @@ vector<string> ServerPeer::getRequestedImages(){
 
 vector<string> ServerPeer::whoCanView(string imageName){
 	std::vector<std::string> viewers;
-	string extract_command = "steghide extract -p 123 -sf " + myImagesPath + "steg_" + imageName;
-	system(extract_command.c_str());
+    string extract_command = "steghide extract -p 123 -sf " + myImagesPath + "steg_" + imageName + " -xf " + myImagesPath + "data_" + imageName;
+    system(extract_command.c_str());
 
-	extract_command = "steghide extract -p 123 -sf " + myImagesPath + "data_" + imageName;
-	system(extract_command.c_str());
+    extract_command = "steghide extract -p 123 -sf " + myImagesPath + "data_" + imageName + " -xf " + myImagesPath + imageName + ".data.txt";
+    system(extract_command.c_str());
 
 	string line;
 	ifstream viewData(imageName + ".data.txt");
@@ -280,20 +282,22 @@ vector<string> ServerPeer::whoCanView(string imageName){
 		viewData.close();
 	}
 
-	string remove_old_command = "rm " + imageName + ".data.txt";
-	system(remove_old_command.c_str());
-	remove_old_command = "rm data_" + myImagesPath + imageName;
-	system(remove_old_command.c_str());
+    string remove_old_command = "rm " + myImagesPath + imageName + ".data.txt";
+    system(remove_old_command.c_str());
+    remove_old_command = "rm " + myImagesPath + "data_" + imageName;
+    system(remove_old_command.c_str());
+    remove_old_command = "rm " + myImagesPath + imageName;
+    system(remove_old_command.c_str());
 
 	return viewers;
 }
 
 int ServerPeer::viewsCount(string username, string imageName){
 	int views;
-	string extract_command = "steghide extract -p 123 -sf " + myImagesPath + "steg_" + imageName;
+    string extract_command = "steghide extract -p 123 -sf " + myImagesPath + "steg_" + imageName + " -xf " + myImagesPath + "data_" + imageName;
 	system(extract_command.c_str());
 
-	extract_command = "steghide extract -p 123 -sf " + myImagesPath + "data_" + imageName;
+    extract_command = "steghide extract -p 123 -sf " + myImagesPath + "data_" + imageName + " -xf " + myImagesPath + imageName + ".data.txt";
 	system(extract_command.c_str());
 
 	string line;
@@ -308,11 +312,12 @@ int ServerPeer::viewsCount(string username, string imageName){
 		viewData.close();
 	}
 
-	string remove_old_command = "rm " + imageName + ".data.txt";
+    string remove_old_command = "rm " + myImagesPath + imageName + ".data.txt";
 	system(remove_old_command.c_str());
-	remove_old_command = "rm data_" + myImagesPath + imageName;
+    remove_old_command = "rm " + myImagesPath + "data_" + imageName;
 	system(remove_old_command.c_str());
-
+    remove_old_command = "rm " + myImagesPath + imageName;
+    system(remove_old_command.c_str());
 	return views;
 }
 

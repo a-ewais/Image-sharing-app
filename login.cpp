@@ -57,8 +57,6 @@ Login::Login(QWidget *parent) :
     ui(new Ui::Login)
 {
     ui->setupUi(this);
-    ui->username->clear();
-    ui->password->clear();
     vector<string> ips;
     print_addresses(AF_INET, ips);
     user = new User("10.7.57.199", 64000, ips[2] , 64000);
@@ -78,6 +76,8 @@ void Login::on_login_clicked()
     bool auth = user->signIn(_username, _password);
     if(auth){
         hide();
+        ui->username->setText("");
+        ui->password->setText("");
         profile = new Profile(this,user);
 //        profile->fillLists();
         profile->show();
@@ -97,6 +97,8 @@ void Login::on_signup_clicked()
     bool auth = user->signUp(_username, _password);
     if(auth){
         hide();
+        ui->username->setText("");
+        ui->password->setText("");
         profile = new Profile(this, user);
 //        profile->fillLists();
         profile->show();

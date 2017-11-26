@@ -210,12 +210,7 @@ Message* ServerPeer::doOperation(Message* _message){
     break;
     case 11:{
     	//Write Image
-    	args[0].getString(); //username
-    	args[1].getString(); //token
-    	args[2].getString(); //image name
-    	args[3].getInt(); //Permitted Views
-    	args[4].getString(); //Image
-//    	writePeerImage(args[0].getString(), args[1].getString(), );
+    	writePeerImage(args[0].getString(), args[1].getString(), args[2].getString(), args[3].getString());
     }
     	break;
     case 9:{
@@ -228,7 +223,7 @@ Message* ServerPeer::doOperation(Message* _message){
     return reply_message;
 }
 
-void ServerPeer::writePeerImage(string& username, string& token, string& imagename, string& image){
+void ServerPeer::writePeerImage(string username, string token, string imagename, string image){
 	if(serviceDiscoveryClient->auth(username, token)){
 		string dir_path = loadedImagesPath + username;
 		mkdir(dir_path.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
@@ -238,7 +233,87 @@ void ServerPeer::writePeerImage(string& username, string& token, string& imagena
 		cout << image.size();
 		fin << image;
 		fin.close();
+		requested[imagename].erase(username);
 	}
+}
+
+void ServerPeer::addRequested(string username, string imageName, int views){
+	requested[imageName][username] = views;
+}
+
+vector<string> ServerPeer::getRequesters(string imageName){
+	std::vector<std::string> req;
+	std::map<string, int> imageRequesters = requesters[imageName];
+
+	for (std::map<string,int>::iterator it=imageRequesters.begin(); it!=imageRequesters.end(); ++it)
+		req.push_back(it->first);
+
+	return req;
+}
+
+vector<string> ServerPeer::getRequestedImages(){
+	std::vector<std::string> req;
+	for (std::map<string,map<string, int>>::iterator it=requesters.begin(); it!=requesters.end(); ++it)
+		req.push_back(it->first);
+
+	return req;
+}
+
+vector<string> ServerPeer::whoCanView(string imageName){
+	std::vector<std::string> viewers;
+	string extract_command = "steghide extract -p 123 -sf " + myImagesPath + "steg_" + imageName;
+	system(extract_command.c_str());
+
+	extract_command = "steghide extract -p 123 -sf " + myImagesPath + "data_" + imageName;
+	system(extract_command.c_str());
+
+	string line;
+	ifstream viewData(imageName + ".data.txt");
+	map<std::string, int> data;
+
+	if(viewData.is_open()){
+		while(getline(viewData,line)){
+			int delimiter = line.find(';');
+			string username = line.substr(0, delimiter);
+			viewers.push_back(username);
+		}
+		viewData.close();
+	}
+
+	string remove_old_command = "rm " + imageName + ".data.txt";
+	system(remove_old_command.c_str());
+	remove_old_command = "rm data_" + myImagesPath + imageName;
+	system(remove_old_command.c_str());
+
+	return viewers;
+}
+
+int ServerPeer::viewsCount(string username, string imageName){
+	int views;
+	string extract_command = "steghide extract -p 123 -sf " + myImagesPath + "steg_" + imageName;
+	system(extract_command.c_str());
+
+	extract_command = "steghide extract -p 123 -sf " + myImagesPath + "data_" + imageName;
+	system(extract_command.c_str());
+
+	string line;
+	ifstream viewData(imageName + ".data.txt");
+	map<std::string, int> data;
+
+	if(viewData.is_open()){
+		while(getline(viewData,line)){
+			int delimiter = line.find(';');
+			views = stoi(line.substr(delimiter, string::npos));
+		}
+		viewData.close();
+	}
+
+	string remove_old_command = "rm " + imageName + ".data.txt";
+	system(remove_old_command.c_str());
+	remove_old_command = "rm data_" + myImagesPath + imageName;
+	system(remove_old_command.c_str());
+
+	return views;
 }
 
 cv::Mat ServerPeer::readPeerImage(string& username, string& imagename){

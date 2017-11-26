@@ -26,13 +26,20 @@ class ServerPeer: public Server{
    		Message* doOperation(Message* _message); //overload...dispatcher
     public:
         ServerPeer(char* _listen_hostname, int _listen_port, Client* serviceDiscoveryClient);
-        void writePeerImage(string& username, string& token, string& imagename, string& image);
+        void writePeerImage(string username, string token, string imagename, string image);
         void writeMyImage(string imagePath);
         cv::Mat readPeerImage(string& username, string& imagename);
         vector<string> getListOfMyImages();
         void updateLocalViews(std::string userID, std::string imageID, int count);
         cv::Mat getMyImage(string& imagename);
         std::string getImage(std::string imageID);
+        void addRequested(string username, string imageName, int views);
+        vector<string> getRequesters(string imageName);
+        vector<string> getRequestedImages();
+        vector<string> whoCanView(string imageName);
+        int viewsCount(string username, string imageName);
+
+
         ~ServerPeer();
 };
 

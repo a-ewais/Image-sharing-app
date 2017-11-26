@@ -33,6 +33,11 @@ public:
 	void updateMyImage(cv::Mat newImage);
 	void uploadImage(string imgPath);
 
+	vector<string> getRequestedImages();
+	vector<string> getRequesters(string imageName);
+	vector<string> whoCanView(string imageName);
+	int viewsCount(string username, string imageName);
+
 	//to other peers
 	void grantPeerImage(string username, string imagename, int views);
 	void revokePeerImage(string username, string imagename);

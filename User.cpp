@@ -68,6 +68,9 @@ void User::requestPeerImage(string _username, string _imagename, int views){
 //	if(!cli->isEnabled())
 //		cli->enable();
 	bool request = cli->requestImage(username, token, _imagename, views);
+	if(request)
+		myServer->addRequested(_username, _imagename, views);
+
 //	myServer->writePeerImage(_username, _imagename, image);
 }
 
@@ -119,6 +122,26 @@ void User::updatePeerImage(string _username, string _imagename, int _views){
 	if(cli->updateViews(username, token, _imagename, _views))
 		myServer->updateLocalViews(_username, _imagename, _views);
 	//	cli->disable();
+}
+
+vector<string> User::getRequestedImages(){
+	std::vector<string> reqImages = myServer->getRequestedImages();
+	return reqImages;
+}
+
+vector<string> User::getRequesters(string imageName){
+	std::vector<string> users = myServer->getRequesters(imageName);
+	return users;
+}
+
+vector<string> User::whoCanView(string imageName){
+	std::vector<string> viewers = myServer->whoCanView(imageName);
+	return viewers;
+}
+
+int User::viewsCount(string username, string imageName){
+	int views = myServer->viewsCount(username, imageName);
+	return views;
 }
 
 User::~User() {

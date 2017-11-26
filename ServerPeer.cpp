@@ -57,14 +57,17 @@ std::vector<std::string> ServerPeer::getListofImages(std::string username, std::
 	return results;
 }
 
-std::string ServerPeer::getImage(std::string imageID){
-	cout << "SERVERPEER::getImage!";
-//	std::string dataImage = "";
-	string imageLocation = myImagesPath + "steg_" + imageID;
-	std::ifstream fin(imageLocation, std::ios::in | std::ios::binary);
-	std::ostringstream oss;
-	oss << fin.rdbuf();
-	std::string dataImage(oss.str());
+std::string ServerPeer::getImage(string username, string token, std::string imageID){
+	string dataImage = "";
+	if(serviceDiscoveryClient->auth(username, token)){
+		cout << "SERVERPEER::getImage!";
+	//	std::string dataImage = "";
+		string imageLocation = myImagesPath + "steg_" + imageID;
+		std::ifstream fin(imageLocation, std::ios::in | std::ios::binary);
+		std::ostringstream oss;
+		oss << fin.rdbuf();
+		std::string dataImage(oss.str());
+	}
 	return dataImage;
 }
 
@@ -139,7 +142,7 @@ void ServerPeer::updateLocalViews(std::string userID, std::string imageID, int c
 		while(getline(viewData,line)){
 			int delimiter = line.find(';');
 			string username = line.substr(0, delimiter);
-			string views = line.substr(delimiter, string::npos);
+            string views = line.substr(delimiter+1, string::npos);
 			data[username] = stoi(views);
 		}
 		viewData.close();
@@ -158,6 +161,9 @@ void ServerPeer::updateLocalViews(std::string userID, std::string imageID, int c
 		for (std::map<string,int>::iterator it=data.begin(); it!=data.end(); ++it)
 		    newData << it->first << ";" << it->second << '\n';
 	}
+
+    remove_old_command = "rm " + myImagesPath + "steg_" + imageID;
+    system(remove_old_command.c_str());
 
 	string create_new_command;
 	create_new_command = "steghide embed -p 123 -cf " + myImagesPath + imageID + " -ef " + myImagesPath + imageID + ".data.txt -sf " + myImagesPath + "data_" + imageID;
@@ -204,39 +210,55 @@ Message* ServerPeer::doOperation(Message* _message){
     	Parameter arg1;
 		arg1.setVectorString(imageList);
 		reply_args.push_back(arg1);
-    }
+    	}
     	break;
     case 8:{
     	addRequester(args[0].getString(), args[1].getString(), args[2].getString(), args[3].getInt());
-    }
-    break;
+    	}
+    	break;
     case 11:{
-    	//Write Image
-    	writePeerImage(args[0].getString(), args[1].getString(), args[2].getString(), args[3].getString());
-    }
+    	addApprovedImage(args[0].getString(), args[1].getString(), args[2].getString(), args[3].getInt(), args[4].getBoolean());
+    	}
     	break;
     case 9:{
     	updateViews(args[0].getString(), args[1].getString(), args[2].getString(), args[3].getInt());
-    }
+    	}
     	break;
+    case 12:{
+    	string imageData = getImage(args[0].getString(), args[1].getString(), args[2].getString());
+    	Parameter arg1;
+    	arg1.setString(imageData);
+    	reply_args.push_back(arg1);
+    	}
+    break;
     }
+
 
 	MessageDecoder::encode(*reply_message, reply_args, operation, Reply);
     return reply_message;
 }
 
-void ServerPeer::writePeerImage(string username, string token, string imagename, string image){
+void ServerPeer::addApprovedImage(string username, string token, string imagename, int views, bool approve){
 	if(serviceDiscoveryClient->auth(username, token)){
-		string dir_path = loadedImagesPath + username;
-		mkdir(dir_path.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-
-		string imagePath = dir_path + "/" + imagename;
-		std::ofstream fin(imagePath, std::ios::out | std::ios::binary);
-		cout << image.size();
-		fin << image;
-		fin.close();
-		requested[imagename].erase(username);
+		if(approve)
+			approvedImages[username][imagename] = views;
 	}
+}
+
+void ServerPeer::removeRequester(string username, string imageName){
+	requesters[imageName].erase(username);
+}
+
+void ServerPeer::writePeerImage(string username, string imagename, string image){
+	string dir_path = loadedImagesPath + username;
+	mkdir(dir_path.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+
+	string imagePath = dir_path + "/" + imagename;
+	std::ofstream fin(imagePath, std::ios::out | std::ios::binary);
+	cout << image.size();
+	fin << image;
+	fin.close();
+	requested[imagename].erase(username);
 }
 
 void ServerPeer::addRequested(string username, string imageName, int views){
@@ -324,6 +346,7 @@ int ServerPeer::viewsCount(string username, string imageName){
 cv::Mat ServerPeer::readPeerImage(string& username, string& imagename){
 	cv::Mat image = extractImage(username, imagename, 0);
 	decrementPeerImage(username, imagename);
+	approvedImages[username][imagename]--;
 	return image;
 }
 
@@ -335,6 +358,15 @@ vector<string> ServerPeer::getListOfMyImages(){
 cv::Mat ServerPeer::getMyImage(string& imagename){
 	cv::Mat image = extractImage("", imagename, 1);
 	return image;
+}
+
+int ServerPeer::allowedViews(string username, string imageName){
+	map<string,map<string, int>>::const_iterator it = approvedImages.find(username);
+	if(it!=approvedImages.end()){
+		return approvedImages[username][imageName];
+	}
+	else
+		return 0;
 }
 
 cv::Mat ServerPeer::extractImage(string username, string imagename, bool owned){

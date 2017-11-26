@@ -75,9 +75,17 @@ void User::requestPeerImage(string _username, string _imagename, int views){
 }
 
 cv::Mat User::viewPeerImage(string _username, string _imagename){
-	cv::Mat m = myServer->readPeerImage(_username, _imagename);
-	//TODO: MODIFY REMAINING VIEWS
-//	clients[_username]->viewNotify(username, token, _imagename);
+	cv::Mat m;
+	if(myServer->allowedViews(_username, _imagename)){
+	    ifstream f(_imagename.c_str());
+	    if(f.good()){
+			cv::Mat m = myServer->readPeerImage(_username, _imagename);
+	    }
+		Client* cli = clients[_username];
+		string image = cli->getApprovedImage(username, token, _imagename);
+		myServer->writePeerImage(_username, _imagename, image);
+		cv::Mat m = myServer->readPeerImage(_username, _imagename);
+	}
 	return m;
 }
 
@@ -100,8 +108,8 @@ void User::uploadImage(string imgPath){
 void User::grantPeerImage(string _username, string _imagename, int _views){
 	Client* cli = clients[_username];
 	myServer->updateLocalViews(_username, _imagename, _views);
-	string image = myServer->getImage(_imagename);
-	bool sent = cli->sendImage(username, token, _imagename, image);
+	bool approve = true;
+	bool sent = cli->sendImageApprove(username, token, _imagename, _views, approve);
 	if(sent);
 		//TODO:Remove Requester from server
 }

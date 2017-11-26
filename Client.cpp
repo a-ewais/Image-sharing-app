@@ -121,7 +121,7 @@ vector<string> Client::requestListOfImages(string& username, string& token){
 
 bool Client::requestImage(string& username, string& token, string& imageId, int& views){
 	Message r(Request, Message::getNewRPC());
-	vector<Parameter> args(3);
+	vector<Parameter> args(4);
 	args[0].setString(username);
 	args[1].setString(token);
 	args[2].setString(imageId);
@@ -140,13 +140,33 @@ bool Client::requestImage(string& username, string& token, string& imageId, int&
 //	cout << imageData.size() << endl;
 //	return imageData;
 }
-bool Client::sendImage(string& username, string& token, string& imageID, string& image){
+
+string Client::getApprovedImage(string& username, string& token, string& imageID){
+	string s = "";
 	Message r(Request, Message::getNewRPC());
 	vector<Parameter> args(3);
 	args[0].setString(username);
 	args[1].setString(token);
 	args[2].setString(imageID);
-	args[3].setString(image);
+	MessageDecoder::encode(r, args, 12, Request);
+	Message* reply = execute(&r);
+	if(reply==NULL)
+		return s;
+	args.clear();
+	MessageDecoder::decode(reply, args);
+	delete reply;
+	string imageData = args[0].getString();
+	return imageData;
+}
+
+bool Client::sendImageApprove(string& username, string& token, string& imageID, int& views, bool& approve){
+	Message r(Request, Message::getNewRPC());
+    vector<Parameter> args(5);
+	args[0].setString(username);
+	args[1].setString(token);
+	args[2].setString(imageID);
+	args[3].setInt(views);
+	args[4].setBoolean(approve);
 	MessageDecoder::encode(r, args, 11, Request);
 	Message* reply = execute(&r);
 	if(reply==NULL)

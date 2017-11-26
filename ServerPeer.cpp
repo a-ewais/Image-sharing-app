@@ -38,7 +38,7 @@ vector<string> ServerPeer::loadFileNames(string path){
 	while (entry){									// if !entry then end of directory
 		if (entry->d_type == DT_REG){		// if entry is a regular file
 			std::string fname = entry->d_name;	// filename
-			if(fname != "default.jpeg")
+            if(fname != ".default.jpeg")
 				results.push_back(fname.substr(5));		// add filename to results vector
 		}
 		entry = readdir(dir_point);
@@ -115,7 +115,7 @@ void ServerPeer::decrementPeerImage(std::string userID, std::string imageID){
 		string create_new_command;
 		create_new_command = "steghide embed -p 123 -cf " + loadedImagesPath + userID + "/" + imageID + " -ef " + loadedImagesPath + userID + "/" + imageID + ".data.txt -sf " + loadedImagesPath + userID + "/" + "data_" + imageID;
 		system(create_new_command.c_str());
-		create_new_command = "steghide embed -p 123 -cf " + loadedImagesPath + userID + "/" + " .default.jpeg -ef " + loadedImagesPath + userID + "/" + "data_" + imageID + " -sf " + loadedImagesPath + userID + "/" + " steg_" + imageID;
+        create_new_command = "steghide embed -p 123 -cf " + loadedImagesPath + userID + "/" + ".default.jpeg -ef " + loadedImagesPath + userID + "/" + "data_" + imageID + " -sf " + loadedImagesPath + userID + "/" + "steg_" + imageID;
 		system(create_new_command.c_str());
 
 		remove_old_command = "rm " + loadedImagesPath + userID + "/" + imageID + ".data.txt";
@@ -162,7 +162,7 @@ void ServerPeer::updateLocalViews(std::string userID, std::string imageID, int c
 	string create_new_command;
 	create_new_command = "steghide embed -p 123 -cf " + myImagesPath + imageID + " -ef " + myImagesPath + imageID + ".data.txt -sf " + myImagesPath + "data_" + imageID;
 	system(create_new_command.c_str());
-	create_new_command = "steghide embed -p 123 -cf " + myImagesPath + " .default.jpeg -ef " + myImagesPath + "data_" + imageID + " -sf " + myImagesPath + " steg_" + imageID;
+    create_new_command = "steghide embed -p 123 -cf " + myImagesPath + ".default.jpeg -ef " + myImagesPath + "data_" + imageID + " -sf " + myImagesPath + "steg_" + imageID;
 	system(create_new_command.c_str());
 
 	remove_old_command = "rm " + myImagesPath + imageID + ".data.txt";
@@ -352,20 +352,25 @@ cv::Mat ServerPeer::extractImage(string username, string imagename, bool owned){
 void ServerPeer::writeMyImage(string imagePath){
 	std::size_t found = imagePath.find_last_of("/\\");
 	string imgName = imagePath.substr(found+1);
-	string copy_command = "cp " + imagePath + " " + myImagesPath + imgName;
+    string copy_command = "cp " + imagePath + " ./MyImages/" + imgName;
+
 	system(copy_command.c_str());
 
-	string make_data_command = "echo "" > " + imgName +".data.txt";
+    string make_data_command = "echo "" > ./MyImages/" + imgName +".data.txt";
+
 	system(make_data_command.c_str());
 
 	string create_new_command;
-	create_new_command = "steghide embed -p 123 -cf " + myImagesPath + imgName + " -ef " + myImagesPath + imgName + ".data.txt -sf " + myImagesPath + "data_" + imgName;
-	system(create_new_command.c_str());
-	create_new_command = "steghide embed -p 123 -cf " + myImagesPath + " .default.jpeg -ef " + myImagesPath + "data_" + imgName + " -sf " + myImagesPath + " steg_" + imgName;
+    create_new_command = "steghide embed -p 123 -cf ./MyImages/" + imgName + " -ef ./MyImages/" + imgName + ".data.txt -sf ./MyImages/data_" + imgName;
+    cout << create_new_command << endl;
+    system(create_new_command.c_str());
+    create_new_command = "steghide embed -p 123 -cf ./MyImages/.default.jpeg -ef ./MyImages/data_" + imgName + " -sf ./MyImages/steg_" + imgName;
 	system(create_new_command.c_str());
 
-	string remove_old_command = "rm " + myImagesPath + imgName + ".data.txt";
+    string remove_old_command = "rm ./MyImages/" + imgName + ".data.txt";
 	system(remove_old_command.c_str());
-	remove_old_command = "rm data_" + myImagesPath + imgName;
+    remove_old_command = "rm ./MyImages/data_" + imgName;
 	system(remove_old_command.c_str());
+    remove_old_command = "rm ./MyImages/" + imgName;
+    system(remove_old_command.c_str());
 }

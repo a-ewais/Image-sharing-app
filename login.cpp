@@ -57,6 +57,8 @@ Login::Login(QWidget *parent) :
     ui(new Ui::Login)
 {
     ui->setupUi(this);
+    ui->username->clear();
+    ui->password->clear();
     vector<string> ips;
     print_addresses(AF_INET, ips);
     user = new User("10.7.57.199", 64000, ips[2] , 64000);
@@ -78,7 +80,7 @@ void Login::on_login_clicked()
         hide();
         profile = new Profile(this,user);
 //        profile->fillLists();
-        profile->showNormal();
+        profile->show();
     }
     else{
         QMessageBox::information(this,"ERROR","Username or Password is incorrect");
@@ -97,7 +99,7 @@ void Login::on_signup_clicked()
         hide();
         profile = new Profile(this, user);
 //        profile->fillLists();
-        profile->showNormal();
+        profile->show();
     }
     else{
         QMessageBox::information(this,"ERROR","This username is already taken");

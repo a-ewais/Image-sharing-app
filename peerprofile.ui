@@ -140,7 +140,7 @@ border-color: rgb(14, 168, 146);</string>
    <property name="geometry">
     <rect>
      <x>700</x>
-     <y>570</y>
+     <y>600</y>
      <width>221</width>
      <height>31</height>
     </rect>
@@ -150,6 +150,41 @@ border-color: rgb(14, 168, 146);</string>
    </property>
    <property name="text">
     <string>Request</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>700</x>
+     <y>570</y>
+     <width>171</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Ubuntu Mono</family>
+     <pointsize>13</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(14, 168, 146);</string>
+   </property>
+   <property name="text">
+    <string>request image count</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="count">
+   <property name="geometry">
+    <rect>
+     <x>880</x>
+     <y>570</y>
+     <width>61</width>
+     <height>25</height>
+    </rect>
    </property>
   </widget>
  </widget>

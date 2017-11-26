@@ -44,8 +44,11 @@ void PeerProfile::on_request_clicked()
 {
     std::string _imagename = imagename.toUtf8().constData();
     std::string _online = online_user.toUtf8().constData();
-    if(imagename!="")
-        user->requestPeerImage(_online, _imagename);
+    QString x= ui->count->text();
+    std:: string _num = x.toUtf8().constData();
+
+    if(imagename!=""&& x!="")
+        user->requestPeerImage(_online, _imagename, std::stoi(_num));
 }
 
 void PeerProfile::on_back_clicked()

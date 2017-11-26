@@ -1,7 +1,7 @@
 #ifndef IMAGEINFORMATION_H
 #define IMAGEINFORMATION_H
 
-#include <QWidget>
+#include <QMainWindow>
 #include <QListWidgetItem>
 #include "User.h"
 
@@ -9,7 +9,7 @@ namespace Ui {
 class ImageInformation;
 }
 
-class ImageInformation : public QWidget
+class ImageInformation : public QMainWindow
 {
     Q_OBJECT
 

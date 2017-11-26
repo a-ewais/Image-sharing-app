@@ -18,7 +18,7 @@ Requests::~Requests()
 }
 
 void Requests::fillList(){
-   std::vector<std::string> u= user->getRequestersImage();
+   std::vector<std::string> u= user->getRequestedImages();
    for(int i=0; i<u.size(); ++i)
       ui->imageRequested->addItem(QString::fromStdString(u[i]));
 }
@@ -49,6 +49,6 @@ void Requests::on_request_clicked()
 
 void Requests::on_back_clicked()
 {
-    this->parentWidget()->show();
+    this->parentWidget()->showFullScreen();
     this->close();
 }

@@ -3,7 +3,7 @@
 #include <opencv2/core.hpp>
 
 ImageInformation::ImageInformation(QWidget *parent, QString str, User* _user) :
-    QWidget(parent),
+    QMainWindow(parent),
     ui(new Ui::ImageInformation)
 {
     ui->setupUi(this);
@@ -58,7 +58,7 @@ void ImageInformation::on_viewersList_itemClicked(QListWidgetItem *item)
         peer = item->text();
         std::string s= peer.toUtf8().constData();
         std::string _name=imagename.toUtf8().constData();
-        ui->views->setText(QString::number(user->requestPeerImage(_name,s)));
+        ui->views->setText(QString::number(user->viewsCount(_name,s)));
 }
 
 void ImageInformation::on_back_clicked()

@@ -67,8 +67,8 @@ void User::requestPeerImage(string _username, string _imagename, int views){
 	Client* cli = clients[_username];
 //	if(!cli->isEnabled())
 //		cli->enable();
-	string image = cli->requestImage(username, token, _imagename, views);
-	myServer->writePeerImage(_username, _imagename, image);
+	bool request = cli->requestImage(username, token, _imagename, views);
+//	myServer->writePeerImage(_username, _imagename, image);
 }
 
 cv::Mat User::viewPeerImage(string _username, string _imagename){
@@ -95,8 +95,12 @@ void User::uploadImage(string imgPath){
 }
 
 void User::grantPeerImage(string _username, string _imagename, int _views){
-	//TODO: when we have an idea how to notify the user and take his response.
-	//we have to communicate the grant order to the server
+	Client* cli = clients[_username];
+	myServer->updateLocalViews(_username, _imagename, _views);
+	string image = myServer->getImage(_imagename);
+	bool sent = cli->sendImage(username, token, _imagename, image);
+	if(sent);
+		//TODO:Remove Requester from server
 }
 
 void User::revokePeerImage(string _username, string _imagename){

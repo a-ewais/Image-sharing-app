@@ -140,7 +140,21 @@ bool Client::requestImage(string& username, string& token, string& imageId, int&
 //	cout << imageData.size() << endl;
 //	return imageData;
 }
+bool Client::sendImage(string& username, string& token, string& imageID, string& image){
+	Message r(Request, Message::getNewRPC());
+	vector<Parameter> args(3);
+	args[0].setString(username);
+	args[1].setString(token);
+	args[2].setString(imageID);
+	args[3].setString(image);
+	MessageDecoder::encode(r, args, 11, Request);
+	Message* reply = execute(&r);
+	if(reply==NULL)
+		return false;
+	delete reply;
+	return true;
 
+}
 bool Client::updateViews(string& username, string& token,  string& imgId, int views){
 	Message r(Request, Message::getNewRPC());
 	vector<Parameter> args(4);

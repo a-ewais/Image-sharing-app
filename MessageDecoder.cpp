@@ -111,7 +111,16 @@ void MessageDecoder::encode(Message& _message, std::vector<Parameter>& params, i
 				messageContent.append(";");
 			}
 		break;
-
+		case 11:{
+			messageContent.append(params[0].getString());
+			messageContent.append(";");
+			messageContent.append(params[1].getString());
+			messageContent.append(";");
+			messageContent.append(params[2].getString());
+			messageContent.append(";");
+    		messageContent.append(params[3].getString());
+		}
+		break;
 		}
     }
     else if(_type == Reply){
@@ -220,6 +229,26 @@ void MessageDecoder::decode(Message* _message, std::vector<Parameter>& params){
 			params.push_back(arg1);
 			params.push_back(arg2);
 			params.push_back(arg3);
+		}
+		break;
+		case 11:{
+    		Parameter arg1, arg2, arg3, arg4, arg5;
+    		arg1.setString(tokens[0]);
+    		arg2.setString(tokens[1]);
+    		arg3.setString(tokens[2]);
+
+    		string image;
+    		int loc = tokens[0].size() + tokens[1].size() + tokens[2].size();
+    		image.resize(_message->getMessageSize());
+    		for(int i = loc ; i < _message->getMessageSize(); i++){
+    			image[i] = _message->getMessage()[i];
+    		}
+
+    		arg4.setString(image);
+    		params.push_back(arg1);
+			params.push_back(arg2);
+			params.push_back(arg3);
+			params.push_back(arg4);
 		}
 		break;
 		}

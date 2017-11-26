@@ -57,21 +57,15 @@ std::vector<std::string> ServerPeer::getListofImages(std::string username, std::
 	return results;
 }
 
-std::string ServerPeer::getImage(std::string username, std::string token, std::string imageID){
+std::string ServerPeer::getImage(std::string imageID){
 	cout << "SERVERPEER::getImage!";
-	std::string dataImage = "";
-	if(serviceDiscoveryClient->auth(username, token)){
-		string imageLocation = myImagesPath + "steg_" + imageID;
-//		cv::Mat image = cv::imread(imageLocation, cv::IMREAD_UNCHANGED);
-//		unsigned char* dataImage = image.data;
-//		std::string _dataImage(reinterpret_cast<char*>(dataImage));
-		std::ifstream fin(imageLocation, std::ios::in | std::ios::binary);
-		std::ostringstream oss;
-		oss << fin.rdbuf();
-		std::string dataImage(oss.str());
-		return dataImage;
-	}
-	else return dataImage;
+//	std::string dataImage = "";
+	string imageLocation = myImagesPath + "steg_" + imageID;
+	std::ifstream fin(imageLocation, std::ios::in | std::ios::binary);
+	std::ostringstream oss;
+	oss << fin.rdbuf();
+	std::string dataImage(oss.str());
+	return dataImage;
 }
 
 void ServerPeer::decrementPeerImage(std::string userID, std::string imageID){
@@ -187,7 +181,7 @@ void ServerPeer::updateViews(std::string username, std::string token, std::strin
 void ServerPeer::addRequester(string username, string token, string imageID, int views){
 	cout << "SERVERPEER::addRequester!";
 	if(serviceDiscoveryClient->auth(username, token)){
-		requests[imageID][username] = views;
+		requesters[imageID][username] = views;
 	}
 }
 
@@ -215,10 +209,13 @@ Message* ServerPeer::doOperation(Message* _message){
     }
     break;
     case 11:{
-    	string image = getImage(args[0].getString(), args[1].getString(), args[2].getString());
-    	Parameter arg1;
-    	arg1.setString(image);
-    	reply_args.push_back(arg1);
+    	//Write Image
+    	args[0].getString(); //username
+    	args[1].getString(); //token
+    	args[2].getString(); //image name
+    	args[3].getInt(); //Permitted Views
+    	args[4].getString(); //Image
+//    	writePeerImage(args[0].getString(), args[1].getString(), );
     }
     	break;
     case 9:{
@@ -231,15 +228,17 @@ Message* ServerPeer::doOperation(Message* _message){
     return reply_message;
 }
 
-void ServerPeer::writePeerImage(string& username,string &imagename, string& image){
-	string dir_path = loadedImagesPath + username;
-	mkdir(dir_path.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+void ServerPeer::writePeerImage(string& username, string& token, string& imagename, string& image){
+	if(serviceDiscoveryClient->auth(username, token)){
+		string dir_path = loadedImagesPath + username;
+		mkdir(dir_path.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
-	string imagePath = dir_path + "/" + imagename;
-	std::ofstream fin(imagePath, std::ios::out | std::ios::binary);
-	cout << image.size();
-	fin << image;
-	fin.close();
+		string imagePath = dir_path + "/" + imagename;
+		std::ofstream fin(imagePath, std::ios::out | std::ios::binary);
+		cout << image.size();
+		fin << image;
+		fin.close();
+	}
 }
 
 cv::Mat ServerPeer::readPeerImage(string& username, string& imagename){

@@ -45,6 +45,8 @@ class Message
 		void setMessage (const char * message, size_t message_size); //Done
 		void setMessageType (MessageType message_type); //Done
 		void setRPCId(int c);
+		void setParts(int _p);
+		void setPart(int _p);
 		void print();
 		static int getNewRPC();
 		~Message();

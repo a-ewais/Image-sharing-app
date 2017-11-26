@@ -183,6 +183,12 @@ void Message::setRPCId(int c)
 {
 	rpc_id = c;
 }
+void Message::setParts(int _p){
+	parts_num = _p;
+}
+void Message::setPart(int _p){
+	part_num = _p;
+}
 void Message::print(){
 	cout<<"\nType: "<<message_type<<endl;
 	printf("RPC Id: %d\nparts number: %d\npart number:%d\noperation: %d\nmessage_size: %d\n",rpc_id,parts_num,part_num,operation,message_size);

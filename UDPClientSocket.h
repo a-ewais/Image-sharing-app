@@ -14,7 +14,7 @@ class UDPClientSocket : private UDPSocket
 private:
 	queue<Message *> outbox;
 	map<int, Message*> waitFor;
-	map<int, vector<Message*> > parts;
+	map<int, pair<set<int>, vector<Message*> > > parts;
 	pthread_mutex_t out_mutex, in_mutex;
 	pthread_cond_t cond;
 	bool initializeClient (char * _peerAddr, int _peerPort);

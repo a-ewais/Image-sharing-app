@@ -36,6 +36,7 @@ void* UDPClientSocket::messenger(void* arg){
 					cout<<"error sending packet\n";
 				else{
 //					cout<<"packet sent\n";
+					delete temp;
 					break;
 				}
 			}
@@ -60,19 +61,32 @@ void* UDPClientSocket::messenger(void* arg){
 			Message* temp = new Message(incoming);
 			pthread_mutex_lock(&me->in_mutex);
 			if(me->waitFor.find(temp->getRPCId())!=me->waitFor.end()){
-				if(temp->isComplete()&&!me->parts[temp->getRPCId()].size()){
+				if(temp->isComplete()&&!me->parts[temp->getRPCId()].first.size()){
 					me->waitFor[temp->getRPCId()] = temp;
 					cout<<"complete\n";
 //					temp->print();
 					pthread_cond_signal(&me->cond);
 					pthread_mutex_unlock(&me->in_mutex);
 				}else{
-					cout<<me->parts[temp->getRPCId()].size()<<endl;
-					me->parts[temp->getRPCId()].push_back(temp);
-					if(me->parts[temp->getRPCId()].size()==temp->getPartsNum()){
+					cout<<me->parts[temp->getRPCId()].first.size()<<endl;
+					if(me->parts[temp->getRPCId()].first.find(temp->getPartNum())==
+							me->parts[temp->getRPCId()].first.end()){
+						me->parts[temp->getRPCId()].second.push_back(temp);
+						me->parts[temp->getRPCId()].first.insert(temp->getPartNum());
+						//ack here
+						Message * ack = new Message(Ack, temp->getRPCId());
+						ack->setParts(temp->getPartsNum());
+						ack->setPart(temp->getPartNum());
+						pthread_mutex_lock(&me->out_mutex);
+						me->outbox.push(ack);
+						pthread_mutex_lock(&me->out_mutex);
+						//end ack
+					}
+					if(me->parts[temp->getRPCId()].first.size()==temp->getPartsNum()){
 						cout<<"heeeey...message complete\n";
-						temp = new Message(me->parts[temp->getRPCId()]);
+						temp = new Message(me->parts[temp->getRPCId()].second);
 						me->waitFor[temp->getRPCId()] = temp;
+						me->parts.erase(temp->getRPCId());
 						pthread_cond_signal(&me->cond);
 						pthread_mutex_unlock(&me->in_mutex);
 					}

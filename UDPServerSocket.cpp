@@ -74,8 +74,11 @@ void* UDPServerSocket::messenger(void* arg){
 				int new_rpc = me->ip_id[{temp->getRPCId(), MessageDecoder::encodeIpPort(me->peerAddr)}];
 				temp->setRPCId(new_rpc);
 			}
-
-			if(temp->isComplete()){
+			if(temp->getMessageType()== Ack){
+				pthread_mutex_lock(&me->ack_mutex);
+				me->acks.push(temp);
+				pthread_mutex_unlock(&me->ack_mutex);
+			}else if(temp->isComplete()){
 				pthread_mutex_lock(&me->in_mutex);
 				me->inbox.push(temp);
 				pthread_mutex_unlock(&me->in_mutex);
@@ -136,10 +139,48 @@ void UDPServerSocket::sendReply(Message* m){
 	cout<<"this message is split into "<<temp_parts.size()<<" parts\n";
 	pthread_mutex_lock(&out_mutex);
 	for(int i=0;i<temp_parts.size();i++){
-		usleep(1000);
+//		usleep(1000);
 		outbox.push(temp_parts[i]);
 	}
 	pthread_mutex_unlock(&out_mutex);
+}
+
+bool UDPServerSocket::sendReplyWaitAck(Message* m, int trials){
+	vector<Message*> temp_parts;
+	vector<bool> recvAck;
+	if(m->getMessageSize()+32 > MAX_DATAGRAM_SIZE)
+		temp_parts = m->split(MAX_DATAGRAM_SIZE);
+	else
+		temp_parts.push_back(m);
+	recvAck.assign(temp_parts.size(),false);
+	cout<<"this message is split into "<<temp_parts.size()<<" parts\n";
+	bool done = true;
+	while(trials--){
+		done = true;
+		pthread_mutex_lock(&out_mutex);
+		for(int i=0;i<temp_parts.size();i++){
+			if(!recvAck[i]){
+				done = false;
+				outbox.push(temp_parts[i]);
+			}
+		}
+		pthread_mutex_unlock(&out_mutex);
+		if(done)
+			break;
+		sleep(3);
+		pthread_mutex_lock(&ack_mutex);
+		while(!acks.empty()){
+			Message * temp = acks.front();
+			acks.pop();
+			recvAck[temp->getPartNum()] = true;
+			delete temp;
+		}
+		pthread_mutex_unlock(&ack_mutex);
+	}
+	if(done)
+		return true;
+	else
+		false;
 }
 
 bool UDPServerSocket::readyRequest(){

@@ -1,7 +1,7 @@
 #ifndef PROFILE_H
 #define PROFILE_H
 
-#include <QWidget>
+#include <QMainWindow>
 #include <QListWidgetItem>
 #include "User.h"
 #include "imageinformation.h"
@@ -12,7 +12,7 @@ namespace Ui {
 class Profile;
 }
 
-class Profile : public QWidget
+class Profile : public QMainWindow
 {
     Q_OBJECT
 

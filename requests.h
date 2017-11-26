@@ -1,7 +1,7 @@
 #ifndef REQUESTS_H
 #define REQUESTS_H
 
-#include <QWidget>
+#include <QMainWindow>
 #include <QListWidgetItem>
 #include "User.h"
 
@@ -9,7 +9,7 @@ namespace Ui {
 class Requests;
 }
 
-class Requests : public QWidget
+class Requests : public QMainWindow
 {
     Q_OBJECT
 

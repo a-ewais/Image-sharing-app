@@ -26,7 +26,7 @@ void ImageInformation::displayImage(){
 void ImageInformation::fillList(){
     std::vector<std::string> temp;
     std::string _name = imagename.toUtf8().constData();
-//    temp = user->whoCanView(_name);
+    temp = user->whoCanView(_name);
 
     for(int i=0; i<temp.size(); ++i)
         ui->viewersList->addItem(QString::fromStdString(temp[i]));

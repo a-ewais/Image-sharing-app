@@ -1,7 +1,7 @@
 #ifndef PEERPROFILE_H
 #define PEERPROFILE_H
 
-#include <QWidget>
+#include <QMainWindow>
 #include <QListWidgetItem>
 #include "User.h"
 
@@ -9,7 +9,7 @@ namespace Ui {
 class PeerProfile;
 }
 
-class PeerProfile : public QWidget
+class PeerProfile : public QMainWindow
 {
     Q_OBJECT
 

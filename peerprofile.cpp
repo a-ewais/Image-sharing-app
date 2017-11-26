@@ -3,7 +3,7 @@
 #include <opencv2/core.hpp>
 
 PeerProfile::PeerProfile(QWidget *parent, QString str,User* _user) :
-    QWidget(parent),
+    QMainWindow(parent),
     ui(new Ui::PeerProfile)
 {
     ui->setupUi(this);
@@ -29,7 +29,7 @@ void PeerProfile::on_listWidget_itemClicked(QListWidgetItem *item)
 {
     imagename = item->text();
     std::string _name = imagename.toUtf8().constData();
-    int x = user->requestPeerImage(online_user.toUtf8().constData(), _name);
+    int x = user->viewsCount(online_user.toUtf8().constData(), _name);
     cv::Mat img;
     if (QString::number(x)!="0"){
         img = user->viewPeerImage(online_user.toUtf8().constData(), _name);
@@ -44,8 +44,8 @@ void PeerProfile::on_request_clicked()
 {
     std::string _imagename = imagename.toUtf8().constData();
     std::string _online = online_user.toUtf8().constData();
-//    if(imagename!="")
-//        user->requestImageFromPeer(_online, _imagename);
+    if(imagename!="")
+        user->requestPeerImage(_online, _imagename);
 }
 
 void PeerProfile::on_back_clicked()

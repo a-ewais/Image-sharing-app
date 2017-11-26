@@ -6,7 +6,7 @@
 #include <opencv2/core.hpp>
 
 Profile::Profile(QWidget *parent, User* _user) :
-    QWidget(parent),
+    QMainWindow(parent),
     ui(new Ui::Profile)
 {
     ui->setupUi(this);
@@ -54,7 +54,7 @@ void Profile::on_upload_clicked()
     QString filename= QFileDialog::getOpenFileName(this, tr("Choose Image"), "c://", "Image file (*.*);;");
     QMessageBox::information(this,tr("File Name"),filename);
     cv::Mat img = cv::imread(filename.toUtf8().constData(), cv::IMREAD_COLOR);
-//    user->uploadImage(img, filename.toUtf8().constData());
+    user->uploadImage(filename.toUtf8().constData());
     hide();
     request->showNormal();
 }

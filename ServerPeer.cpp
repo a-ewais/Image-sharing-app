@@ -58,7 +58,6 @@ std::vector<std::string> ServerPeer::getListofImages(std::string username, std::
 }
 
 std::string ServerPeer::getImage(string username, string token, std::string imageID){
-	string dataImage = "";
 	if(serviceDiscoveryClient->auth(username, token)){
 		cout << "SERVERPEER::getImage!";
 	//	std::string dataImage = "";
@@ -67,8 +66,10 @@ std::string ServerPeer::getImage(string username, string token, std::string imag
 		std::ostringstream oss;
 		oss << fin.rdbuf();
 		std::string dataImage(oss.str());
+        return dataImage;
 	}
-	return dataImage;
+    string temp = "";
+    return temp;
 }
 
 void ServerPeer::decrementPeerImage(std::string userID, std::string imageID){

@@ -24,13 +24,17 @@ void* UDPClientSocket::messenger(void* arg){
 //			cout<<"it is not empty\n";
 			WORK++;
 			Message* temp = me->outbox.front();
+            temp->print();
 			me->outbox.pop();
 			pthread_mutex_unlock(&me->out_mutex);
 			int trials = 3;
+//            temp->print();
+
 			while(trials--){
 				int t = 0;
 				char* x = temp->marshal(t);
-//				cout<<x<<endl;
+//                cout<<x<<endl;
+
 				int res = me->writeToSocket(x,t);
 				if(res<0)
 					cout<<"error sending packet\n";
@@ -179,7 +183,8 @@ Message* UDPClientSocket::sendWaitForReply(Message* m, int waitSec){		//send req
     cout << "I am here" << endl;
     pthread_mutex_lock(&in_mutex);
 	waitFor[m->getRPCId()] = NULL;
-	pthread_mutex_unlock(&in_mutex);
+    pthread_mutex_unlock(&in_mutex);
+    m->print();
 	send(m);
 	struct timespec time_to_wait = {0, 0};
 	time_to_wait.tv_sec = time(NULL) + waitSec+100;

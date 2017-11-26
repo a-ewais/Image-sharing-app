@@ -82,15 +82,23 @@ void User::requestPeerImage(string _username, string _imagename, int views){
 
 cv::Mat User::viewPeerImage(string _username, string _imagename){
 	cv::Mat m;
+    if(clients.find(_username)==clients.end()){
+        cout<<"new client "<< _username;
+        pair<string,int> temp = MessageDecoder::decodeIpPortPair(listOfUsers[_username]);
+        clients[_username] = new Client(const_cast<char*>(temp.first.c_str()), temp.second, _username);
+    }
 	if(myServer->allowedViews(_username, _imagename)){
 	    ifstream f(_imagename.c_str());
 	    if(f.good()){
-			cv::Mat m = myServer->readPeerImage(_username, _imagename);
+            m = myServer->readPeerImage(_username, _imagename);
 	    }
-		Client* cli = clients[_username];
-		string image = cli->getApprovedImage(username, token, _imagename);
-		myServer->writePeerImage(_username, _imagename, image);
-		cv::Mat m = myServer->readPeerImage(_username, _imagename);
+        else{
+            Client* cli = clients[_username];
+            string image = cli->getApprovedImage(username, token, _imagename);
+            myServer->writePeerImage(_username, _imagename, image);
+            m = myServer->readPeerImage(_username, _imagename);
+        }
+
 	}
 	return m;
 }
@@ -130,6 +138,11 @@ int User::allowedViews(string username, string imagename){
 }
 
 void User::revokePeerImage(string _username, string _imagename){
+    if(clients.find(_username)==clients.end()){
+        cout<<"new client "<< _username;
+        pair<string,int> temp = MessageDecoder::decodeIpPortPair(listOfUsers[_username]);
+        clients[_username] = new Client(const_cast<char*>(temp.first.c_str()), temp.second, _username);
+    }
 	Client* cli = clients[_username];
 //	if(!cli->isEnabled())
 //		cli->enable();
@@ -139,6 +152,11 @@ void User::revokePeerImage(string _username, string _imagename){
 }
 
 void User::updatePeerImage(string _username, string _imagename, int _views){
+    if(clients.find(_username)==clients.end()){
+        cout<<"new client "<< _username;
+        pair<string,int> temp = MessageDecoder::decodeIpPortPair(listOfUsers[_username]);
+        clients[_username] = new Client(const_cast<char*>(temp.first.c_str()), temp.second, _username);
+    }
 	Client* cli = clients[_username];
 	//	if(!cli->isEnabled())
 	//		cli->enable();

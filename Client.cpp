@@ -12,7 +12,7 @@ Client::Client(char* _hostname, int _port, string _peerUserName){
 }
 
 Message * Client::execute(Message* message){
-//	message->print();
+    message->print();
 	Message* temp = udpSocket->sendWaitForReply(message, 30);
 	if(temp==NULL)
 		cout<<"failed to send message..network error\n";

@@ -149,7 +149,7 @@ void UDPServerSocket::sendReply(Message* m){
 bool UDPServerSocket::sendReplyWaitAck(Message* m, int trials){
 	vector<Message*> temp_parts;
 	vector<bool> recvAck;
-	if(m->getMessageSize()+32 > MAX_DATAGRAM_SIZE)
+	if(m->getMessageSize()+32 < MAX_DATAGRAM_SIZE)
 		temp_parts = m->split(MAX_DATAGRAM_SIZE);
 	else
 		temp_parts.push_back(m);

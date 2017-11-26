@@ -18,17 +18,17 @@ Requests::~Requests()
 }
 
 void Requests::fillList(){
-//   std::vector<std::string> u= user->requesters();
-//   for(int i=0; i<u.size(); ++i)
-//      ui->imageRequested->addItem(QString::fromStdString(u[i]));
+   std::vector<std::string> u= user->getRequestersImage();
+   for(int i=0; i<u.size(); ++i)
+      ui->imageRequested->addItem(QString::fromStdString(u[i]));
 }
 
 void Requests::on_imageRequested_itemClicked(QListWidgetItem *item)
 {
     image_name = item->text();
-    //    std::vector<std::string> u= user->usersRequesting(image_name.toUtf8().constData());
-    //    for(int i=0; i<u.size(); ++i)
-    //       ui->usersRequesting->addItem(QString::fromStdString(u[i]));
+        std::vector<std::string> u= user->getRequesters(image_name.toUtf8().constData());
+        for(int i=0; i<u.size(); ++i)
+           ui->usersRequesting->addItem(QString::fromStdString(u[i]));
 }
 
 void Requests::on_usersRequesting_itemClicked(QListWidgetItem *item)

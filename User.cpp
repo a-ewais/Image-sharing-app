@@ -64,6 +64,12 @@ vector<string> User::getListOfPeerImages(string _username){
 }
 
 void User::requestPeerImage(string _username, string _imagename, int views){
+    if(clients.find(_username)==clients.end()){
+        cout<<"new client "<< _username;
+        pair<string,int> temp = MessageDecoder::decodeIpPortPair(listOfUsers[_username]);
+        clients[_username] = new Client(const_cast<char*>(temp.first.c_str()), temp.second, _username);
+    }
+
 	Client* cli = clients[_username];
 //	if(!cli->isEnabled())
 //		cli->enable();
@@ -106,12 +112,21 @@ void User::uploadImage(string imgPath){
 }
 
 void User::grantPeerImage(string _username, string _imagename, int _views){
+    if(clients.find(_username)==clients.end()){
+        cout<<"new client "<< _username;
+        pair<string,int> temp = MessageDecoder::decodeIpPortPair(listOfUsers[_username]);
+        clients[_username] = new Client(const_cast<char*>(temp.first.c_str()), temp.second, _username);
+    }
 	Client* cli = clients[_username];
 	myServer->updateLocalViews(_username, _imagename, _views);
 	bool approve = true;
 	bool sent = cli->sendImageApprove(username, token, _imagename, _views, approve);
 	if(sent);
 		//TODO:Remove Requester from server
+}
+
+int User::allowedViews(string username, string imagename){
+    return myServer->allowedViews(username, imagename);
 }
 
 void User::revokePeerImage(string _username, string _imagename){

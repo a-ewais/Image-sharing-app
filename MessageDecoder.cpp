@@ -121,6 +121,7 @@ void MessageDecoder::encode(Message& _message, std::vector<Parameter>& params, i
     		messageContent.append(to_string(params[3].getInt()));
 			messageContent.append(";");
     		messageContent.append(to_string(params[4].getBoolean()));
+            messageContent.append(";");
 		}
 		break;
 		case 12:{

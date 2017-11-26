@@ -42,6 +42,8 @@ public:
 	void grantPeerImage(string username, string imagename, int views);
 	void revokePeerImage(string username, string imagename);
 	void updatePeerImage(string username, string imagename, int views);
+
+    int allowedViews(string username, string imagename);
 	~User();
 };
 

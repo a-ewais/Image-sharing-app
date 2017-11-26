@@ -176,7 +176,8 @@ void UDPClientSocket::send(Message* m){			//no delivery guarantees
 
 
 Message* UDPClientSocket::sendWaitForReply(Message* m, int waitSec){		//send request..wait for reply
-	pthread_mutex_lock(&in_mutex);
+    cout << "I am here" << endl;
+    pthread_mutex_lock(&in_mutex);
 	waitFor[m->getRPCId()] = NULL;
 	pthread_mutex_unlock(&in_mutex);
 	send(m);

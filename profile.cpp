@@ -12,7 +12,6 @@ Profile::Profile(QWidget *parent, User* _user) :
     ui->setupUi(this);
     user = _user;
     fillList();
-    request = new Requests(this,user);
 }
 
 Profile::~Profile()
@@ -64,6 +63,7 @@ void Profile::on_upload_clicked()
 
 void Profile::on_request_clicked()
 {
+    request = new Requests(this,user);
     hide();
     request->show();
 }

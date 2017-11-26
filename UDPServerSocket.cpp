@@ -136,7 +136,6 @@ void UDPServerSocket::sendReply(Message* m){
 		cout<<(sendReplyWaitAck(m,3)?"sent successfully\n":"failed to send\n")<<endl;
 	else{
 		temp_parts.push_back(m);
-		cout<<"this message is split into "<<temp_parts.size()<<" parts\n";
 		pthread_mutex_lock(&out_mutex);
 		for(int i=0;i<temp_parts.size();i++){
 			outbox.push(temp_parts[i]);

@@ -79,7 +79,7 @@ void* UDPClientSocket::messenger(void* arg){
 						ack->setPart(temp->getPartNum());
 						pthread_mutex_lock(&me->out_mutex);
 						me->outbox.push(ack);
-						pthread_mutex_lock(&me->out_mutex);
+						pthread_mutex_unlock(&me->out_mutex);
 						//end ack
 					}
 					if(me->parts[temp->getRPCId()].first.size()==temp->getPartsNum()){

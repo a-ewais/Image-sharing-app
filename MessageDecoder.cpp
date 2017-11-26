@@ -162,8 +162,10 @@ void MessageDecoder::encode(Message& _message, std::vector<Parameter>& params, i
     		}
     	}
     	break;
-    	case 8:{
-
+        case 8:
+        case 9:
+        case 11:{
+            messageContent.append(";");
     	}
     	break;
     	case 10:{

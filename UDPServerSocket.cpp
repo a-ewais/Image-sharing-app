@@ -104,7 +104,7 @@ void* UDPServerSocket::messenger(void* arg){
 			pthread_mutex_unlock(&me->out_mutex);
 			int trials = 3;
 			cout<<"this is the message to send\n";
-			temp->print();
+//			temp->print();
 			int localRPCId = temp->getRPCId();
 			temp->setRPCId(me->id_ip[localRPCId].first);
 
@@ -139,7 +139,6 @@ void UDPServerSocket::sendReply(Message* m){
 		cout<<"this message is split into "<<temp_parts.size()<<" parts\n";
 		pthread_mutex_lock(&out_mutex);
 		for(int i=0;i<temp_parts.size();i++){
-//		usleep(1000);
 			outbox.push(temp_parts[i]);
 		}
 		pthread_mutex_unlock(&out_mutex);
@@ -149,10 +148,7 @@ void UDPServerSocket::sendReply(Message* m){
 bool UDPServerSocket::sendReplyWaitAck(Message* m, int trials){
 	vector<Message*> temp_parts;
 	vector<bool> recvAck;
-	if(m->getMessageSize()+32 < MAX_DATAGRAM_SIZE)
-		temp_parts = m->split(MAX_DATAGRAM_SIZE);
-	else
-		temp_parts.push_back(m);
+	temp_parts = m->split(MAX_DATAGRAM_SIZE);
 	recvAck.assign(temp_parts.size(),false);
 	cout<<"this message is split into "<<temp_parts.size()<<" parts\n";
 	bool done = true;
@@ -181,7 +177,7 @@ bool UDPServerSocket::sendReplyWaitAck(Message* m, int trials){
 	if(done)
 		return true;
 	else
-		false;
+		return false;
 }
 
 bool UDPServerSocket::readyRequest(){

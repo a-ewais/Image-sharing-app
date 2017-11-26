@@ -31,23 +31,6 @@ void Profile::fillList(){
         ui->onlineUsers->addItem(QString::fromStdString(online[i]));
 }
 
-void Profile::on_images_itemClicked(QListWidgetItem *item)
-{
-    QString image_name = item->text();
-    hide();
-    info = new ImageInformation(this,image_name,user);
-    info->show();
-}
-
-void Profile::on_onlineUsers_itemClicked(QListWidgetItem *item)
-{
-    QString temp = item->text();
-    hide();
-    peerProfile = new PeerProfile(this,temp,user);
-    peerProfile->show();
-
-}
-
 void Profile::on_upload_clicked()
 {
     QString filename= QFileDialog::getOpenFileName(this, tr("Choose Image"), "c://", "Image file (*.jpg);;");
@@ -73,4 +56,20 @@ void Profile::on_logout_clicked()
 //    user->down();
     this->parentWidget()->show();
     this->close();
+}
+
+void Profile::on_images_itemDoubleClicked(QListWidgetItem *item)
+{
+    QString image_name = item->text();
+    hide();
+    info = new ImageInformation(this,image_name,user);
+    info->show();
+}
+
+void Profile::on_onlineUsers_itemDoubleClicked(QListWidgetItem *item)
+{
+    QString temp = item->text();
+    hide();
+    peerProfile = new PeerProfile(this,temp,user);
+    peerProfile->show();
 }

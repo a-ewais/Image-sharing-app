@@ -18,7 +18,6 @@ public:
     ~PeerProfile();
 
 private slots:
-    void on_listWidget_itemClicked(QListWidgetItem *item);
 
     void on_request_clicked();
 
@@ -26,11 +25,14 @@ private slots:
 
     void on_back_clicked();
 
+    void on_imageList_itemClicked(QListWidgetItem *item);
+
 private:
     Ui::PeerProfile *ui;
     User* user;
     QString online_user;
     QString imagename;
+
 };
 
 #endif // PEERPROFILE_H

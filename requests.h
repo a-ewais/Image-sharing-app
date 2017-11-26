@@ -18,21 +18,22 @@ public:
     ~Requests();
 
 private slots:
-    void on_imageRequested_itemClicked(QListWidgetItem *item);
-
-    void on_usersRequesting_itemClicked(QListWidgetItem *item);
-
     void fillList();
 
     void on_request_clicked();
 
     void on_back_clicked();
 
+    void on_imageRequested_itemDoubleClicked(QListWidgetItem *item);
+
+    void on_usersRequesting_itemDoubleClicked(QListWidgetItem *item);
+
 private:
     Ui::Requests *ui;
     User* user;
     QString send_to;
     QString image_name;
+    int viewsRequested;
 };
 
 #endif // REQUESTS_H

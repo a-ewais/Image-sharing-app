@@ -23,9 +23,9 @@ private slots:
 
     void on_delete_2_clicked();
 
-    void on_viewersList_itemClicked(QListWidgetItem *item);
-
     void on_back_clicked();
+
+    void on_viewersList_itemClicked(QListWidgetItem *item);
 
 private:
     Ui::ImageInformation *ui;

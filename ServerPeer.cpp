@@ -293,7 +293,7 @@ vector<string> ServerPeer::whoCanView(string imageName){
 }
 
 int ServerPeer::viewsCount(string username, string imageName){
-	int views;
+    int views = 0;
     string extract_command = "steghide extract -p 123 -sf " + myImagesPath + "steg_" + imageName + " -xf " + myImagesPath + "data_" + imageName;
 	system(extract_command.c_str());
 
@@ -304,13 +304,19 @@ int ServerPeer::viewsCount(string username, string imageName){
 	ifstream viewData(imageName + ".data.txt");
 	map<std::string, int> data;
 
-	if(viewData.is_open()){
-		while(getline(viewData,line)){
-			int delimiter = line.find(';');
-			views = stoi(line.substr(delimiter, string::npos));
-		}
-		viewData.close();
-	}
+    if(viewData.is_open()){
+        while(getline(viewData,line)){
+            int delimiter = line.find(';');
+            string username = line.substr(0, delimiter);
+            string views = line.substr(delimiter, string::npos);
+            data[username] = stoi(views);
+        }
+        viewData.close();
+    }
+
+    map<std::string, int>::const_iterator it = data.find(username);
+    if(it!=data.end())
+        views = data[username];
 
     string remove_old_command = "rm " + myImagesPath + imageName + ".data.txt";
 	system(remove_old_command.c_str());

@@ -21,9 +21,6 @@ public:
     ~Profile();
 
 private slots:
-    void on_images_itemClicked(QListWidgetItem *item);
-
-    void on_onlineUsers_itemClicked(QListWidgetItem *item);
 
     void on_upload_clicked();
 
@@ -32,6 +29,10 @@ private slots:
     void fillList();
 
     void on_logout_clicked();
+
+    void on_images_itemDoubleClicked(QListWidgetItem *item);
+
+    void on_onlineUsers_itemDoubleClicked(QListWidgetItem *item);
 
 private:
     Ui::Profile *ui;

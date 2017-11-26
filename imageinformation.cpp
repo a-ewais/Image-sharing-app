@@ -57,16 +57,16 @@ void ImageInformation::on_delete_2_clicked()
         user->revokePeerImage(peer.toUtf8().constData(), imagename.toUtf8().constData());
 }
 
-void ImageInformation::on_viewersList_itemClicked(QListWidgetItem *item)
-{
-        peer = item->text();
-        std::string s= peer.toUtf8().constData();
-        std::string _name=imagename.toUtf8().constData();
-        ui->views->setText(QString::number(user->viewsCount(_name,s)));
-}
-
 void ImageInformation::on_back_clicked()
 {
     this->parentWidget()->show();
     this->close();
+}
+
+void ImageInformation::on_viewersList_itemClicked(QListWidgetItem *item)
+{
+    peer = item->text();
+    std::string s= peer.toUtf8().constData();
+    std::string _name=imagename.toUtf8().constData();
+    ui->views->setText(QString::number(user->viewsCount(_name,s)));
 }

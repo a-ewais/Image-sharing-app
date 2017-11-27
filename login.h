@@ -25,6 +25,7 @@ private slots:
 
     void on_signup_clicked(); //checks if the username does not exist it grants the user the access to profile screen otherwise asks for a new user
 
+    void loadLogo();
 private:
     Ui::Login *ui;
     QString username;

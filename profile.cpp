@@ -10,6 +10,7 @@ Profile::Profile(QWidget *parent, User* _user) :
     ui(new Ui::Profile)
 {
     ui->setupUi(this);
+    loadLogo();
     user = _user;
     fillList();
 }
@@ -20,6 +21,11 @@ Profile::~Profile()
     delete info;
     delete peerProfile;
     delete request;
+}
+void Profile::loadLogo(){
+    QPixmap pixmap("Resources/top-logo.png");
+    ui->logo->setPixmap(pixmap);
+    ui->logo->show();
 }
 
 void Profile::fillList(){

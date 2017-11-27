@@ -254,7 +254,7 @@ void ServerPeer::writePeerImage(string username, string imagename, string image)
 	string dir_path = loadedImagesPath + username;
 	mkdir(dir_path.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
-	string imagePath = dir_path + "/" + imagename;
+    string imagePath = dir_path + "/steg_" + imagename;
 	std::ofstream fin(imagePath, std::ios::out | std::ios::binary);
 	cout << image.size();
 	fin << image;

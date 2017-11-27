@@ -57,6 +57,7 @@ Login::Login(QWidget *parent) :
     ui(new Ui::Login)
 {
     ui->setupUi(this);
+    loadLogo();
     vector<string> ips;
     print_addresses(AF_INET, ips);
     string ip = ips.back();
@@ -66,6 +67,12 @@ Login::Login(QWidget *parent) :
 Login::~Login()
 {
     delete ui;
+}
+
+void Login::loadLogo(){
+    QPixmap pixmap("Resources/logo.png");
+    ui->logo->setPixmap(pixmap);
+    ui->logo->show();
 }
 
 void Login::on_login_clicked()

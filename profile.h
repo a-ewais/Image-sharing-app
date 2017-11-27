@@ -28,7 +28,7 @@ private slots:
     void on_logout_clicked(); // logout and returns to the login screen
     void on_images_itemDoubleClicked(QListWidgetItem *item); // if image is chosen it goes to imageinformation screen to display the information related to this image
     void on_onlineUsers_itemDoubleClicked(QListWidgetItem *item); // goes to the peerprofile of the online user
-
+    void loadLogo();
 private:
     Ui::Profile *ui;
     User* user;

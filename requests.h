@@ -24,9 +24,9 @@ private slots:
 
     void on_back_clicked();
 
-    void on_imageRequested_itemDoubleClicked(QListWidgetItem *item);
+    void on_imageRequested_itemClicked(QListWidgetItem *item);
 
-    void on_usersRequesting_itemDoubleClicked(QListWidgetItem *item);
+    void on_usersRequesting_itemClicked(QListWidgetItem *item);
 
 private:
     Ui::Requests *ui;

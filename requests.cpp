@@ -40,7 +40,7 @@ void Requests::on_back_clicked()
     this->close();
 }
 
-void Requests::on_imageRequested_itemDoubleClicked(QListWidgetItem *item)
+void Requests::on_imageRequested_itemClicked(QListWidgetItem *item)
 {
     image_name = item->text();
         std::vector<std::string> u= user->getRequesters(image_name.toUtf8().constData());
@@ -48,7 +48,7 @@ void Requests::on_imageRequested_itemDoubleClicked(QListWidgetItem *item)
            ui->usersRequesting->addItem(QString::fromStdString(u[i]));
 }
 
-void Requests::on_usersRequesting_itemDoubleClicked(QListWidgetItem *item)
+void Requests::on_usersRequesting_itemClicked(QListWidgetItem *item)
 {
     send_to = item->text();
 }

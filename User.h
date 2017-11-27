@@ -6,7 +6,6 @@
 
 class User {
 private:
-	string username;
 	string token;
 	ServerPeer* myServer;
 	map<string, Client*> clients;
@@ -14,6 +13,7 @@ private:
 	map<string, vector<string>> imageLists;
 
 public:
+    string username;
 	User(string serverIp, int serverPort,string myIp, int myPort);
 
 	bool signUp(string userName, string password);

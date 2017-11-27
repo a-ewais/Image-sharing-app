@@ -52,6 +52,8 @@ void PeerProfile::on_imageList_itemClicked(QListWidgetItem *item)
     if (x!=0){
         img = user->viewPeerImage(online_user.toUtf8().constData(), _name);
         cv::cvtColor(img, img, cv::COLOR_BGR2RGB);
+        cv::Size size(640,610);
+        cv::resize(img,img,size);
         ui->image->setPixmap(QPixmap::fromImage(QImage(img.data, img.cols, img.rows, img.step, QImage::Format_RGB888)));
     }
 }

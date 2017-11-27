@@ -39,7 +39,7 @@
     <rect>
      <x>10</x>
      <y>50</y>
-     <width>581</width>
+     <width>641</width>
      <height>611</height>
     </rect>
    </property>
@@ -75,9 +75,9 @@
   <widget class="QListWidget" name="imageList">
    <property name="geometry">
     <rect>
-     <x>670</x>
+     <x>680</x>
      <y>80</y>
-     <width>271</width>
+     <width>251</width>
      <height>401</height>
     </rect>
    </property>
@@ -95,9 +95,9 @@ border-color: rgb(14, 168, 146);</string>
   <widget class="QPushButton" name="request">
    <property name="geometry">
     <rect>
-     <x>700</x>
+     <x>680</x>
      <y>600</y>
-     <width>221</width>
+     <width>241</width>
      <height>31</height>
     </rect>
    </property>
@@ -111,7 +111,7 @@ border-color: rgb(14, 168, 146);</string>
   <widget class="QLabel" name="label_4">
    <property name="geometry">
     <rect>
-     <x>660</x>
+     <x>670</x>
      <y>550</y>
      <width>171</width>
      <height>20</height>

@@ -30,8 +30,10 @@ void Profile::fillList(){
     for (int i=0; i<images.size(); ++i)
         ui->images->addItem(QString::fromStdString(images[i]));
 
-    for (int i=0; i<online.size(); ++i)
-        ui->onlineUsers->addItem(QString::fromStdString(online[i]));
+    for (int i=0; i<online.size(); ++i){
+        if(online[i]!=user->username)
+            ui->onlineUsers->addItem(QString::fromStdString(online[i]));
+    }
 }
 
 void Profile::on_upload_clicked()

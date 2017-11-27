@@ -157,6 +157,7 @@ void MessageDecoder::encode(Message& _message, std::vector<Parameter>& params, i
     			messageContent.append(it->second);
     			messageContent.append(";");
     		}
+            messageContent.append(";");
     	}
     	break;
     	case 7:{
@@ -165,6 +166,7 @@ void MessageDecoder::encode(Message& _message, std::vector<Parameter>& params, i
     			messageContent.append(*it);
     			messageContent.append(";");
     		}
+            messageContent.append(";");
     	}
     	break;
         case 8:
@@ -180,6 +182,7 @@ void MessageDecoder::encode(Message& _message, std::vector<Parameter>& params, i
     	break;
     	case 12:{
     		messageContent.append(params[0].getString());
+            messageContent.append(";");
     	}
     	}
     }
@@ -193,12 +196,15 @@ void MessageDecoder::decode(Message* _message, std::vector<Parameter>& params){
 
     std::vector<std::string> tokens;
 
-    char* pch = strtok (_message->getMessage(),";");
-    while (pch != NULL)
-    {
-    	tokens.push_back(pch);
-    	pch = strtok (NULL, ";");
+    if(_message->getMessageSize() != 0){
+        char* pch = strtok (_message->getMessage(),";");
+        while (pch != NULL)
+        {
+            tokens.push_back(pch);
+            pch = strtok (NULL, ";");
+        }
     }
+
     if(_type == Request){
 		switch(_operation){
 		case 1:

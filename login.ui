@@ -40,7 +40,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>../Downloads/logo boobba-01.png</pixmap>
+     <pixmap>Resources/logo boobba-01.png</pixmap>
     </property>
    </widget>
    <widget class="QLabel" name="label">
@@ -177,7 +177,7 @@ border-color: rgb(234, 110, 89);</string>
      <x>0</x>
      <y>0</y>
      <width>981</width>
-     <height>25</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>

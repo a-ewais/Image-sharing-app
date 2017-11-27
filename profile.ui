@@ -210,7 +210,7 @@ selection-color: rgb(234, 110, 89);</string>
     <string/>
    </property>
    <property name="pixmap">
-    <pixmap>../Downloads/top-logo.png</pixmap>
+    <pixmap>Resources/top-logo.png</pixmap>
    </property>
   </widget>
   <widget class="QPushButton" name="logout">

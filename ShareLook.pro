@@ -43,7 +43,9 @@ SOURCES += \
     MessageDecoder.cpp \
     Message.cpp \
     DatabaseLinker.cpp \
-    Client.cpp
+    Client.cpp \
+    mainwindow.cpp \
+    servicegui.cpp
 
 HEADERS += \
         login.h \
@@ -63,11 +65,15 @@ HEADERS += \
     Message.h \
     DatabaseLinker.h \
     Client.h \
-    Base64_Marshal.h
+    Base64_Marshal.h \
+    mainwindow.h \
+    servicegui.h
 
 FORMS += \
         login.ui \
     profile.ui \
     imageinformation.ui \
     peerprofile.ui \
-    requests.ui
+    requests.ui \
+    mainwindow.ui \
+    servicegui.ui

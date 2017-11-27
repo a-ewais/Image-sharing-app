@@ -59,7 +59,8 @@ Login::Login(QWidget *parent) :
     ui->setupUi(this);
     vector<string> ips;
     print_addresses(AF_INET, ips);
-    user = new User("10.7.57.199", 64000, ips[2] , 64000);
+    string ip = ips.back();
+    user = new User("10.7.57.199", 64000, ip , 64000);
 }
 
 Login::~Login()

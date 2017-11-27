@@ -133,8 +133,8 @@ void User::grantPeerImage(string _username, string _imagename, int _views){
 		//TODO:Remove Requester from server
 }
 
-int User::allowedViews(string username, string imagename){
-    return myServer->allowedViews(username, imagename);
+int User::allowedViews(string _username, string _imagename){
+    return myServer->allowedViews(_username, _imagename);
 }
 
 void User::revokePeerImage(string _username, string _imagename){
@@ -180,12 +180,26 @@ vector<string> User::whoCanView(string imageName){
 	return viewers;
 }
 
-int User::viewsCount(string username, string imageName){
-	int views = myServer->viewsCount(username, imageName);
+int User::viewsCount(string _username, string imageName){
+    int views = myServer->viewsCount(_username, imageName);
 	return views;
 }
 
+bool User::down(){
+    Client* cli = clients["ServiceDiscovery"];
+    bool temp = cli->down(username, token);
+    return temp;
+}
+
+//bool User::stillUp(){
+//    Client* cli = clients["ServiceDiscovery"];
+//    bool temp = cli->up(username, token,)
+//}
+
 User::~User() {
+    Client* cli = clients["ServiceDiscovery"];
+    bool temp = cli->down(username, token);
+
 	for(auto it= clients.begin();it!=clients.end();it++)
 		delete it->second;
 	delete myServer;

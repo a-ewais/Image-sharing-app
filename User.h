@@ -44,6 +44,7 @@ public:
 	void updatePeerImage(string username, string imagename, int views);
 
     int allowedViews(string username, string imagename);
+    bool down();
 	~User();
 };
 

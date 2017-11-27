@@ -68,5 +68,5 @@ void ImageInformation::on_viewersList_itemClicked(QListWidgetItem *item)
     peer = item->text();
     std::string s= peer.toUtf8().constData();
     std::string _name=imagename.toUtf8().constData();
-    ui->views->setText(QString::number(user->viewsCount(_name,s)));
+    ui->views->setText(QString::number(user->viewsCount(s,_name)));
 }

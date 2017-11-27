@@ -56,7 +56,7 @@ void Profile::on_request_clicked()
 
 void Profile::on_logout_clicked()
 {
-//    user->down();
+    user->down();
     this->parentWidget()->show();
     this->close();
 }

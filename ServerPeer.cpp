@@ -309,8 +309,6 @@ vector<string> ServerPeer::whoCanView(string imageName){
     system(remove_old_command.c_str());
     remove_old_command = "rm " + myImagesPath + "data_" + imageName;
     system(remove_old_command.c_str());
-    remove_old_command = "rm " + myImagesPath + imageName;
-    system(remove_old_command.c_str());
 
 	return viewers;
 }
@@ -331,7 +329,7 @@ int ServerPeer::viewsCount(string username, string imageName){
         while(getline(viewData,line)){
             int delimiter = line.find(';');
             string username = line.substr(0, delimiter);
-            string views = line.substr(delimiter, string::npos);
+            string views = line.substr(delimiter+1, string::npos);
             data[username] = stoi(views);
         }
         viewData.close();
@@ -345,8 +343,6 @@ int ServerPeer::viewsCount(string username, string imageName){
 	system(remove_old_command.c_str());
     remove_old_command = "rm " + myImagesPath + "data_" + imageName;
 	system(remove_old_command.c_str());
-    remove_old_command = "rm " + myImagesPath + imageName;
-    system(remove_old_command.c_str());
 	return views;
 }
 

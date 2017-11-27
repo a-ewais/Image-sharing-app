@@ -36,7 +36,7 @@ void Profile::fillList(){
 
 void Profile::on_upload_clicked()
 {
-    QString filename= QFileDialog::getOpenFileName(this, tr("Choose Image"), "c://", "Image file (*.jpg);;");
+    QString filename= QFileDialog::getOpenFileName(this, tr("Choose Image"), "c://", "Image file (*.jpg *.png *.jpeg);;");
     QMessageBox::information(this,tr("File Name"),filename);
     cv::Mat img = cv::imread(filename.toUtf8().constData(), cv::IMREAD_COLOR);
     user->uploadImage(filename.toUtf8().constData());

@@ -392,12 +392,21 @@ cv::Mat ServerPeer::extractImage(string username, string imagename, bool owned){
 void ServerPeer::writeMyImage(string imagePath){
 	std::size_t found = imagePath.find_last_of("/\\");
 	string imgName = imagePath.substr(found+1);
-    string copy_command = "cp " + imagePath + " ./MyImages/" + imgName;
 
+    string copy_command = "cp " + imagePath + " ./MyImages/" + imgName;
 	system(copy_command.c_str());
 
-    string make_data_command = "echo "" > ./MyImages/" + imgName +".data.txt";
+    std::size_t format = imgName.find(".png");
+    if(format != std::string::npos){
+        string convert_command = "convert ./MyImages/" + imgName + " ./MyImages/" + imgName.substr(0, format) + ".jpg";
+        system(convert_command.c_str());
 
+        string remove_old_format = "rm ./MyImages/" + imgName;
+        system(remove_old_format.c_str());
+        imgName = imgName.substr(0, format) + ".jpg";
+    }
+
+    string make_data_command = "echo "" > ./MyImages/" + imgName +".data.txt";
 	system(make_data_command.c_str());
 
 	string create_new_command;

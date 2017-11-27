@@ -4,10 +4,6 @@
 #include "ServiceDiscovery.h"
 #include "ServerPeer.h"
 
-struct Image{
-	;  //should contain the image and all its info..who owns it..who can see..number of views..
-};
-
 class User {
 private:
 	string username;

@@ -88,7 +88,8 @@ cv::Mat User::viewPeerImage(string _username, string _imagename){
         clients[_username] = new Client(const_cast<char*>(temp.first.c_str()), temp.second, _username);
     }
 	if(myServer->allowedViews(_username, _imagename)){
-	    ifstream f(_imagename.c_str());
+        string imageName = "./LoadedImages/" + _username + "/steg_" + _imagename;
+        ifstream f(imageName.c_str());
 	    if(f.good()){
             m = myServer->readPeerImage(_username, _imagename);
 	    }

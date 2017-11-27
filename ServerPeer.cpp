@@ -87,7 +87,7 @@ void ServerPeer::decrementPeerImage(std::string userID, std::string imageID){
         while(getline(viewData,line)){
             int delimiter = line.find(';');
             string username = line.substr(0, delimiter);
-            string views = line.substr(delimiter, string::npos);
+            string views = line.substr(delimiter+1, string::npos);
             data[username] = stoi(views);
         }
         viewData.close();

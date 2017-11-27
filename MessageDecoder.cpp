@@ -143,6 +143,11 @@ void MessageDecoder::encode(Message& _message, std::vector<Parameter>& params, i
 			messageContent.append(";");
     	}
     	break;
+        case 3:
+        case 4:{
+            messageContent.append(";");
+        }
+        break;
     	case 6:{
     		std::map<std::string, std::string> _mss = params[0].getMapSS();
 
@@ -286,6 +291,11 @@ void MessageDecoder::decode(Message* _message, std::vector<Parameter>& params){
     		params.push_back(arg1);
     	}
     	break;
+        case 3:
+        case 4:{
+
+        }
+        break;
     	case 6:{
     		Parameter arg1;
     		std::map<std::string, std::string> _ms;

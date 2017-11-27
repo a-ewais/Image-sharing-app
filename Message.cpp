@@ -201,6 +201,6 @@ void Message::print(){
 }
 
 Message::~Message(){
-//	delete []message;
+    delete []message;
 }
 

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>950</width>
-    <height>649</height>
+    <width>815</width>
+    <height>660</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
   <widget class="QListWidget" name="images">
    <property name="geometry">
     <rect>
-     <x>100</x>
+     <x>20</x>
      <y>200</y>
      <width>251</width>
      <height>441</height>
@@ -49,7 +49,7 @@ selection-background-color: rgb(14, 168, 146);</string>
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>100</x>
+     <x>20</x>
      <y>170</y>
      <width>251</width>
      <height>31</height>
@@ -86,7 +86,7 @@ selection-background-color: rgb(14, 168, 146);</string>
   <widget class="QListWidget" name="onlineUsers">
    <property name="geometry">
     <rect>
-     <x>630</x>
+     <x>550</x>
      <y>200</y>
      <width>251</width>
      <height>441</height>
@@ -116,7 +116,7 @@ selection-background-color: rgb(14, 168, 146);</string>
   <widget class="QLabel" name="onlinUser">
    <property name="geometry">
     <rect>
-     <x>630</x>
+     <x>550</x>
      <y>170</y>
      <width>251</width>
      <height>31</height>
@@ -150,7 +150,7 @@ selection-background-color: rgb(14, 168, 146);</string>
   <widget class="QPushButton" name="upload">
    <property name="geometry">
     <rect>
-     <x>420</x>
+     <x>340</x>
      <y>410</y>
      <width>141</width>
      <height>31</height>
@@ -175,7 +175,7 @@ selection-color: rgb(234, 110, 89);</string>
   <widget class="QPushButton" name="request">
    <property name="geometry">
     <rect>
-     <x>420</x>
+     <x>340</x>
      <y>460</y>
      <width>141</width>
      <height>31</height>
@@ -197,26 +197,10 @@ selection-color: rgb(234, 110, 89);</string>
     <string>See Requests</string>
    </property>
   </widget>
-  <widget class="QLabel" name="logo">
-   <property name="geometry">
-    <rect>
-     <x>-160</x>
-     <y>10</y>
-     <width>1111</width>
-     <height>441</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="pixmap">
-    <pixmap>Resources/top-logo.png</pixmap>
-   </property>
-  </widget>
   <widget class="QPushButton" name="logout">
    <property name="geometry">
     <rect>
-     <x>420</x>
+     <x>340</x>
      <y>610</y>
      <width>141</width>
      <height>31</height>
@@ -238,6 +222,48 @@ selection-color: rgb(234, 110, 89);</string>
     <string>LOGOUT</string>
    </property>
   </widget>
+  <widget class="QLabel" name="logo">
+   <property name="geometry">
+    <rect>
+     <x>-370</x>
+     <y>-170</y>
+     <width>1581</width>
+     <height>811</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">image: url(:/Resources/top-logo.png);</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="refresh">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>560</y>
+     <width>141</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Ubuntu Mono</family>
+     <pointsize>12</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(14, 168, 146);
+image: url(:/Resources/refresh.png);
+selection-color: rgb(234, 110, 89);</string>
+   </property>
+   <property name="text">
+    <string>refresh</string>
+   </property>
+  </widget>
   <zorder>logo</zorder>
   <zorder>label</zorder>
   <zorder>onlineUsers</zorder>
@@ -246,6 +272,7 @@ selection-color: rgb(234, 110, 89);</string>
   <zorder>upload</zorder>
   <zorder>request</zorder>
   <zorder>logout</zorder>
+  <zorder>refresh</zorder>
  </widget>
  <resources/>
  <connections/>

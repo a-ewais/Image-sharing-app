@@ -38,12 +38,19 @@ void PeerProfile::on_request_clicked()
 
 void PeerProfile::on_back_clicked()
 {
+    clear();
     this->parentWidget()->show();
     this->close();
 }
 
+void PeerProfile::clear(){
+
+    ui->imageList->clear();
+    ui->image->clear();
+}
 void PeerProfile::on_imageList_itemClicked(QListWidgetItem *item)
 {
+    ui->image->clear();
     imagename = item->text();
     std::string _name = imagename.toUtf8().constData();
     int x = user->allowedViews(online_user.toUtf8().constData(), _name);
@@ -56,4 +63,10 @@ void PeerProfile::on_imageList_itemClicked(QListWidgetItem *item)
         cv::resize(img,img,size);
         ui->image->setPixmap(QPixmap::fromImage(QImage(img.data, img.cols, img.rows, img.step, QImage::Format_RGB888)));
     }
+}
+
+void PeerProfile::on_refresh_clicked()
+{
+    clear();
+    fillList();
 }

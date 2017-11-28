@@ -28,6 +28,10 @@ private slots:
 
     void on_usersRequesting_itemClicked(QListWidgetItem *item);
 
+    void on_refresh_clicked();
+
+    void clear();
+
 private:
     Ui::Requests *ui;
     User* user;

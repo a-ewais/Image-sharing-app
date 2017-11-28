@@ -27,6 +27,10 @@ private slots:
 
     void on_viewersList_itemClicked(QListWidgetItem *item);
 
+    void clear();
+
+    void on_refresh_clicked();
+
 private:
     Ui::ImageInformation *ui;
     QString imagename;

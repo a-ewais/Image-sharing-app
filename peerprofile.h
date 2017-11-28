@@ -27,6 +27,10 @@ private slots:
 
     void on_imageList_itemClicked(QListWidgetItem *item);
 
+    void on_refresh_clicked();
+
+    void clear();
+
 private:
     Ui::PeerProfile *ui;
     User* user;

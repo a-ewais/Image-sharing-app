@@ -77,3 +77,6 @@ FORMS += \
     requests.ui \
     mainwindow.ui \
     servicegui.ui
+
+RESOURCES += \
+    images.qrc

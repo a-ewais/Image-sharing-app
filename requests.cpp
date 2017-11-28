@@ -18,6 +18,10 @@ Requests::~Requests()
     delete ui;
 }
 
+void Requests::clear(){
+    ui->imageRequested->clear();
+    ui->usersRequesting->clear();
+}
 
 void Requests::fillList(){
    std::vector<std::string> u= user->getRequestedImages();
@@ -36,12 +40,14 @@ void Requests::on_request_clicked()
 
 void Requests::on_back_clicked()
 {
+    clear();
     this->parentWidget()->show();
     this->close();
 }
 
 void Requests::on_imageRequested_itemClicked(QListWidgetItem *item)
 {
+    ui->usersRequesting->clear();
     image_name = item->text();
         std::vector<std::string> u= user->getRequesters(image_name.toUtf8().constData());
         for(int i=0; i<u.size(); ++i)
@@ -51,4 +57,9 @@ void Requests::on_imageRequested_itemClicked(QListWidgetItem *item)
 void Requests::on_usersRequesting_itemClicked(QListWidgetItem *item)
 {
     send_to = item->text();
+}
+
+void Requests::on_refresh_clicked()
+{
+    clear();
 }

@@ -31,7 +31,7 @@ void ImageInformation::fillList(){
     std::vector<std::string> temp;
     std::string _name = imagename.toUtf8().constData();
     temp = user->whoCanView(_name);
-
+    clear();
     for(int i=0; i<temp.size(); ++i)
         ui->viewersList->addItem(QString::fromStdString(temp[i]));
 }
@@ -59,6 +59,7 @@ void ImageInformation::on_delete_2_clicked()
 
 void ImageInformation::on_back_clicked()
 {
+    clear();
     this->parentWidget()->show();
     this->close();
 }
@@ -69,4 +70,14 @@ void ImageInformation::on_viewersList_itemClicked(QListWidgetItem *item)
     std::string s= peer.toUtf8().constData();
     std::string _name=imagename.toUtf8().constData();
     ui->views->setText(QString::number(user->viewsCount(s,_name)));
+}
+
+void ImageInformation::clear(){
+    ui->viewersList->clear();
+    ui->views->clear();
+}
+
+void ImageInformation::on_refresh_clicked()
+{
+    clear();
 }

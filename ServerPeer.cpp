@@ -248,6 +248,9 @@ void ServerPeer::addApprovedImage(string username, string token, string imagenam
 
 void ServerPeer::removeRequester(string username, string imageName){
 	requesters[imageName].erase(username);
+    if(requesters[imageName].empty())
+        requesters.erase(imageName);
+
 }
 
 void ServerPeer::writePeerImage(string username, string imagename, string image){

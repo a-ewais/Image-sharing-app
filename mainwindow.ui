@@ -14,8 +14,7 @@
    <string>MainWindow</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">
-background-color: rgb(14, 168, 146);</string>
+   <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QPushButton" name="service">
@@ -57,7 +56,7 @@ background-color: rgb(14, 168, 146);</string>
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>22</height>
+     <height>19</height>
     </rect>
    </property>
   </widget>

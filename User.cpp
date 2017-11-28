@@ -131,7 +131,7 @@ void User::grantPeerImage(string _username, string _imagename, int _views){
 	bool approve = true;
 	bool sent = cli->sendImageApprove(username, token, _imagename, _views, approve);
 	if(sent);
-		//TODO:Remove Requester from server
+        myServer->removeRequester(_username, _imagename);
 }
 
 int User::allowedViews(string _username, string _imagename){

@@ -85,7 +85,7 @@ vector<string> DatabaseLinker::getOnline( string toRetreive){
     Records records;
     rc = sqlite3_open("test.db", &db);
     sql = "SELECT " + toRetreive + " FROM USERS "
-    "WHERE ONLINE = '1';";
+    "WHERE ONLINE = 'true';";
     
     const char* sqlChar = sql.c_str();
     rc = sqlite3_exec(db, sqlChar, callback, &records, &zErrMsg);

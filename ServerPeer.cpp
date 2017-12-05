@@ -38,7 +38,7 @@ vector<string> ServerPeer::loadFileNames(string path){
 	while (entry){									// if !entry then end of directory
 		if (entry->d_type == DT_REG){		// if entry is a regular file
 			std::string fname = entry->d_name;	// filename
-            if(fname != ".default.jpeg")
+            if(fname != ".default.jpg")
 				results.push_back(fname.substr(5));		// add filename to results vector
 		}
 		entry = readdir(dir_point);
@@ -117,9 +117,9 @@ void ServerPeer::decrementPeerImage(std::string userID, std::string imageID){
     }
 
     string create_new_command;
-    create_new_command = "steghide embed -p 123 -cf " + loadedImagesPath + userID + "/" + imageID + " -ef " + loadedImagesPath + userID + "/" + imageID + ".data.txt -sf " + loadedImagesPath + userID + "/" + "data_" + imageID;
+    create_new_command = "steghide embed -p 123 -cf " + loadedImagesPath + userID + "/data_" + imageID + " -ef " + loadedImagesPath + userID + "/" + imageID + ".data.txt -sf " + loadedImagesPath + userID + "/" + "data_" + imageID;
     system(create_new_command.c_str());
-    create_new_command = "steghide embed -p 123 -cf " + loadedImagesPath + userID + "/" + ".default.jpeg -ef " + loadedImagesPath + userID + "/" + "data_" + imageID + " -sf " + loadedImagesPath + userID + "/" + "steg_" + imageID;
+    create_new_command = "steghide embed -p 123 -cf " + loadedImagesPath + userID + "/" + ".default.jpg -ef " + loadedImagesPath + userID + "/" + "data_" + imageID + " -sf " + loadedImagesPath + userID + "/" + "steg_" + imageID;
     system(create_new_command.c_str());
 
     remove_old_command = "rm " + loadedImagesPath + userID + "/" + imageID + ".data.txt";
@@ -169,7 +169,7 @@ void ServerPeer::updateLocalViews(std::string userID, std::string imageID, int c
 	string create_new_command;
 	create_new_command = "steghide embed -p 123 -cf " + myImagesPath + imageID + " -ef " + myImagesPath + imageID + ".data.txt -sf " + myImagesPath + "data_" + imageID;
 	system(create_new_command.c_str());
-    create_new_command = "steghide embed -p 123 -cf " + myImagesPath + ".default.jpeg -ef " + myImagesPath + "data_" + imageID + " -sf " + myImagesPath + "steg_" + imageID;
+    create_new_command = "steghide embed -p 123 -cf " + myImagesPath + ".default.jpg -ef " + myImagesPath + "data_" + imageID + " -sf " + myImagesPath + "steg_" + imageID;
 	system(create_new_command.c_str());
 
     remove_old_command = "rm " + myImagesPath + imageID + ".data.txt";
@@ -421,7 +421,7 @@ void ServerPeer::writeMyImage(string imagePath){
     create_new_command = "steghide embed -p 123 -cf ./MyImages/" + imgName + " -ef ./MyImages/" + imgName + ".data.txt -sf ./MyImages/data_" + imgName;
     cout << create_new_command << endl;
     system(create_new_command.c_str());
-    create_new_command = "steghide embed -p 123 -cf ./MyImages/.default.jpeg -ef ./MyImages/data_" + imgName + " -sf ./MyImages/steg_" + imgName;
+    create_new_command = "steghide embed -p 123 -cf ./MyImages/.default.jpg -ef ./MyImages/data_" + imgName + " -sf ./MyImages/steg_" + imgName;
 	system(create_new_command.c_str());
 
     string remove_old_command = "rm ./MyImages/" + imgName + ".data.txt";

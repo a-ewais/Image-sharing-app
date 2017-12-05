@@ -62,4 +62,5 @@ void Requests::on_usersRequesting_itemClicked(QListWidgetItem *item)
 void Requests::on_refresh_clicked()
 {
     clear();
+    fillList();
 }

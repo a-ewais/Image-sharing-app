@@ -98,9 +98,9 @@ void ServerPeer::decrementPeerImage(std::string userID, std::string imageID){
     if(count == 0){
         string remove_old_command = "rm " + loadedImagesPath + userID + "/" + imageID + ".data.txt";
         system(remove_old_command.c_str());
-        remove_old_command = "rm data_" + loadedImagesPath + userID + "/" + imageID;
+        remove_old_command = "rm " + loadedImagesPath + userID + "/data_" + imageID;
         system(remove_old_command.c_str());
-        remove_old_command = "rm steg_" + loadedImagesPath + userID + "/" + imageID;
+        remove_old_command = "rm " + loadedImagesPath + userID + "/steg_" + imageID;
         system(remove_old_command.c_str());
         return;
     }
@@ -124,7 +124,7 @@ void ServerPeer::decrementPeerImage(std::string userID, std::string imageID){
 
     remove_old_command = "rm " + loadedImagesPath + userID + "/" + imageID + ".data.txt";
     system(remove_old_command.c_str());
-    remove_old_command = "rm data_" + loadedImagesPath + userID + "/" + imageID;
+    remove_old_command = "rm " + loadedImagesPath + userID + "/data_" + imageID;
     system(remove_old_command.c_str());
 }
 
@@ -176,8 +176,8 @@ void ServerPeer::updateLocalViews(std::string userID, std::string imageID, int c
     system(remove_old_command.c_str());
     remove_old_command = "rm " + myImagesPath + "data_" + imageID;
     system(remove_old_command.c_str());
-    remove_old_command = "rm " + myImagesPath + imageID;
-    system(remove_old_command.c_str());
+//    remove_old_command = "rm " + myImagesPath + imageID;
+//    system(remove_old_command.c_str());
 
 }
 
@@ -377,17 +377,22 @@ int ServerPeer::allowedViews(string username, string imageName){
 
 cv::Mat ServerPeer::extractImage(string username, string imagename, bool owned){
 	string imagePath;
-	if(owned)
+    string path;
+    if(owned){
+        path = myImagesPath;
 		imagePath = myImagesPath + "steg_" +  imagename;
-	else
+    }
+    else{
+        path = loadedImagesPath;
 		imagePath = loadedImagesPath + username + "/steg_" + imagename;
+    }
 
-	string extract_command = "steghide extract -p 123 -sf " + imagePath + " -xf " + myImagesPath + "data_" + imagename;
+    string extract_command = "steghide extract -p 123 -sf " + imagePath + " -xf " + path + "data_" + imagename;
 	system(extract_command.c_str());
 
-	string _image = myImagesPath + "data_" + imagename;
+    string _image = path + "data_" + imagename;
 	cv::Mat image = cv::imread(_image, cv::IMREAD_UNCHANGED);
-	string remove_command = "rm " + myImagesPath + "data_" + imagename;
+    string remove_command = "rm " + path + "data_" + imagename;
 	system(remove_command.c_str());
 	return image;
 }

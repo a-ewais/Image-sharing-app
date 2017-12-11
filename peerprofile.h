@@ -16,6 +16,7 @@ class PeerProfile : public QMainWindow
 public:
     PeerProfile(QWidget *parent, QString str, User* _user);
     ~PeerProfile();
+    bool isEmpty();
 
 private slots:
 
@@ -36,6 +37,7 @@ private:
     User* user;
     QString online_user;
     QString imagename;
+    vector<string> tempList;
 
 };
 

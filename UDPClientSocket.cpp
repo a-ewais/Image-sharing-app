@@ -187,7 +187,7 @@ Message* UDPClientSocket::sendWaitForReply(Message* m, int waitSec){		//send req
     m->print();
 	send(m);
 	struct timespec time_to_wait = {0, 0};
-	time_to_wait.tv_sec = time(NULL) + waitSec+100;
+    time_to_wait.tv_sec = time(NULL) + waitSec+10;
 	pthread_mutex_lock(&in_mutex);
 	pthread_cond_timedwait(&cond, &in_mutex, &time_to_wait);
 	Message* temp = waitFor[m->getRPCId()];

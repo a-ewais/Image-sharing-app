@@ -1,6 +1,8 @@
 #include "peerprofile.h"
 #include "ui_peerprofile.h"
 #include <opencv2/core.hpp>
+#include <sys/stat.h>
+#include <dirent.h>
 
 PeerProfile::PeerProfile(QWidget *parent, QString str,User* _user) :
     QMainWindow(parent),
@@ -20,7 +22,25 @@ PeerProfile::~PeerProfile()
 
 void PeerProfile::fillList(){
     std::vector<std::string> temp;
-    temp= user->getListOfPeerImages(online_user.toUtf8().constData());
+    temp = user->getListOfPeerImages(online_user.toUtf8().constData());
+    tempList = temp;
+    if(isEmpty()){
+        string username = online_user.toUtf8().constData();
+        string path = "./LoadedImages/" + username;
+        DIR* dir_point = opendir(path.c_str());
+        dirent* entry = readdir(dir_point);
+        while (entry){									// if !entry then end of directory
+            if (entry->d_type == DT_REG){		// if entry is a regular file
+                std::string fname = entry->d_name;	// filename
+                if(fname != ".default.jpg")
+                    temp.push_back(fname.substr(5));		// add filename to results vector
+            }
+            entry = readdir(dir_point);
+        }
+
+    }
+    tempList = temp;
+
     for (int i=0; i<temp.size(); ++i)
         ui->imageList->addItem(QString::fromStdString(temp[i]));
 }
@@ -34,6 +54,10 @@ void PeerProfile::on_request_clicked()
 
     if(imagename!=""&& x!="")
         user->requestPeerImage(_online, _imagename, stoi(_num));
+}
+
+bool PeerProfile::isEmpty(){
+    return tempList.size() == 0;
 }
 
 void PeerProfile::on_back_clicked()

@@ -76,10 +76,11 @@ void Profile::on_images_itemDoubleClicked(QListWidgetItem *item)
 void Profile::on_onlineUsers_itemDoubleClicked(QListWidgetItem *item)
 {
     QString temp = item->text();
-    hide();
-    clear();
     peerProfile = new PeerProfile(this,temp,user);
     peerProfile->show();
+    hide();
+    clear();
+
 }
 
 void Profile::clear(){

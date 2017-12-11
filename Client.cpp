@@ -31,6 +31,10 @@ string Client::signup(string& username, string& password, string& host, int port
 	args[2].setString(MessageDecoder::encodeIpPortPair(host, port));
 	MessageDecoder::encode(r, args, 1, Request);
 	Message* reply = execute(&r);
+    if(reply==NULL){
+        string temp = "";
+        return temp;
+    }
 	args.clear();
 	MessageDecoder::decode(reply, args);
 	delete reply;
@@ -45,6 +49,10 @@ string Client::login(string& username, string& password, string& host, int port)
 	args[2].setString(MessageDecoder::encodeIpPortPair(host, port));
 	MessageDecoder::encode(r, args, 2, Request);
 	Message* reply = execute(&r);
+    if(reply==NULL){
+        string temp = "";
+        return temp;
+    }
 	args.clear();
 	MessageDecoder::decode(reply, args);
 //	reply->print();
@@ -59,6 +67,10 @@ map<string, string> Client::requestListOfOnlineUsers(string& token, string& user
 	args[1].setString(token);
 	MessageDecoder::encode(r, args, 6, Request);
 	Message* reply = execute(&r);
+    if(reply==NULL){
+        map<string, string> temp;
+        return temp;
+    }
 	args.clear();
 	MessageDecoder::decode(reply, args);
 	delete reply;
@@ -72,6 +84,8 @@ bool Client::auth(string& username, string& token){
 	args[1].setString(token);
 	MessageDecoder::encode(r, args, 10, Request);
 	Message* reply = execute(&r);
+    if(reply==NULL)
+        return false;
 	args.clear();
 	MessageDecoder::decode(reply, args);
 	delete reply;
@@ -113,6 +127,10 @@ vector<string> Client::requestListOfImages(string& username, string& token){
 	MessageDecoder::encode(r, args, 7, Request);
 	r.print();
 	Message* reply = execute(&r);
+    if(reply==NULL){
+        vector<string> temp;
+        return temp;
+    }
 	args.clear();
 	MessageDecoder::decode(reply, args);
 	delete reply;
